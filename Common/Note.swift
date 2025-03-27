@@ -11,26 +11,26 @@ import SwiftUICore
 
 @Model
 final class Note {
-  var createdTimestamp: Date
+  var createdTimestamp: Date = Date.now
   var modifiedTimestamp: Date?
-  var content: String
+  var content: String = ""
   var fileURL: URL?
-  var backgroundColorHex: String
-  var windowFrame: CGRect?
+  var backgroundColorHex: String = "#FFFFFF"
+  
+  // Thread 1: Fatal error: Composite Coder only supports Keyed Container
+  // var windowFrame: CGRect?
   
   init(
     createdTimestamp: Date,
     modifiedTimestamp: Date? = nil,
     content: String,
     fileURL: URL? = nil,
-    backgroundColorHex: String,
-    windowFrame: CGRect? = nil
+    backgroundColorHex: String
   ) {
     self.createdTimestamp = createdTimestamp
     self.modifiedTimestamp = modifiedTimestamp
     self.content = content
     self.fileURL = fileURL
     self.backgroundColorHex = backgroundColorHex
-    self.windowFrame = windowFrame
   }
 }

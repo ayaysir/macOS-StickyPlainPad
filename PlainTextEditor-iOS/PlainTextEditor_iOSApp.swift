@@ -1,15 +1,15 @@
 //
-//  StickyPlainPadApp.swift
-//  StickyPlainPad
+//  PlainTextEditor_iOSApp.swift
+//  PlainTextEditor-iOS
 //
-//  Created by 윤범태 on 3/25/25.
+//  Created by 윤범태 on 3/27/25.
 //
 
 import SwiftUI
 import SwiftData
 
 @main
-struct StickyPlainPadApp: App {
+struct PlainTextEditor_iOSApp: App {
   var sharedModelContainer: ModelContainer = {
     do {
       return try appGroupSharedModelContainer()
@@ -21,7 +21,7 @@ struct StickyPlainPadApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
+        .modelContainer(sharedModelContainer)
     }
-    .modelContainer(sharedModelContainer)
   }
 }

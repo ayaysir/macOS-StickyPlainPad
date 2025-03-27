@@ -1,8 +1,8 @@
 //
 //  ContentView.swift
-//  StickyPlainPad
+//  PlainTextEditor-iOS
 //
-//  Created by 윤범태 on 3/25/25.
+//  Created by 윤범태 on 3/27/25.
 //
 
 import SwiftUI
