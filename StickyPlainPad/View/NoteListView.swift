@@ -11,9 +11,6 @@ import SwiftData
 struct NoteListView: View {
   @Environment(\.openWindow) private var openWindow
   
-  // @Environment(\.modelContext) private var modelContext
-  // @Query private var notes: [NoteEntity]
-  
   @State private var viewModel: NoteViewModel
   
   init(context: ModelContext) {
@@ -53,9 +50,9 @@ struct NoteListView: View {
       }
     }
     .onAppear {
-      viewModel.notes.forEach {
-        openWindow(value: $0.id)
-      }
+      // viewModel.notes.forEach {
+      //   openWindow(value: $0.id)
+      // }
     }
   }
   
@@ -81,6 +78,6 @@ struct NoteListView: View {
 
 #Preview {
   NoteListView(
-    context: .memoryContext
+    context: .forPreviewContext
   )
 }

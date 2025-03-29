@@ -37,13 +37,6 @@
 			);
 			target = 443CACAE2D92E2DC006AA89C /* StickyPlainPad */;
 		};
-		449FBE312D97C65D00A3A6CC /* Exceptions for "Unused" folder in "StickyPlainPad" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				OpenNoteWindow.swift,
-			);
-			target = 443CACAE2D92E2DC006AA89C /* StickyPlainPad */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -63,14 +56,6 @@
 		443CACCF2D92E2DE006AA89C /* StickyPlainPadUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = StickyPlainPadUITests;
-			sourceTree = "<group>";
-		};
-		449FBE1E2D95A25B00A3A6CC /* Unused */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				449FBE312D97C65D00A3A6CC /* Exceptions for "Unused" folder in "StickyPlainPad" target */,
-			);
-			path = Unused;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -103,7 +88,6 @@
 		443CACA62D92E2DC006AA89C = {
 			isa = PBXGroup;
 			children = (
-				449FBE1E2D95A25B00A3A6CC /* Unused */,
 				443CACB12D92E2DC006AA89C /* StickyPlainPad */,
 				443CACC52D92E2DE006AA89C /* StickyPlainPadTests */,
 				443CACCF2D92E2DE006AA89C /* StickyPlainPadUITests */,

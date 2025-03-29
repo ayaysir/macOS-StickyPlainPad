@@ -10,9 +10,12 @@ import SwiftData
 
 @main
 struct StickyPlainPadApp: App {
+  @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+  
   @State private var noteViewModel: NoteViewModel
   
   init() {
+    // @State를 init에서 초기화하는 경우 _*** = State(initialValue:) 사용
     _noteViewModel = State(
       initialValue: NoteViewModel(
         repository: NoteRepositoryImpl(context: .mainContext)
@@ -27,8 +30,7 @@ struct StickyPlainPadApp: App {
     }
     
     // 포스트잇 창
-    
-    WindowGroup("Notes", for: Note.ID.self) { $noteID in
+    WindowGroup("Note", for: Note.ID.self) { $noteID in
       if let noteID = $noteID.wrappedValue {
         NoteEditView(noteViewModel: noteViewModel, noteID: noteID)
       } else {
@@ -36,57 +38,26 @@ struct StickyPlainPadApp: App {
       }
     }
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
-    .windowResizability(.contentSize)
+    .windowStyle(.hiddenTitleBar)
+    // .windowResizability(.contentSize)
   }
 }
 
-extension ModelContainer {
-  /*
-   ModelContainer를 computed property로 만들면 안됨: EXC_BREAKPOINT 에러 발생
-   */
-  static let mainModelContainer: ModelContainer = {
-    let schema = Schema([
-      NoteEntity.self,
-    ])
-    
-    let modelConfiguration = ModelConfiguration(
-      schema: schema,
-      isStoredInMemoryOnly: false
-    )
-    
-    do {
-      return try ModelContainer(for: schema, configurations: [modelConfiguration])
-    } catch {
-      fatalError("Could not create ModelContainer: \(error)")
-    }
-  }()
+class AppDelegate: NSObject, NSApplicationDelegate {
+  func applicationDidFinishLaunching(_ notification: Notification) {
+    hideTitleBar()
+  }
   
-  static let previewModelContainer: ModelContainer = {
-    let schema = Schema([
-      NoteEntity.self,
-    ])
-    
-    let modelConfiguration = ModelConfiguration(
-      schema: schema,
-      isStoredInMemoryOnly: true
-    )
-    
-    do {
-      return try ModelContainer(for: schema, configurations: [modelConfiguration])
-    } catch {
-      fatalError("Could not create ModelContainer: \(error)")
+  func hideTitleBar() {
+    NSApplication.shared.windows.forEach { window in
+      window.titlebarAppearsTransparent = true
+      window.titleVisibility = .hidden
+      
+      window.standardWindowButton(.closeButton)?.isHidden = true
+      window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+      window.standardWindowButton(.zoomButton)?.isHidden = true
     }
-  }()
+  }
 }
 
-extension ModelContext {
-  @MainActor
-  static var mainContext: ModelContext {
-    ModelContainer.mainModelContainer.mainContext
-  }
-  
-  @MainActor
-  static var memoryContext: ModelContext {
-    ModelContainer.previewModelContainer.mainContext
-  }
-}
+

@@ -25,6 +25,10 @@ class NoteViewModel {
     notes = repository.fetchAll()
   }
   
+  func findNote(id: UUID) -> Note? {
+    notes.first(where: { $0.id == id })
+  }
+  
   func addEmptyNote() {
     let newNote = Note(
       id: .init(),
