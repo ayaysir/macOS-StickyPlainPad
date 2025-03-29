@@ -10,12 +10,21 @@ import SwiftData
 
 @main
 struct StickyPlainPadApp: App {
-  @State private var windowOffsets: [Note.ID: CGSize] = [:]
+  @State private var noteViewModel: NoteViewModel
+  
+  init() {
+    _noteViewModel = State(
+      initialValue: NoteViewModel(
+        repository: NoteRepositoryImpl(context: Self.sharedModelContainer.mainContext)
+      )
+    )
+  }
   
   static var sharedModelContainer: ModelContainer = {
     let schema = Schema([
-      Note.self,
+      NoteEntity.self,
     ])
+    
     let modelConfiguration = ModelConfiguration(
       schema: schema,
       isStoredInMemoryOnly: false
@@ -28,25 +37,35 @@ struct StickyPlainPadApp: App {
     }
   }()
   
+  static var sharedModelContainerMemoryOnly: ModelContainer = {
+    let schema = Schema([
+      NoteEntity.self,
+    ])
+    
+    let modelConfiguration = ModelConfiguration(
+      schema: schema,
+      isStoredInMemoryOnly: true
+    )
+    
+    do {
+      return try ModelContainer(for: schema, configurations: [modelConfiguration])
+    } catch {
+      fatalError("Could not create ModelContainer: \(error)")
+    }
+  }()
+  
   var body: some Scene {
     // 디버그용 리스트 창 (목록을 어디에 배치할지 추후 결정)
     Window("List", id: "list") {
-      NoteListView()
+      NoteListView(viewModel: noteViewModel)
     }
     .modelContainer(Self.sharedModelContainer)
     
     // 포스트잇 창
+    
     WindowGroup("Notes", for: Note.ID.self) { $noteID in
-      if let noteID, let note = fetchNote(by: noteID) {
-        NoteEditView(note: note)
-          // .frame(width: 600, height: 400) // 창 크기 설정
-          // .offset(windowOffsets[noteID] ?? .zero) // 계단식 배치
-          // .onAppear {
-          //   if windowOffsets[noteID] == nil {
-          //     let offsetValue = CGFloat(windowOffsets.count) * 40
-          //     windowOffsets[noteID] = CGSize(width: offsetValue, height: -offsetValue)
-          //   }
-          // }
+      if let noteID = $noteID.wrappedValue {
+        NoteEditView(noteViewModel: noteViewModel, noteID: noteID)
       } else {
         Text("Note is nil.")
       }

@@ -11,8 +11,22 @@ import SwiftData
 struct NoteListView: View {
   @Environment(\.openWindow) private var openWindow
   
-  @Environment(\.modelContext) private var modelContext
-  @Query private var notes: [Note]
+  // @Environment(\.modelContext) private var modelContext
+  // @Query private var notes: [NoteEntity]
+  
+  @State private var viewModel: NoteViewModel
+  
+  init(context: ModelContext) {
+    _viewModel = State(
+      initialValue: NoteViewModel(
+        repository: NoteRepositoryImpl(context: context)
+      )
+    )
+  }
+  
+  init(viewModel: NoteViewModel) {
+    _viewModel = State(initialValue: viewModel)
+  }
   
   var body: some View {
     VStack {
@@ -21,15 +35,15 @@ struct NoteListView: View {
           Label("Add", systemImage: "plus")
         }
         
-        ForEach(notes) { note in
+        ForEach(viewModel.notes) { note in
           Button {
             openWindow(value: note.id)
           } label: {
-            Text("\(note.content), \(note.createdTimestamp)")
+            Text("\(note.content), \(note.createdAt)")
           }
           .contextMenu {
             Button(role: .destructive) {
-              modelContext.delete(note)
+              viewModel.deleteNote(note)
             } label: {
               Text("삭제")
             }
@@ -39,7 +53,7 @@ struct NoteListView: View {
       }
     }
     .onAppear {
-      notes.forEach {
+      viewModel.notes.forEach {
         openWindow(value: $0.id)
       }
     }
@@ -47,20 +61,14 @@ struct NoteListView: View {
   
   private func addItem() {
     withAnimation {
-      let newNote = Note(
-        createdTimestamp: .now,
-        content: generateRandomUppercaseString(),
-        backgroundColorHex: "#FFFFFF"
-      )
-      
-      modelContext.insert(newNote)
+      viewModel.addEmptyNote()
     }
   }
   
   private func deleteItems(offsets: IndexSet) {
     withAnimation {
       for index in offsets {
-        modelContext.delete(notes[index])
+        viewModel.deleteNote(index: index)
       }
     }
   }
@@ -69,10 +77,11 @@ struct NoteListView: View {
     let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     return String((0..<length).map { _ in letters.randomElement()! })
   }
-
 }
 
 #Preview {
-  NoteListView()
-    .modelContainer(for: Note.self, inMemory: true)
+  NoteListView(
+    context: StickyPlainPadApp.sharedModelContainerMemoryOnly.mainContext
+  )
+    .modelContainer(for: NoteEntity.self, inMemory: true)
 }

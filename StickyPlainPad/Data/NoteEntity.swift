@@ -1,5 +1,5 @@
 //
-//  Item 2.swift
+//  NoteEntity.swift
 //  StickyPlainPad
 //
 //  Created by 윤범태 on 3/25/25.
@@ -10,28 +10,32 @@ import SwiftData
 import SwiftUICore
 
 @Model
-final class Note: Identifiable {
-  var id: UUID = UUID()
-  var createdTimestamp: Date = Date.now
-  var modifiedTimestamp: Date?
+final class NoteEntity: Identifiable {
+  @Attribute(.unique) var id: UUID = UUID()
+  var createdAt: Date = Date.now
+  var modifiedAt: Date?
   var content: String = ""
   var fileURL: URL?
   var backgroundColorHex: String = "#FFFFFF"
+  var windowFrame: Rect?
   
   // Thread 1: Fatal error: Composite Coder only supports Keyed Container
   // var windowFrame: CGRect?
   
   init(
-    createdTimestamp: Date,
-    modifiedTimestamp: Date? = nil,
+    id: NoteEntity.ID,
+    createdAt: Date,
+    modifiedAt: Date? = nil,
     content: String,
     fileURL: URL? = nil,
-    backgroundColorHex: String
+    backgroundColorHex: String,
+    windowFrame: Rect?
   ) {
-    self.createdTimestamp = createdTimestamp
-    self.modifiedTimestamp = modifiedTimestamp
+    self.createdAt = createdAt
+    self.modifiedAt = modifiedAt
     self.content = content
     self.fileURL = fileURL
     self.backgroundColorHex = backgroundColorHex
+    self.windowFrame = windowFrame
   }
 }

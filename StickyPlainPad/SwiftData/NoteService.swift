@@ -8,10 +8,10 @@
 import Foundation
 import SwiftData
 
-@MainActor func fetchNote(by id: Note.ID) -> Note? {
+@MainActor func fetchNote(by id: NoteEntity.ID) -> NoteEntity? {
   let context = StickyPlainPadApp.sharedModelContainer.mainContext
-  let predicate = #Predicate<Note> { $0.id == id }
-  let descriptor = FetchDescriptor<Note>(predicate: predicate)
+  let predicate = #Predicate<NoteEntity> { $0.id == id }
+  let descriptor = FetchDescriptor<NoteEntity>(predicate: predicate)
   
   return try? context.fetch(descriptor).first
 }

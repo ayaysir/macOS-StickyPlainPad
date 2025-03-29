@@ -40,7 +40,6 @@
 		449FBE312D97C65D00A3A6CC /* Exceptions for "Unused" folder in "StickyPlainPad" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				ContentView.swift,
 				OpenNoteWindow.swift,
 			);
 			target = 443CACAE2D92E2DC006AA89C /* StickyPlainPad */;

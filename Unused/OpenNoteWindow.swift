@@ -10,7 +10,7 @@ import SwiftUI
 
 var windowOffset: CGFloat = 0 // 창이 열릴 때마다 증가할 값
 
-func openNoteWindow(id: Note.ID) {
+func openNoteWindow(id: NoteEntity.ID) {
   @Environment(\.openWindow) var openWindow
   openWindow(value: id)
 
