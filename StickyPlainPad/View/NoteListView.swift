@@ -81,7 +81,6 @@ struct NoteListView: View {
 
 #Preview {
   NoteListView(
-    context: StickyPlainPadApp.sharedModelContainerMemoryOnly.mainContext
+    context: .memoryContext
   )
-    .modelContainer(for: NoteEntity.self, inMemory: true)
 }

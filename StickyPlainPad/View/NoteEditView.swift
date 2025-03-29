@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct NoteEditView: View {
   @State private var note: Note?
@@ -41,11 +42,9 @@ struct NoteEditView: View {
 }
 
 #Preview {
-  let context = StickyPlainPadApp.sharedModelContainerMemoryOnly.mainContext
-  
-  return NoteEditView(
+  NoteEditView(
     noteViewModel: NoteViewModel(
-      repository: NoteRepositoryImpl(context: context)
+      repository: NoteRepositoryImpl(context: .memoryContext)
     ),
     noteID: .init()
   )

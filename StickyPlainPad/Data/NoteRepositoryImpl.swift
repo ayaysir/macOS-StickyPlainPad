@@ -34,18 +34,22 @@ class NoteRepositoryImpl: NoteRepository {
     let descriptor = FetchDescriptor<NoteEntity>(
       sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
     )
-    let entities = (try? context.fetch(descriptor)) ?? []
     
-    return entities.map {
-      Note(
-        id: $0.id,
-        createdAt: $0.createdAt,
-        modifiedAt: $0.modifiedAt,
-        content: $0.content,
-        fileURL: $0.fileURL,
-        backgroundColorHex: $0.backgroundColorHex,
-        windowFrame: $0.windowFrame?.toCGRect
-      )
+    do {
+      return try context.fetch(descriptor).map {
+        Note(
+          id: $0.id,
+          createdAt: $0.createdAt,
+          modifiedAt: $0.modifiedAt,
+          content: $0.content,
+          fileURL: $0.fileURL,
+          backgroundColorHex: $0.backgroundColorHex,
+          windowFrame: $0.windowFrame?.toCGRect
+        )
+      }
+    } catch {
+      print(#function, error)
+      return []
     }
   }
   
