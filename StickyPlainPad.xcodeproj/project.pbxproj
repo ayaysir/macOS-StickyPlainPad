@@ -21,38 +21,27 @@
 			remoteGlobalIDString = 443CACAE2D92E2DC006AA89C;
 			remoteInfo = StickyPlainPad;
 		};
-		443CAD422D959915006AA89C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 443CACA72D92E2DC006AA89C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 443CAD312D959913006AA89C;
-			remoteInfo = "PlainTextEditor-iOS";
-		};
-		443CAD4C2D959915006AA89C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 443CACA72D92E2DC006AA89C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 443CAD312D959913006AA89C;
-			remoteInfo = "PlainTextEditor-iOS";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		443CACAF2D92E2DC006AA89C /* StickyPlainPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickyPlainPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		443CACC22D92E2DE006AA89C /* StickyPlainPadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StickyPlainPadTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		443CACCC2D92E2DE006AA89C /* StickyPlainPadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StickyPlainPadUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		443CAD322D959913006AA89C /* PlainTextEditor-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PlainTextEditor-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		443CAD412D959915006AA89C /* PlainTextEditor-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PlainTextEditor-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		443CAD4B2D959915006AA89C /* PlainTextEditor-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PlainTextEditor-iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		449FBE1F2D95A26300A3A6CC /* Exceptions for "Common" folder in "StickyPlainPad" target */ = {
+		449FBE2A2D9706E600A3A6CC /* Exceptions for "StickyPlainPad" folder in "StickyPlainPad" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Extension/SwiftUI.Color+.swift",
-				Note.swift,
-				SharedModelContainer.swift,
+				Info.plist,
+			);
+			target = 443CACAE2D92E2DC006AA89C /* StickyPlainPad */;
+		};
+		449FBE312D97C65D00A3A6CC /* Exceptions for "Unused" folder in "StickyPlainPad" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContentView.swift,
+				OpenNoteWindow.swift,
 			);
 			target = 443CACAE2D92E2DC006AA89C /* StickyPlainPad */;
 		};
@@ -61,6 +50,9 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		443CACB12D92E2DC006AA89C /* StickyPlainPad */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				449FBE2A2D9706E600A3A6CC /* Exceptions for "StickyPlainPad" folder in "StickyPlainPad" target */,
+			);
 			path = StickyPlainPad;
 			sourceTree = "<group>";
 		};
@@ -74,27 +66,12 @@
 			path = StickyPlainPadUITests;
 			sourceTree = "<group>";
 		};
-		443CAD332D959913006AA89C /* PlainTextEditor-iOS */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "PlainTextEditor-iOS";
-			sourceTree = "<group>";
-		};
-		443CAD442D959915006AA89C /* PlainTextEditor-iOSTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "PlainTextEditor-iOSTests";
-			sourceTree = "<group>";
-		};
-		443CAD4E2D959915006AA89C /* PlainTextEditor-iOSUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "PlainTextEditor-iOSUITests";
-			sourceTree = "<group>";
-		};
-		449FBE1E2D95A25B00A3A6CC /* Common */ = {
+		449FBE1E2D95A25B00A3A6CC /* Unused */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				449FBE1F2D95A26300A3A6CC /* Exceptions for "Common" folder in "StickyPlainPad" target */,
+				449FBE312D97C65D00A3A6CC /* Exceptions for "Unused" folder in "StickyPlainPad" target */,
 			);
-			path = Common;
+			path = Unused;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -121,40 +98,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		443CAD2F2D959913006AA89C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		443CAD3E2D959915006AA89C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		443CAD482D959915006AA89C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		443CACA62D92E2DC006AA89C = {
 			isa = PBXGroup;
 			children = (
-				449FBE1E2D95A25B00A3A6CC /* Common */,
+				449FBE1E2D95A25B00A3A6CC /* Unused */,
 				443CACB12D92E2DC006AA89C /* StickyPlainPad */,
 				443CACC52D92E2DE006AA89C /* StickyPlainPadTests */,
 				443CACCF2D92E2DE006AA89C /* StickyPlainPadUITests */,
-				443CAD332D959913006AA89C /* PlainTextEditor-iOS */,
-				443CAD442D959915006AA89C /* PlainTextEditor-iOSTests */,
-				443CAD4E2D959915006AA89C /* PlainTextEditor-iOSUITests */,
 				443CACB02D92E2DC006AA89C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -165,9 +118,6 @@
 				443CACAF2D92E2DC006AA89C /* StickyPlainPad.app */,
 				443CACC22D92E2DE006AA89C /* StickyPlainPadTests.xctest */,
 				443CACCC2D92E2DE006AA89C /* StickyPlainPadUITests.xctest */,
-				443CAD322D959913006AA89C /* PlainTextEditor-iOS.app */,
-				443CAD412D959915006AA89C /* PlainTextEditor-iOSTests.xctest */,
-				443CAD4B2D959915006AA89C /* PlainTextEditor-iOSUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -243,75 +193,6 @@
 			productReference = 443CACCC2D92E2DE006AA89C /* StickyPlainPadUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		443CAD312D959913006AA89C /* PlainTextEditor-iOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 443CAD532D959915006AA89C /* Build configuration list for PBXNativeTarget "PlainTextEditor-iOS" */;
-			buildPhases = (
-				443CAD2E2D959913006AA89C /* Sources */,
-				443CAD2F2D959913006AA89C /* Frameworks */,
-				443CAD302D959913006AA89C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				443CAD332D959913006AA89C /* PlainTextEditor-iOS */,
-				449FBE1E2D95A25B00A3A6CC /* Common */,
-			);
-			name = "PlainTextEditor-iOS";
-			packageProductDependencies = (
-			);
-			productName = "PlainTextEditor-iOS";
-			productReference = 443CAD322D959913006AA89C /* PlainTextEditor-iOS.app */;
-			productType = "com.apple.product-type.application";
-		};
-		443CAD402D959915006AA89C /* PlainTextEditor-iOSTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 443CAD562D959915006AA89C /* Build configuration list for PBXNativeTarget "PlainTextEditor-iOSTests" */;
-			buildPhases = (
-				443CAD3D2D959915006AA89C /* Sources */,
-				443CAD3E2D959915006AA89C /* Frameworks */,
-				443CAD3F2D959915006AA89C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				443CAD432D959915006AA89C /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				443CAD442D959915006AA89C /* PlainTextEditor-iOSTests */,
-			);
-			name = "PlainTextEditor-iOSTests";
-			packageProductDependencies = (
-			);
-			productName = "PlainTextEditor-iOSTests";
-			productReference = 443CAD412D959915006AA89C /* PlainTextEditor-iOSTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		443CAD4A2D959915006AA89C /* PlainTextEditor-iOSUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 443CAD592D959915006AA89C /* Build configuration list for PBXNativeTarget "PlainTextEditor-iOSUITests" */;
-			buildPhases = (
-				443CAD472D959915006AA89C /* Sources */,
-				443CAD482D959915006AA89C /* Frameworks */,
-				443CAD492D959915006AA89C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				443CAD4D2D959915006AA89C /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				443CAD4E2D959915006AA89C /* PlainTextEditor-iOSUITests */,
-			);
-			name = "PlainTextEditor-iOSUITests";
-			packageProductDependencies = (
-			);
-			productName = "PlainTextEditor-iOSUITests";
-			productReference = 443CAD4B2D959915006AA89C /* PlainTextEditor-iOSUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -333,17 +214,6 @@
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = 443CACAE2D92E2DC006AA89C;
 					};
-					443CAD312D959913006AA89C = {
-						CreatedOnToolsVersion = 16.2;
-					};
-					443CAD402D959915006AA89C = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 443CAD312D959913006AA89C;
-					};
-					443CAD4A2D959915006AA89C = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 443CAD312D959913006AA89C;
-					};
 				};
 			};
 			buildConfigurationList = 443CACAA2D92E2DC006AA89C /* Build configuration list for PBXProject "StickyPlainPad" */;
@@ -363,9 +233,6 @@
 				443CACAE2D92E2DC006AA89C /* StickyPlainPad */,
 				443CACC12D92E2DE006AA89C /* StickyPlainPadTests */,
 				443CACCB2D92E2DE006AA89C /* StickyPlainPadUITests */,
-				443CAD312D959913006AA89C /* PlainTextEditor-iOS */,
-				443CAD402D959915006AA89C /* PlainTextEditor-iOSTests */,
-				443CAD4A2D959915006AA89C /* PlainTextEditor-iOSUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -386,27 +253,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		443CACCA2D92E2DE006AA89C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		443CAD302D959913006AA89C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		443CAD3F2D959915006AA89C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		443CAD492D959915006AA89C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -437,27 +283,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		443CAD2E2D959913006AA89C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		443CAD3D2D959915006AA89C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		443CAD472D959915006AA89C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -470,16 +295,6 @@
 			isa = PBXTargetDependency;
 			target = 443CACAE2D92E2DC006AA89C /* StickyPlainPad */;
 			targetProxy = 443CACCD2D92E2DE006AA89C /* PBXContainerItemProxy */;
-		};
-		443CAD432D959915006AA89C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 443CAD312D959913006AA89C /* PlainTextEditor-iOS */;
-			targetProxy = 443CAD422D959915006AA89C /* PBXContainerItemProxy */;
-		};
-		443CAD4D2D959915006AA89C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 443CAD312D959913006AA89C /* PlainTextEditor-iOS */;
-			targetProxy = 443CAD4C2D959915006AA89C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -616,6 +431,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StickyPlainPad/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -645,6 +461,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StickyPlainPad/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -728,151 +545,6 @@
 			};
 			name = Release;
 		};
-		443CAD542D959915006AA89C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "PlainTextEditor-iOS/PlainTextEditor-iOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PlainTextEditor-iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 6S2SA26VAN;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bgsmm.PlainTextEditor-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		443CAD552D959915006AA89C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "PlainTextEditor-iOS/PlainTextEditor-iOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PlainTextEditor-iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = 6S2SA26VAN;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bgsmm.PlainTextEditor-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		443CAD572D959915006AA89C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6S2SA26VAN;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bgsmm.PlainTextEditor-iOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PlainTextEditor-iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PlainTextEditor-iOS";
-			};
-			name = Debug;
-		};
-		443CAD582D959915006AA89C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6S2SA26VAN;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bgsmm.PlainTextEditor-iOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PlainTextEditor-iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PlainTextEditor-iOS";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		443CAD5A2D959915006AA89C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6S2SA26VAN;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bgsmm.PlainTextEditor-iOSUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "PlainTextEditor-iOS";
-			};
-			name = Debug;
-		};
-		443CAD5B2D959915006AA89C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6S2SA26VAN;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bgsmm.PlainTextEditor-iOSUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "PlainTextEditor-iOS";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -908,33 +580,6 @@
 			buildConfigurations = (
 				443CACDD2D92E2DE006AA89C /* Debug */,
 				443CACDE2D92E2DE006AA89C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		443CAD532D959915006AA89C /* Build configuration list for PBXNativeTarget "PlainTextEditor-iOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				443CAD542D959915006AA89C /* Debug */,
-				443CAD552D959915006AA89C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		443CAD562D959915006AA89C /* Build configuration list for PBXNativeTarget "PlainTextEditor-iOSTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				443CAD572D959915006AA89C /* Debug */,
-				443CAD582D959915006AA89C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		443CAD592D959915006AA89C /* Build configuration list for PBXNativeTarget "PlainTextEditor-iOSUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				443CAD5A2D959915006AA89C /* Debug */,
-				443CAD5B2D959915006AA89C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

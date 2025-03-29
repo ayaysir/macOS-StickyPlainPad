@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+  @Environment(\.openWindow) private var openWindow
+  
   @Environment(\.modelContext) private var modelContext
   @Query private var notes: [Note]
   
@@ -53,6 +55,12 @@ struct ContentView: View {
             Label("Add Item", systemImage: "plus")
           }
         }
+      }
+      .onAppear {
+        // ["A", "B", "C", "D", "E"].forEach {
+        //   openWindow(value: $0)
+        // }
+        print("contentView onApeear")
       }
       .sheet(isPresented: $showEditSheet) {
         VStack {

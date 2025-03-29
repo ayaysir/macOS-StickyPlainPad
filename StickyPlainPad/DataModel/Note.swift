@@ -10,7 +10,8 @@ import SwiftData
 import SwiftUICore
 
 @Model
-final class Note {
+final class Note: Identifiable {
+  var id: UUID = UUID()
   var createdTimestamp: Date = Date.now
   var modifiedTimestamp: Date?
   var content: String = ""
