@@ -38,14 +38,14 @@ struct StickyPlainPadApp: App {
       }
     }
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
-    .windowStyle(.hiddenTitleBar)
+    // .windowStyle(.hiddenTitleBar)
     // .windowResizability(.contentSize)
   }
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ notification: Notification) {
-    hideTitleBar()
+    // hideTitleBar()
   }
   
   func hideTitleBar() {
@@ -53,9 +53,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       window.titlebarAppearsTransparent = true
       window.titleVisibility = .hidden
       
-      window.standardWindowButton(.closeButton)?.isHidden = true
-      window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-      window.standardWindowButton(.zoomButton)?.isHidden = true
+      window.isMovableByWindowBackground = true
+      
+      // window.standardWindowButton(.closeButton)?.isHidden = true
+      // window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+      // window.standardWindowButton(.zoomButton)?.isHidden = true
+      
+      // window.styleMask.remove(.titled) // 타이틀바 제거
+      // window.styleMask.insert(.fullSizeContentView) // 전체 콘텐츠 뷰 활성화
+      
+      /*
+       print(window.styleMask.contains(.borderless)) // t
+       print(window.styleMask.contains(.closable)) // t
+       print(window.styleMask.contains(.docModalWindow)) // f
+       print(window.styleMask.contains(.fullScreen)) // f
+       print(window.styleMask.contains(.fullSizeContentView)) // t
+       print(window.styleMask.contains(.hudWindow)) // f
+       print(window.styleMask.contains(.miniaturizable)) // t
+       print(window.styleMask.contains(.nonactivatingPanel)) // f
+       print(window.styleMask.contains(.resizable)) // t
+       print(window.styleMask.contains(.titled)) // t
+       print(window.styleMask.contains(.unifiedTitleAndToolbar)) // f
+       print(window.styleMask.contains(.utilityWindow)) // f
+       
+       print(window.canBecomeKey, window.canBecomeMain)
+       */
     }
   }
 }
