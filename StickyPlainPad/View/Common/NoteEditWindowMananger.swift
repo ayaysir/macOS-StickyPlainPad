@@ -11,9 +11,31 @@ import Combine
 
 final class NoteEditWindowMananger {
   static let shared = NoteEditWindowMananger()
-  private init() {}
+
+  let screenSize = NSScreen.main?.frame ?? .zero
+  let windowSize = CGSize(width: 400, height: 300)
+  private init() {
+    newWindowPos = newWindowPosFirst
+  }
+  
+  var newWindowPosFirst: CGPoint {
+    CGPoint(
+      x: (screenSize.width - windowSize.width) / 2,
+      y: (screenSize.height - windowSize.height) / 2
+    )
+  }
   
   private(set) var openWindows: [NoteEditWindow] = []
+  private var createdWindowCount = 0 {
+    didSet {
+      let increment = CGFloat(createdWindowCount * 10)
+      newWindowPos = CGPoint(
+        x: newWindowPosFirst.x + increment,
+        y: newWindowPosFirst.y - increment
+      )
+    }
+  }
+  private(set) var newWindowPos: CGPoint!
   private var cancellables = Set<AnyCancellable>()
   
   // @discardableResult
@@ -25,13 +47,9 @@ final class NoteEditWindowMananger {
     }
     
     // 화면의 중앙에 창 위치 계산
-    let screenSize = NSScreen.main?.frame ?? .zero
-    let windowSize = CGSize(width: 400, height: 300)
     let windowFrame = CGRect(
-      x: (screenSize.width - windowSize.width) / 2,
-      y: (screenSize.height - windowSize.height) / 2,
-      width: windowSize.width,
-      height: windowSize.height
+      origin: newWindowPos,
+      size: windowSize
     )
 
     // CustomWindow 생성
@@ -165,9 +183,12 @@ final class NoteEditWindowMananger {
     window.windowFramePublisher
       .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
       .sink { rect in
-        print(rect)
         noteViewModel.updateNote(noteID: noteID, windowFrame: rect)
       }
       .store(in: &cancellables)
+  }
+  
+  func appendCreateWindowCount() {
+    createdWindowCount += 1
   }
 }

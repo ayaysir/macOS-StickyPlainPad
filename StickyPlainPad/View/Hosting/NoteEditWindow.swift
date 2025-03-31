@@ -48,16 +48,23 @@ extension NoteEditWindow: NSWindowDelegate {
       hostingView.frame = contentView?.bounds ?? .zero
     }
     
-    // 창 크기 정보 내보내기
-    guard let windowFrame = Rect(cgRect: frame) else {
-      return
-    }
-    
-    windowFramePublisher.send(windowFrame)
+    sendWindoFrameToPublisher()
   }
   
   func windowDidMove(_ notification: Notification) {
-    // 창 위치 정보 내보내기
+    sendWindoFrameToPublisher()
+  }
+  
+  func windowDidBecomeMain(_ notification: Notification) {
+    sendWindoFrameToPublisher()
+  }
+  
+  func windowDidBecomeKey(_ notification: Notification) {
+    sendWindoFrameToPublisher()
+  }
+  
+  private func sendWindoFrameToPublisher() {
+    // 창 크기 정보 내보내기
     guard let windowFrame = Rect(cgRect: frame) else {
       return
     }

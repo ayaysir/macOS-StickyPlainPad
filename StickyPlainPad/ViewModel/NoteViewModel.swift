@@ -37,15 +37,20 @@ class NoteViewModel {
     notes.first(where: { $0.id == id })
   }
   
-  func addEmptyNote() {
+  @discardableResult
+  func addEmptyNote(windowFrame: Rect? = nil) -> UUID {
+    let noteID = UUID()
     let newNote = Note(
-      id: .init(),
+      id: noteID,
       createdAt: .now,
-      content: ""
+      content: "",
+      windowFrame: windowFrame
     )
     
     repository.add(newNote)
     loadNotes()
+    
+    return noteID
   }
   
   func updateNote(_ note: Note, content: String) {

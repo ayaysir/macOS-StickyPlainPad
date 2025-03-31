@@ -62,8 +62,22 @@ struct NoteListView: View {
   }
   
   private func addItem() {
+    let newPos = NoteEditWindowMananger.shared.newWindowPos
+    let firstPos = NoteEditWindowMananger.shared.newWindowPosFirst
+    let windowSize = NoteEditWindowMananger.shared.windowSize
+    
+    var firstWindowFrame: Rect {
+      .init(
+        originX: newPos?.x ?? firstPos.x ,
+        originY: newPos?.y ?? firstPos.y,
+        width: windowSize.width,
+        height: windowSize.height
+      )
+    }
+    
     withAnimation {
-      viewModel.addEmptyNote()
+      viewModel.addEmptyNote(windowFrame: firstWindowFrame)
+      NoteEditWindowMananger.shared.appendCreateWindowCount()
     }
   }
   
