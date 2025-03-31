@@ -20,6 +20,8 @@ class NoteEditWindow: NSWindow, NSWindowDelegate  {
     return true
   }
   
+  var noteID: UUID?
+  
   override init(
     contentRect: NSRect,
     styleMask style: NSWindow.StyleMask,

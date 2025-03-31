@@ -14,8 +14,10 @@ struct Note: Codable, Identifiable, Hashable {
   var modifiedAt: Date?
   var content: String
   var fileURL: URL?
-  var backgroundColorHex: String = "#FFFFFF"
+  var backgroundColorHex: String = "#FFFFFF" // -> 테마
   var windowFrame: CGRect?
+  var isPinned: Bool = false
+  var fontSize: CGFloat = 14
 }
 
 extension Note {

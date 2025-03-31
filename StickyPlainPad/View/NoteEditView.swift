@@ -15,8 +15,6 @@ struct NoteEditView: View {
   @State private var naviTitle = "가나다"
   @State private var isAlwaysOnTop = false
   
-  @Environment(\.appearsActive) var appearsActive
-  
   init(noteViewModel: NoteViewModel, noteID: UUID) {
     _noteViewModel = State(initialValue: noteViewModel)
     let first = noteViewModel.notes.first(where: { $0.id == noteID })
@@ -78,22 +76,15 @@ struct NoteEditView: View {
       
       noteViewModel.updateNote(note, content: currentContent)
     }
-    // .onChange(of: appearsActive) {
-    //   switch appearsActive {
-    //   case true:
-    //     print("active, id: \(note?.id ?? .init())")
-    //   case false:
-    //     print("inactive, id: \(note?.id ?? .init())")
-    //   }
-    // }
   }
 }
 
 extension NoteEditView {
   /// 현재 윈도우를 닫는 메서드
   func closeWindow() {
-    if let window = NSApplication.shared.keyWindow {
+    if let window = NSApplication.shared.keyWindow as? NoteEditWindow {
       window.close()
+      NoteEditWindowMananger.shared.removeWindowMenu(window)
     }
   }
 }
