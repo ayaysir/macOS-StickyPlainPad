@@ -44,7 +44,7 @@ class NoteRepositoryImpl: NoteRepository {
           content: $0.content,
           fileURL: $0.fileURL,
           backgroundColorHex: $0.backgroundColorHex,
-          windowFrame: $0.windowFrame?.toCGRect
+          windowFrame: $0.windowFrame
         )
       }
     } catch {
@@ -61,7 +61,7 @@ class NoteRepositoryImpl: NoteRepository {
       content: note.content,
       fileURL: note.fileURL,
       backgroundColorHex: note.backgroundColorHex,
-      windowFrame: .init(cgRect: note.windowFrame)
+      windowFrame: note.windowFrame
     )
     context.insert(entity)
     saveContext()
@@ -76,7 +76,7 @@ class NoteRepositoryImpl: NoteRepository {
     entity.backgroundColorHex = note.backgroundColorHex
     entity.fileURL = note.fileURL
     entity.modifiedAt = note.modifiedAt
-    entity.windowFrame = Rect(cgRect: note.windowFrame)
+    entity.windowFrame = note.windowFrame
   }
   
   func delete(_ note: Note) {

@@ -7,13 +7,16 @@
 
 import AppKit
 import SwiftUI
+import Combine
 
 final class NoteEditWindowMananger {
   static let shared = NoteEditWindowMananger()
   private init() {}
   
   private(set) var openWindows: [NoteEditWindow] = []
+  private var cancellables = Set<AnyCancellable>()
   
+  // @discardableResult
   func open(noteViewModel: NoteViewModel, noteID: UUID, previewText: String? = nil) {
     guard !isAlreadyOpened(noteID: noteID) else {
       bringWindowToFront(noteID: noteID)
@@ -67,6 +70,20 @@ final class NoteEditWindowMananger {
     // 윈도우 리스트에 등록
     openWindows.append(customWindow)
     
+    // windowFrame 정보가 있는 경우 창 위치 조절
+    if let windowFrame = noteViewModel.loadWindowFrame(noteID: noteID) {
+      customWindow.setFrame(
+        windowFrame.toCGRect,
+        display: true
+      )
+    }
+    
+    registerWindowPublisher(
+      customWindow,
+      noteViewModel: noteViewModel,
+      noteID: noteID
+    )
+    
     DispatchQueue.main.async {
       self.addWindowToMenu(customWindow)
     }
@@ -102,9 +119,7 @@ final class NoteEditWindowMananger {
     windowItem.target = self
     windowItem.representedObject = window
     
-    
     windowMenu.addItem(windowItem)
-    
   }
   
   func removeWindowMenu(_ window: NoteEditWindow) {
@@ -140,5 +155,19 @@ final class NoteEditWindowMananger {
   
   private func isAlreadyOpened(noteID: UUID) -> Bool {
     openWindows.contains(where: { $0.noteID == noteID })
+  }
+  
+  private func registerWindowPublisher(
+    _ window: NoteEditWindow,
+    noteViewModel: NoteViewModel,
+    noteID: UUID
+  ) {
+    window.windowFramePublisher
+      .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
+      .sink { rect in
+        print(rect)
+        noteViewModel.updateNote(noteID: noteID, windowFrame: rect)
+      }
+      .store(in: &cancellables)
   }
 }

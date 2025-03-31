@@ -25,6 +25,14 @@ class NoteViewModel {
     notes = repository.fetchAll()
   }
   
+  func loadWindowFrame(noteID: UUID) -> Rect? {
+    guard let note = findNote(id: noteID) else {
+      return nil
+    }
+    
+    return note.windowFrame
+  }
+  
   func findNote(id: UUID) -> Note? {
     notes.first(where: { $0.id == id })
   }
@@ -47,6 +55,16 @@ class NoteViewModel {
     
     repository.update(note)
     loadNotes()
+  }
+  
+  func updateNote(noteID: UUID, windowFrame: Rect) {
+    guard var note = findNote(id: noteID) else {
+      return
+    }
+    
+    note.windowFrame = windowFrame
+    repository.update(note)
+    // 윈도우 좌표만 업데이트하므로 일단 리스트를 리프레시하지는 않음?
   }
   
   func deleteNote(_ note: Note) {

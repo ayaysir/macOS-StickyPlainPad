@@ -8,7 +8,7 @@
 import Foundation
 
 /// Codable을 준수하는 사각형 구조체
-struct Rect: Codable {
+struct Rect: Codable, Hashable {
   var originX: CGFloat
   var originY: CGFloat
   var width: CGFloat

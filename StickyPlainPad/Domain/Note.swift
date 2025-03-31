@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUICore
 
 struct Note: Codable, Identifiable, Hashable {
   let id: UUID
@@ -15,13 +14,11 @@ struct Note: Codable, Identifiable, Hashable {
   var content: String
   var fileURL: URL?
   var backgroundColorHex: String = "#FFFFFF" // -> 테마
-  var windowFrame: CGRect?
+  var windowFrame: Rect?
   var isPinned: Bool = false
   var fontSize: CGFloat = 14
 }
 
 extension Note {
-  var backgroundColor: Color? {
-    .init(hex: backgroundColorHex)
-  }
+ 
 }
