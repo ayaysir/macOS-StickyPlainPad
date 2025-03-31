@@ -21,6 +21,9 @@ struct NoteEditView: View {
     
     if let note = first {
       _note = State(initialValue: note)
+      print("note exist \(noteID)")
+    } else {
+      print("note doesn't exist \(noteID)")
     }
   }
   

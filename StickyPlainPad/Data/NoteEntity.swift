@@ -33,6 +33,7 @@ final class NoteEntity: Identifiable {
     backgroundColorHex: String,
     windowFrame: Rect?
   ) {
+    self.id = id
     self.createdAt = createdAt
     self.modifiedAt = modifiedAt
     self.content = content

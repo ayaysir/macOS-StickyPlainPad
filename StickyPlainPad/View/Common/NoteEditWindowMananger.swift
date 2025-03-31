@@ -38,8 +38,11 @@ final class NoteEditWindowMananger {
   private(set) var newWindowPos: CGPoint!
   private var cancellables = Set<AnyCancellable>()
   
-  // @discardableResult
-  func open(noteViewModel: NoteViewModel, noteID: UUID, previewText: String? = nil) {
+  func open(
+    noteViewModel: NoteViewModel,
+    noteID: UUID,
+    previewText: String? = nil
+  ) {
     guard !isAlreadyOpened(noteID: noteID) else {
       bringWindowToFront(noteID: noteID)
       addWindowToMenu(noteID: noteID)
@@ -69,6 +72,7 @@ final class NoteEditWindowMananger {
       noteViewModel: noteViewModel,
       noteID: noteID
     )
+    
     let hostingView = NSHostingView(rootView: noteEditView)
     hostingView.frame = customWindow.contentView?.bounds ?? .zero
     customWindow.contentView?.addSubview(hostingView)

@@ -76,8 +76,13 @@ struct NoteListView: View {
     }
     
     withAnimation {
-      viewModel.addEmptyNote(windowFrame: firstWindowFrame)
+      let id = viewModel.addEmptyNote(windowFrame: firstWindowFrame)
       NoteEditWindowMananger.shared.appendCreateWindowCount()
+      
+      NoteEditWindowMananger.shared.open(
+        noteViewModel: viewModel,
+        noteID: id
+      )
     }
   }
   
