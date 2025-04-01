@@ -44,7 +44,11 @@ class NoteRepositoryImpl: NoteRepository {
           content: $0.content,
           fileURL: $0.fileURL,
           backgroundColorHex: $0.backgroundColorHex,
-          windowFrame: $0.windowFrame
+          windowFrame: $0.windowFrame,
+          isPinned: $0.isPinned,
+          fontSize: $0.fontSize,
+          lastWindowFocusedAt: $0.lastWindowFocusedAt,
+          isWindowOpened: $0.isWindowOpened
         )
       }
     } catch {
@@ -61,7 +65,11 @@ class NoteRepositoryImpl: NoteRepository {
       content: note.content,
       fileURL: note.fileURL,
       backgroundColorHex: note.backgroundColorHex,
-      windowFrame: note.windowFrame
+      windowFrame: note.windowFrame,
+      isPinned: note.isPinned,
+      fontSize: note.fontSize,
+      lastWindowFocusedAt: note.lastWindowFocusedAt,
+      isWindowOpened: note.isWindowOpened
     )
     context.insert(entity)
     saveContext()
@@ -77,6 +85,12 @@ class NoteRepositoryImpl: NoteRepository {
     entity.fileURL = note.fileURL
     entity.modifiedAt = note.modifiedAt
     entity.windowFrame = note.windowFrame
+    entity.isPinned = note.isPinned
+    entity.fontSize = note.fontSize
+    entity.lastWindowFocusedAt = note.lastWindowFocusedAt
+    entity.isWindowOpened = note.isWindowOpened
+    
+    saveContext()
   }
   
   func delete(_ note: Note) {

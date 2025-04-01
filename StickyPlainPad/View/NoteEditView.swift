@@ -21,7 +21,6 @@ struct NoteEditView: View {
     
     if let note = first {
       _note = State(initialValue: note)
-      print("note exist \(noteID)")
     } else {
       print("note doesn't exist \(noteID)")
     }
@@ -78,6 +77,7 @@ struct NoteEditView: View {
       }
       
       noteViewModel.updateNote(note, content: currentContent)
+      print("onChange")
     }
   }
 }
@@ -88,6 +88,15 @@ extension NoteEditView {
     if let window = NSApplication.shared.keyWindow as? NoteEditWindow {
       window.close()
       NoteEditWindowMananger.shared.removeWindowMenu(window)
+    }
+    
+    if let note {
+      NoteEditWindowMananger.shared.updateWindowsOpenStatus(
+        noteViewModel: noteViewModel,
+        noteID: note.id,
+        isWindowOpened: false
+      )
+      print("close")
     }
   }
 }

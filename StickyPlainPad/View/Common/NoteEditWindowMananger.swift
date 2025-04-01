@@ -67,6 +67,9 @@ final class NoteEditWindowMananger {
     customWindow.titlebarAppearsTransparent = true
     customWindow.isMovableByWindowBackground = true
     
+    // NoteEditView를 열기 전에 먼저 윈도우 오픈 상태 업데이트
+    noteViewModel.updateNote(noteID: noteID, isWindowOpened: true)
+    
     // NoteEditView를 NSHostingView로 감싸서 CustomWindow의 콘텐츠로 설정
     let noteEditView = NoteEditView(
       noteViewModel: noteViewModel,
@@ -77,7 +80,7 @@ final class NoteEditWindowMananger {
     hostingView.frame = customWindow.contentView?.bounds ?? .zero
     customWindow.contentView?.addSubview(hostingView)
     customWindow.title = if let previewText {
-      previewText
+      previewText.truncated()
     } else {
       "Note \(noteID)"
     }
@@ -156,6 +159,14 @@ final class NoteEditWindowMananger {
     }
     
     windowMenu.removeItem(item)
+  }
+  
+  func updateWindowsOpenStatus(
+    noteViewModel: NoteViewModel,
+    noteID: UUID,
+    isWindowOpened: Bool
+  ) {
+    noteViewModel.updateNote(noteID: noteID, isWindowOpened: isWindowOpened)
   }
   
   @objc func switchToWindow(_ sender: NSMenuItem) {

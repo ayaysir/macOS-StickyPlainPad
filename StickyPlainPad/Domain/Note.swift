@@ -17,6 +17,8 @@ struct Note: Codable, Identifiable, Hashable {
   var windowFrame: Rect?
   var isPinned: Bool = false
   var fontSize: CGFloat = 14
+  var lastWindowFocusedAt: Date?
+  var isWindowOpened: Bool = false
 }
 
 extension Note {

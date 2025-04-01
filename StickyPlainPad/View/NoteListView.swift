@@ -55,9 +55,13 @@ struct NoteListView: View {
       }
     }
     .onAppear {
-      // viewModel.notes.forEach {
-      //   openWindow(value: $0.id)
-      // }
+      viewModel.lastOpenedNotes.forEach { note in
+        NoteEditWindowMananger.shared.open(
+          noteViewModel: viewModel,
+          noteID: note.id,
+          previewText: note.content
+        )
+      }
     }
   }
   

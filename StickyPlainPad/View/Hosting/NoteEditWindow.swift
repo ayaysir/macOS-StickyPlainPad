@@ -63,6 +63,7 @@ extension NoteEditWindow: NSWindowDelegate {
     sendWindoFrameToPublisher()
   }
   
+  // MARK : - 윈도우 명령
   private func sendWindoFrameToPublisher() {
     // 창 크기 정보 내보내기
     guard let windowFrame = Rect(cgRect: frame) else {

@@ -20,6 +20,8 @@ final class NoteEntity: Identifiable {
   var windowFrame: Rect?
   var isPinned: Bool = false
   var fontSize: CGFloat = 14
+  var lastWindowFocusedAt: Date?
+  var isWindowOpened: Bool = false
   
   // Thread 1: Fatal error: Composite Coder only supports Keyed Container
   // var windowFrame: CGRect?
@@ -31,7 +33,11 @@ final class NoteEntity: Identifiable {
     content: String,
     fileURL: URL? = nil,
     backgroundColorHex: String,
-    windowFrame: Rect?
+    windowFrame: Rect?,
+    isPinned: Bool = false,
+    fontSize: CGFloat = 14,
+    lastWindowFocusedAt: Date? = nil,
+    isWindowOpened: Bool = false
   ) {
     self.id = id
     self.createdAt = createdAt
@@ -40,5 +46,9 @@ final class NoteEntity: Identifiable {
     self.fileURL = fileURL
     self.backgroundColorHex = backgroundColorHex
     self.windowFrame = windowFrame
+    self.isPinned = isPinned
+    self.fontSize = fontSize
+    self.lastWindowFocusedAt = lastWindowFocusedAt
+    self.isWindowOpened = isWindowOpened
   }
 }

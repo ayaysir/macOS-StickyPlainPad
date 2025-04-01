@@ -12,9 +12,13 @@ class NoteViewModel {
   private let repository: NoteRepository
   var notes: [Note] = []
 
-  // var noteList: [Note] {
-  //   notes
-  // }
+  var lastOpenedNotes: [Note] {
+    notes.filter {
+      $0.isWindowOpened
+    }.sorted {
+      ($0.lastWindowFocusedAt ?? .distantPast) > ($1.lastWindowFocusedAt ?? .distantPast)
+    }
+  }
   
   init(repository: NoteRepository) {
     self.repository = repository
@@ -56,7 +60,9 @@ class NoteViewModel {
   func updateNote(_ note: Note, content: String) {
     var note = note
     note.content = content
+    note.lastWindowFocusedAt = .now
     note.modifiedAt = .now
+    note.isWindowOpened = true
     
     repository.update(note)
     loadNotes()
@@ -68,8 +74,18 @@ class NoteViewModel {
     }
     
     note.windowFrame = windowFrame
+    note.lastWindowFocusedAt = .now
     repository.update(note)
     // 윈도우 좌표만 업데이트하므로 일단 리스트를 리프레시하지는 않음?
+  }
+  
+  func updateNote(noteID: UUID, isWindowOpened: Bool) {
+    guard var note = findNote(id: noteID) else {
+      return
+    }
+    
+    note.isWindowOpened = isWindowOpened
+    repository.update(note)
   }
   
   func deleteNote(_ note: Note) {
