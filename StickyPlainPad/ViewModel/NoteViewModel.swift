@@ -29,20 +29,16 @@ class NoteViewModel {
     notes = repository.fetchAll()
   }
   
-  func loadWindowFrame(noteID: UUID) -> Rect? {
-    guard let note = findNote(id: noteID) else {
-      return nil
-    }
-    
+  func loadWindowFrame(note: Note) -> Rect? {
     return note.windowFrame
   }
   
-  func findNote(id: UUID) -> Note? {
-    notes.first(where: { $0.id == id })
-  }
+  // func findNote(id: UUID) -> Note? {
+  //   notes.first(where: { $0.id == id })
+  // }
   
   @discardableResult
-  func addEmptyNote(windowFrame: Rect? = nil) -> UUID {
+  func addEmptyNote(windowFrame: Rect? = nil) -> Note {
     let noteID = UUID()
     let newNote = Note(
       id: noteID,
@@ -54,10 +50,10 @@ class NoteViewModel {
     repository.add(newNote)
     loadNotes()
     
-    return noteID
+    return newNote
   }
   
-  func updateNote(_ note: Note, content: String) {
+  func updateNote(_ note: Note, content: String) -> Note {
     var note = note
     note.content = content
     note.lastWindowFocusedAt = .now
@@ -66,26 +62,26 @@ class NoteViewModel {
     
     repository.update(note)
     loadNotes()
+    
+    return note
   }
   
-  func updateNote(noteID: UUID, windowFrame: Rect) {
-    guard var note = findNote(id: noteID) else {
-      return
-    }
-    
+  func updateNote(_ note: Note, windowFrame: Rect) -> Note {
+    var note = note
     note.windowFrame = windowFrame
     note.lastWindowFocusedAt = .now
     repository.update(note)
     // 윈도우 좌표만 업데이트하므로 일단 리스트를 리프레시하지는 않음?
+    
+    return note
   }
   
-  func updateNote(noteID: UUID, isWindowOpened: Bool) {
-    guard var note = findNote(id: noteID) else {
-      return
-    }
-    
+  func updateNote(_ note: Note, isWindowOpened: Bool) -> Note {
+    var note = note
     note.isWindowOpened = isWindowOpened
     repository.update(note)
+    
+    return note
   }
   
   func deleteNote(_ note: Note) {

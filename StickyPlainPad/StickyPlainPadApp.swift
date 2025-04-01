@@ -28,18 +28,19 @@ struct StickyPlainPadApp: App {
     Window("List", id: "list") {
       NoteListView(viewModel: noteViewModel)
     }
-    
-    // 포스트잇 창
-    WindowGroup("Note", for: Note.ID.self) { $noteID in
-      if let noteID = $noteID.wrappedValue {
-        NoteEditView(noteViewModel: noteViewModel, noteID: noteID)
-      } else {
-        Text("Note is nil.")
-      }
-    }
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
-    // .windowStyle(.hiddenTitleBar)
-    // .windowResizability(.contentSize)
+    
+    // // 포스트잇 창
+    // WindowGroup("Note", for: Note.ID.self) { $noteID in
+    //   if let noteID = $noteID.wrappedValue {
+    //     NoteEditView(noteViewModel: noteViewModel, noteID: noteID)
+    //   } else {
+    //     Text("Note is nil.")
+    //   }
+    // }
+    // .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
+    // // .windowStyle(.hiddenTitleBar)
+    // // .windowResizability(.contentSize)
   }
 }
 

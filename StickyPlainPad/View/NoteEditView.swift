@@ -9,21 +9,15 @@ import SwiftUI
 import SwiftData
 
 struct NoteEditView: View {
-  @State private var note: Note?
+  @State private var note: Note
   @State private var noteViewModel: NoteViewModel
   @State private var currentContent = ""
   @State private var naviTitle = "가나다"
   @State private var isAlwaysOnTop = false
   
-  init(noteViewModel: NoteViewModel, noteID: UUID) {
+  init(noteViewModel: NoteViewModel, note: Note) {
     _noteViewModel = State(initialValue: noteViewModel)
-    let first = noteViewModel.notes.first(where: { $0.id == noteID })
-    
-    if let note = first {
-      _note = State(initialValue: note)
-    } else {
-      print("note doesn't exist \(noteID)")
-    }
+    _note = State(initialValue: note)
   }
   
   var body: some View {
@@ -60,24 +54,15 @@ struct NoteEditView: View {
       
       // TextEditor(text: $currentContent)
       AutoHidingScrollTextEditor(text: $currentContent)
-        
     }
     .navigationTitle(naviTitle)
     .onAppear {
-      guard let note else {
-        return
-      }
-      
       currentContent = note.content
       naviTitle = note.content
     }
     .onChange(of: currentContent) {
-      guard let note else {
-        return
-      }
-      
-      noteViewModel.updateNote(note, content: currentContent)
-      print("onChange")
+      naviTitle = currentContent.truncated(to: 30)
+      note = noteViewModel.updateNote(note, content: currentContent)
     }
   }
 }
@@ -90,14 +75,11 @@ extension NoteEditView {
       NoteEditWindowMananger.shared.removeWindowMenu(window)
     }
     
-    if let note {
-      NoteEditWindowMananger.shared.updateWindowsOpenStatus(
-        noteViewModel: noteViewModel,
-        noteID: note.id,
-        isWindowOpened: false
-      )
-      print("close")
-    }
+    _ = NoteEditWindowMananger.shared.updateWindowsOpenStatus(
+      noteViewModel: noteViewModel,
+      note: note,
+      isWindowOpened: false
+    )
   }
 }
 
@@ -106,6 +88,6 @@ extension NoteEditView {
     noteViewModel: NoteViewModel(
       repository: NoteRepositoryImpl(context: .forPreviewContext)
     ),
-    noteID: .init()
+    note: Note(id: .init(), createdAt: .now, content: "가나다라")
   )
 }

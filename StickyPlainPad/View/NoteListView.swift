@@ -37,7 +37,7 @@ struct NoteListView: View {
             // openWindow(value: note.id)
             NoteEditWindowMananger.shared.open(
               noteViewModel: viewModel,
-              noteID: note.id,
+              note: note,
               previewText: note.content
             )
           } label: {
@@ -58,7 +58,7 @@ struct NoteListView: View {
       viewModel.lastOpenedNotes.forEach { note in
         NoteEditWindowMananger.shared.open(
           noteViewModel: viewModel,
-          noteID: note.id,
+          note: note,
           previewText: note.content
         )
       }
@@ -80,12 +80,12 @@ struct NoteListView: View {
     }
     
     withAnimation {
-      let id = viewModel.addEmptyNote(windowFrame: firstWindowFrame)
+      let note = viewModel.addEmptyNote(windowFrame: firstWindowFrame)
       NoteEditWindowMananger.shared.appendCreateWindowCount()
       
       NoteEditWindowMananger.shared.open(
         noteViewModel: viewModel,
-        noteID: id
+        note: note
       )
     }
   }

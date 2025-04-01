@@ -40,12 +40,12 @@ final class NoteEditWindowMananger {
   
   func open(
     noteViewModel: NoteViewModel,
-    noteID: UUID,
+    note: Note,
     previewText: String? = nil
   ) {
-    guard !isAlreadyOpened(noteID: noteID) else {
-      bringWindowToFront(noteID: noteID)
-      addWindowToMenu(noteID: noteID)
+    guard !isAlreadyOpened(noteID: note.id) else {
+      bringWindowToFront(noteID: note.id)
+      addWindowToMenu(noteID: note.id)
       return
     }
     
@@ -68,12 +68,12 @@ final class NoteEditWindowMananger {
     customWindow.isMovableByWindowBackground = true
     
     // NoteEditView를 열기 전에 먼저 윈도우 오픈 상태 업데이트
-    noteViewModel.updateNote(noteID: noteID, isWindowOpened: true)
+    let note = noteViewModel.updateNote(note, isWindowOpened: true)
     
     // NoteEditView를 NSHostingView로 감싸서 CustomWindow의 콘텐츠로 설정
     let noteEditView = NoteEditView(
       noteViewModel: noteViewModel,
-      noteID: noteID
+      note: note
     )
     
     let hostingView = NSHostingView(rootView: noteEditView)
@@ -82,10 +82,10 @@ final class NoteEditWindowMananger {
     customWindow.title = if let previewText {
       previewText.truncated()
     } else {
-      "Note \(noteID)"
+      "Note \(note.id)"
     }
      
-    customWindow.noteID = noteID
+    customWindow.noteID = note.id
     
     // EXC_BAD_ACCESS 오류 https://stackoverflow.com/a/75341381
     customWindow.isReleasedWhenClosed = false
@@ -96,7 +96,7 @@ final class NoteEditWindowMananger {
     openWindows.append(customWindow)
     
     // windowFrame 정보가 있는 경우 창 위치 조절
-    if let windowFrame = noteViewModel.loadWindowFrame(noteID: noteID) {
+    if let windowFrame = noteViewModel.loadWindowFrame(note: note) {
       customWindow.setFrame(
         windowFrame.toCGRect,
         display: true
@@ -106,7 +106,7 @@ final class NoteEditWindowMananger {
     registerWindowPublisher(
       customWindow,
       noteViewModel: noteViewModel,
-      noteID: noteID
+      note: note
     )
     
     DispatchQueue.main.async {
@@ -163,10 +163,10 @@ final class NoteEditWindowMananger {
   
   func updateWindowsOpenStatus(
     noteViewModel: NoteViewModel,
-    noteID: UUID,
+    note: Note,
     isWindowOpened: Bool
-  ) {
-    noteViewModel.updateNote(noteID: noteID, isWindowOpened: isWindowOpened)
+  ) -> Note {
+    noteViewModel.updateNote(note, isWindowOpened: isWindowOpened)
   }
   
   @objc func switchToWindow(_ sender: NSMenuItem) {
@@ -178,14 +178,17 @@ final class NoteEditWindowMananger {
     window.makeKeyAndOrderFront(nil)
   }
   
+  /// 현재 열려있는 윈도우 목록에서 `noteID`에 해당하는 윈도우를 가져온다.
   private func getWindow(noteID: UUID) -> NoteEditWindow? {
     openWindows.first(where: { $0.noteID == noteID })
   }
   
+  /// 현재 열려있는 윈도우 목록에서 `noteID`에 해당하는 윈도우를 key window로 만든다.
   private func bringWindowToFront(noteID: UUID) {
     getWindow(noteID: noteID)?.makeKeyAndOrderFront(nil)
   }
   
+  /// 현재 열려있는 윈도우 목록에서 `noteID`에 해당하는 윈도우가 있는지 확인한다.
   private func isAlreadyOpened(noteID: UUID) -> Bool {
     openWindows.contains(where: { $0.noteID == noteID })
   }
@@ -193,12 +196,12 @@ final class NoteEditWindowMananger {
   private func registerWindowPublisher(
     _ window: NoteEditWindow,
     noteViewModel: NoteViewModel,
-    noteID: UUID
+    note: Note
   ) {
     window.windowFramePublisher
       .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
       .sink { rect in
-        noteViewModel.updateNote(noteID: noteID, windowFrame: rect)
+        _ = noteViewModel.updateNote(note, windowFrame: rect)
       }
       .store(in: &cancellables)
   }
