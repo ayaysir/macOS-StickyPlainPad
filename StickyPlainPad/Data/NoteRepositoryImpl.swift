@@ -77,6 +77,7 @@ class NoteRepositoryImpl: NoteRepository {
   
   func update(_ note: Note) {
     guard let entity = findEntity(by: note.id) else {
+      print(#function, "Cant't find note entity \(note.id)")
       return
     }
     

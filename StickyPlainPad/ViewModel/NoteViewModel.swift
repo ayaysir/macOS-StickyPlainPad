@@ -33,9 +33,9 @@ class NoteViewModel {
     return note.windowFrame
   }
   
-  // func findNote(id: UUID) -> Note? {
-  //   notes.first(where: { $0.id == id })
-  // }
+  func findNote(id: UUID) -> Note? {
+    notes.first(where: {$0.id == id})
+  }
   
   @discardableResult
   func addEmptyNote(windowFrame: Rect? = nil) -> Note {
@@ -66,12 +66,18 @@ class NoteViewModel {
     return note
   }
   
-  func updateNote(_ note: Note, windowFrame: Rect) -> Note {
-    var note = note
+  func updateNote(id: UUID, windowFrame: Rect) -> Note? {
+    guard var note = findNote(id: id) else {
+      return nil
+    }
+    
     note.windowFrame = windowFrame
     note.lastWindowFocusedAt = .now
+    
     repository.update(note)
-    // 윈도우 좌표만 업데이트하므로 일단 리스트를 리프레시하지는 않음?
+    loadNotes()
+    
+    // print(#function, note.windowFrame)
     
     return note
   }
@@ -79,7 +85,26 @@ class NoteViewModel {
   func updateNote(_ note: Note, isWindowOpened: Bool) -> Note {
     var note = note
     note.isWindowOpened = isWindowOpened
+    
     repository.update(note)
+    loadNotes()
+    
+    return note
+  }
+  
+  func updateNote(_ note: Note, isPinned: Bool) -> Note {
+    var note = note
+    note.isPinned = isPinned
+    
+    repository.update(note)
+    loadNotes()
+    
+    return note
+  }
+  
+  func updateNote(_ note: Note) -> Note {
+    repository.update(note)
+    loadNotes()
     
     return note
   }

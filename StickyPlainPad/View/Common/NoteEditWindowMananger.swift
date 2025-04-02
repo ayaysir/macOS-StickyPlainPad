@@ -103,6 +103,9 @@ final class NoteEditWindowMananger {
       )
     }
     
+    // isPinned 여부에 따라 플로팅 레벨 조절
+    customWindow.level = note.isPinned ? .floating : .normal
+    
     registerWindowPublisher(
       customWindow,
       noteViewModel: noteViewModel,
@@ -178,6 +181,25 @@ final class NoteEditWindowMananger {
     window.makeKeyAndOrderFront(nil)
   }
   
+  /// 윈도우의 플로팅 레벨 변경
+  func changeWindowLevel(note: Note, noteViewModel: NoteViewModel) -> Note {
+    var note = note
+    
+    if let window = openWindows.first(where: { $0.noteID == note.id }) {
+      if note.isPinned == true {
+        window.level = .normal
+        note.isPinned = false
+        print("noteisPinne false")
+      } else {
+        window.level = .floating
+        note.isPinned = true
+        print("noteisPinne true")
+      }
+    }
+    
+    return noteViewModel.updateNote(note)
+  }
+  
   /// 현재 열려있는 윈도우 목록에서 `noteID`에 해당하는 윈도우를 가져온다.
   private func getWindow(noteID: UUID) -> NoteEditWindow? {
     openWindows.first(where: { $0.noteID == noteID })
@@ -201,7 +223,8 @@ final class NoteEditWindowMananger {
     window.windowFramePublisher
       .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
       .sink { rect in
-        _ = noteViewModel.updateNote(note, windowFrame: rect)
+        // 이 부분을 note로 전송하게 되면 여기서 고여있는 Note가 계속 전송된다.
+        _ = noteViewModel.updateNote(id: note.id, windowFrame: rect)
       }
       .store(in: &cancellables)
   }

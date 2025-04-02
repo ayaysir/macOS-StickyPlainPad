@@ -13,7 +13,7 @@ struct NoteEditView: View {
   @State private var noteViewModel: NoteViewModel
   @State private var currentContent = ""
   @State private var naviTitle = "가나다"
-  @State private var isAlwaysOnTop = false
+  // @State private var isAlwaysOnTop = false
   
   init(noteViewModel: NoteViewModel, note: Note) {
     _noteViewModel = State(initialValue: noteViewModel)
@@ -27,19 +27,14 @@ struct NoteEditView: View {
           .ignoresSafeArea()
         HStack {
           Button {
-            if let window = NSApplication.shared.keyWindow {
-              if window.level == .normal {
-                window.level = .floating
-                isAlwaysOnTop = true
-              } else {
-                window.level = .normal
-                isAlwaysOnTop = false
-              }
-            }
+            note = NoteEditWindowMananger.shared.changeWindowLevel(
+              note: note,
+              noteViewModel: noteViewModel
+            )
           } label: {
             Text("Always on Top")
               .frame(height: 15)
-              .foregroundStyle(isAlwaysOnTop ? .red : .primary)
+              .foregroundStyle(note.isPinned ? .red : .primary)
           }
           
           Button {

@@ -10,7 +10,7 @@ import SwiftData
 import SwiftUICore
 
 @Model
-final class NoteEntity: Identifiable {
+final class NoteEntity {
   @Attribute(.unique) var id: UUID = UUID()
   var createdAt: Date = Date.now
   var modifiedAt: Date?
