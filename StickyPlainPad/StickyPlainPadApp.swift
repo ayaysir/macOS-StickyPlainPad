@@ -49,6 +49,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // hideTitleBar()
   }
   
+  func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+    // 모든 floating 윈도우 닫기
+    for window in NSApp.windows {
+      if window.level == .floating {
+        window.close()
+      }
+    }
+    
+    // 0.1초후 종료: 약간의 지연을 줄 수도 있음 (안정성 향상 목적)
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+      NSApp.reply(toApplicationShouldTerminate: true)
+    }
+    
+    return .terminateLater
+  }
+  
   func hideTitleBar() {
     NSApplication.shared.windows.forEach { window in
       window.titlebarAppearsTransparent = true
