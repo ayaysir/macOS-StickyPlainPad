@@ -30,23 +30,23 @@ struct StickyPlainPadApp: App {
     }
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
     
-    // // 포스트잇 창
-    // WindowGroup("Note", for: Note.ID.self) { $noteID in
-    //   if let noteID = $noteID.wrappedValue {
-    //     NoteEditView(noteViewModel: noteViewModel, noteID: noteID)
-    //   } else {
-    //     Text("Note is nil.")
-    //   }
-    // }
-    // .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
-    // // .windowStyle(.hiddenTitleBar)
-    // // .windowResizability(.contentSize)
+    // TODO: - 커맨드 메뉴 '파일'
   }
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ notification: Notification) {
     // hideTitleBar()
+  }
+  
+  func applicationWillTerminate(_ notification: Notification) {
+    // Dock 아이콘 -> 종료의 경우 익스포트된 독립 앱으로 작동 여부 확인
+    
+    // 모든 윈도우 닫기
+    for window in NSApp.windows {
+      window.isReleasedWhenClosed = true
+      window.close()
+    }
   }
   
   func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
@@ -61,7 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
       NSApp.reply(toApplicationShouldTerminate: true)
     }
-    
+    print(#function)
     return .terminateLater
   }
   

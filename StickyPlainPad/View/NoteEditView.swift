@@ -12,6 +12,7 @@ struct NoteEditView: View {
   @State private var note: Note
   @State private var noteViewModel: NoteViewModel
   @State private var currentContent = ""
+  @State private var fontSize: CGFloat = 14
   @State private var naviTitle = "가나다"
   // @State private var isAlwaysOnTop = false
   
@@ -48,16 +49,24 @@ struct NoteEditView: View {
       .frame(height: 20)
       
       // TextEditor(text: $currentContent)
-      AutoHidingScrollTextEditor(text: $currentContent)
+      AutoHidingScrollTextEditor(
+        text: $currentContent,
+        fontSize: $fontSize
+      )
     }
     .navigationTitle(naviTitle)
     .onAppear {
       currentContent = note.content
       naviTitle = note.content
+      fontSize = note.fontSize
     }
     .onChange(of: currentContent) {
       naviTitle = currentContent.truncated(to: 30)
       note = noteViewModel.updateNote(note, content: currentContent)
+    }
+    .onChange(of: fontSize) {
+      note.fontSize = fontSize
+      note = noteViewModel.updateNote(note)
     }
   }
 }

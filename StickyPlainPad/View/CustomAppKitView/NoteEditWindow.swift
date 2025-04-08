@@ -9,7 +9,7 @@ import AppKit
 import SwiftUI
 import Combine
 
-class NoteEditWindow: NSWindow  {
+class NoteEditWindow: NSWindow {
   /*
    타이틀바를 제거하면 메인 윈도우가 안되기 때문에 억지로 key, main 윈도우로 만든다
    */
@@ -61,6 +61,10 @@ extension NoteEditWindow: NSWindowDelegate {
   
   func windowDidBecomeKey(_ notification: Notification) {
     sendWindoFrameToPublisher()
+  }
+  
+  func windowWillClose(_ notification: Notification) {
+    isReleasedWhenClosed = true
   }
   
   // MARK : - 윈도우 명령
