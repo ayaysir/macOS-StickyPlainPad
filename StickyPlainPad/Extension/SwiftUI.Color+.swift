@@ -8,6 +8,7 @@
 import SwiftUI
 
 extension Color {
+  /// HEX 스트링으로
   func toHex() -> String? {
 #if os(macOS)
     guard let components = NSColor(self).cgColor.components, components.count >= 3 else {
@@ -26,6 +27,7 @@ extension Color {
     return String(format: "#%02X%02X%02X", r, g, b)
   }
   
+  /// HEX 스트링으로부터 
   init?(hex: String) {
     var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
     
@@ -44,3 +46,4 @@ extension Color {
     self.init(red: r, green: g, blue: b)
   }
 }
+

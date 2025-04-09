@@ -37,19 +37,7 @@ class NoteRepositoryImpl: NoteRepository {
     
     do {
       return try context.fetch(descriptor).map {
-        Note(
-          id: $0.id,
-          createdAt: $0.createdAt,
-          modifiedAt: $0.modifiedAt,
-          content: $0.content,
-          fileURL: $0.fileURL,
-          backgroundColorHex: $0.backgroundColorHex,
-          windowFrame: $0.windowFrame,
-          isPinned: $0.isPinned,
-          fontSize: $0.fontSize,
-          lastWindowFocusedAt: $0.lastWindowFocusedAt,
-          isWindowOpened: $0.isWindowOpened
-        )
+        $0.toDomain()
       }
     } catch {
       print(#function, error)
@@ -58,19 +46,7 @@ class NoteRepositoryImpl: NoteRepository {
   }
   
   func add(_ note: Note) {
-    let entity = NoteEntity(
-      id: note.id,
-      createdAt: note.createdAt,
-      modifiedAt: note.modifiedAt,
-      content: note.content,
-      fileURL: note.fileURL,
-      backgroundColorHex: note.backgroundColorHex,
-      windowFrame: note.windowFrame,
-      isPinned: note.isPinned,
-      fontSize: note.fontSize,
-      lastWindowFocusedAt: note.lastWindowFocusedAt,
-      isWindowOpened: note.isWindowOpened
-    )
+    let entity = NoteEntity(from: note, in: context)
     context.insert(entity)
     saveContext()
   }
@@ -82,7 +58,6 @@ class NoteRepositoryImpl: NoteRepository {
     }
     
     entity.content = note.content
-    entity.backgroundColorHex = note.backgroundColorHex
     entity.fileURL = note.fileURL
     entity.modifiedAt = note.modifiedAt
     entity.windowFrame = note.windowFrame
@@ -90,6 +65,18 @@ class NoteRepositoryImpl: NoteRepository {
     entity.fontSize = note.fontSize
     entity.lastWindowFocusedAt = note.lastWindowFocusedAt
     entity.isWindowOpened = note.isWindowOpened
+    
+    if entity.theme?.id != note.themeID {
+      if let themeID = note.themeID {
+        let themeDescriptor = FetchDescriptor<ThemeEntity>(
+          predicate: #Predicate { $0.id == themeID }
+        )
+        
+        entity.theme = try? context.fetch(themeDescriptor).first
+      } else {
+        entity.theme = nil
+      }
+    }
     
     saveContext()
   }

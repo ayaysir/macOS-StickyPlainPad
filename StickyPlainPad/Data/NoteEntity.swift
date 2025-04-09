@@ -16,39 +16,54 @@ final class NoteEntity {
   var modifiedAt: Date?
   var content: String = ""
   var fileURL: URL?
-  var backgroundColorHex: String = "#FFFFFF" // -> 테마
+  
   var windowFrame: Rect?
   var isPinned: Bool = false
   var fontSize: CGFloat = 14
   var lastWindowFocusedAt: Date?
   var isWindowOpened: Bool = false
   
+  @Relationship
+  var theme: ThemeEntity? // 관계 정의 (Many-to-One)
+  
   // Thread 1: Fatal error: Composite Coder only supports Keyed Container
   // var windowFrame: CGRect?
   
-  init(
-    id: NoteEntity.ID,
-    createdAt: Date,
-    modifiedAt: Date? = nil,
-    content: String,
-    fileURL: URL? = nil,
-    backgroundColorHex: String,
-    windowFrame: Rect?,
-    isPinned: Bool = false,
-    fontSize: CGFloat = 14,
-    lastWindowFocusedAt: Date? = nil,
-    isWindowOpened: Bool = false
-  ) {
-    self.id = id
-    self.createdAt = createdAt
-    self.modifiedAt = modifiedAt
-    self.content = content
-    self.fileURL = fileURL
-    self.backgroundColorHex = backgroundColorHex
-    self.windowFrame = windowFrame
-    self.isPinned = isPinned
-    self.fontSize = fontSize
-    self.lastWindowFocusedAt = lastWindowFocusedAt
-    self.isWindowOpened = isWindowOpened
+  init(from note: Note, in context: ModelContext) {
+    self.id = note.id
+    self.createdAt = note.createdAt
+    self.modifiedAt = note.modifiedAt
+    self.content = note.content
+    self.fileURL = note.fileURL
+    self.windowFrame = note.windowFrame
+    self.isPinned = note.isPinned
+    self.fontSize = note.fontSize
+    self.lastWindowFocusedAt = note.lastWindowFocusedAt
+    self.isWindowOpened = note.isWindowOpened
+
+    if let themeID = note.themeID {
+      let descriptor = FetchDescriptor<ThemeEntity>(
+        predicate: #Predicate { $0.id == themeID }
+      )
+      self.theme = try? context.fetch(descriptor).first
+    }
+  }
+
+  func toDomain() -> Note {
+    .init(
+      id: id,
+      createdAt: createdAt,
+      modifiedAt: modifiedAt,
+      content: content,
+      fileURL: fileURL,
+      
+      windowFrame: windowFrame,
+      isPinned: isPinned,
+      fontSize: fontSize,
+      lastWindowFocusedAt: lastWindowFocusedAt,
+      isWindowOpened: isWindowOpened,
+      
+      themeID: theme?.id
+    )
   }
 }

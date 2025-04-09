@@ -55,10 +55,6 @@ struct NoteListView: View {
       }
     }
     .onAppear {
-      // viewModel.notes.forEach {
-      //   print($0.id, $0.isPinned)
-      // }
-      
       viewModel.lastOpenedNotes.forEach { note in
         NoteEditWindowMananger.shared.open(
           noteViewModel: viewModel,

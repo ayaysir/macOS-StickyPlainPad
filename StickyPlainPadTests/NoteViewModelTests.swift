@@ -44,7 +44,7 @@ final class NoteViewModelTests: XCTestCase {
     var note = viewModel.notes.first!
     note.modifiedAt = .now
     
-    viewModel.updateNote(note, content: "Updated content")
+    _ = viewModel.updateNote(note, content: "Updated content")
     
     XCTAssertEqual(viewModel.notes.count, 1)
     XCTAssertEqual(viewModel.notes.first?.content, "Updated content")
