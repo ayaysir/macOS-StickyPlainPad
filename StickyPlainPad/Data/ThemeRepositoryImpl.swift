@@ -17,7 +17,7 @@ final class ThemeRepositoryImpl: ThemeRepository {
 
   func fetchAll() -> [Theme] {
     let descriptor = FetchDescriptor<ThemeEntity>(
-      sortBy: [SortDescriptor(\.name)]
+      sortBy: [SortDescriptor(\.createdAt)]
     )
     
     return (try? context.fetch(descriptor))?.map { $0.toDomain() } ?? []

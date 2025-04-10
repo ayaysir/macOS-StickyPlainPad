@@ -40,7 +40,7 @@ struct StickyPlainPadApp: App {
     .commands {
       // TODO: - 커맨드 메뉴 '파일'
       CommandMenu("테마") {
-        Button("새 테마 추가...") {
+        Button("테마 관리...") {
           openWindow(id: "theme-new-window")
         }
         .keyboardShortcut("n", modifiers: [.command, .shift])
@@ -60,8 +60,8 @@ struct StickyPlainPadApp: App {
       }
     }
     
-    Window("새 테마 추가", id: "theme-new-window") {
-      ThemeView(themeViewModel: themeViewModel)
+    Window("테마 관리", id: "theme-new-window") {
+      ThemeListView(themeViewModel: themeViewModel)
     }
     
   }
