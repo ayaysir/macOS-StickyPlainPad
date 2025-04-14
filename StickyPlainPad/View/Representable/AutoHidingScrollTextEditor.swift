@@ -37,9 +37,6 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     context.coordinator.textView = textView
     textView.delegate = context.coordinator
     
-    let MIN_FONT_SIZE: CGFloat = 8
-    let MAX_FONT_SIZE: CGFloat = 104
-    
     // 🪄 트랙패드 줌 이벤트
     textView.onMagnify = { magnification in
       let newSize = max(

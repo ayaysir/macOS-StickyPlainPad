@@ -14,6 +14,7 @@ extension ModelContainer {
   static let mainModelContainer: ModelContainer = {
     let schema = Schema([
       NoteEntity.self,
+      ThemeEntity.self,
     ])
     
     let modelConfiguration = ModelConfiguration(
@@ -31,6 +32,7 @@ extension ModelContainer {
   static let previewModelContainer: ModelContainer = {
     let schema = Schema([
       NoteEntity.self,
+      ThemeEntity.self,
     ])
     
     let modelConfiguration = ModelConfiguration(

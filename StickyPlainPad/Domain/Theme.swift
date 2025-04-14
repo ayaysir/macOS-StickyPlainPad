@@ -15,6 +15,8 @@ struct Theme: Codable, Identifiable, Hashable {
   var backgroundColorHex: String
   var textColorHex: String
   
-  // TODO: - 폰트 설정 추가
-  
+  // 폰트 설정 추가
+  var fontName: String
+  var fontSize: CGFloat
+  var fontTraits: String?
 }

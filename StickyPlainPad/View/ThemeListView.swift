@@ -90,15 +90,15 @@ struct ThemeListView: View {
     let newTheme = viewModel.addTheme(
       name: "New Theme",
       backgroundColorHex: "#FFFFFF",
-      textColorHex: "#000000"
+      textColorHex: "#000000",
+      fontName: "SF Pro",
+      fontSize: 14
     )
     
     DispatchQueue.main.async {
       selectedThemeID = newTheme.id
     }
   }
-  
-  
 }
 
 #Preview {

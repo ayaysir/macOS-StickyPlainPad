@@ -19,15 +19,13 @@ struct ThemeView: View {
   @State private var showDuplicateAlert = false
   @FocusState private var isNameFocused: Bool
   
+  @State private var selectedFontName: String = ""
+  @State private var selectedFontSize: Double = 14
+  
   var body: some View {
     VStack(alignment: .leading, spacing: 16) {
-      HStack {
-        Text("이름")
-        TextField("테마 이름을 입력하세요.", text: $themeName)
-          .focused($isNameFocused)
-          .padding()
-      }
-      
+      Text("미리 보기")
+        .font(.title3)
       ZStack(alignment: .top) {
         backgroundColor
         Text("""
@@ -35,28 +33,75 @@ struct ThemeView: View {
           단축키 command와 [+], [-] 버튼을 눌러
           조정할 수 있습니다.
           """)
-        .foregroundStyle(textColor)
         .multilineTextAlignment(.leading)
-        .padding(8)
+        .font(.custom(selectedFontName, size: selectedFontSize))
+        .foregroundStyle(textColor)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(5)
       }
       .frame(height: 150)
       
       HStack {
-        Text("배경색:")
-        ColorPicker("", selection: $backgroundColor)
+        Text("테마 이름")
+          .font(.title3)
+        TextField("테마 이름을 입력하세요.", text: $themeName)
+          .focused($isNameFocused)
+          .padding()
       }
       
-      HStack {
-        Text("글자색:")
-        ColorPicker("", selection: $textColor)
+      Divider()
+      
+      VStack(alignment: .leading) {
+        Text("색상 설정")
+          .font(.title3)
+        
+        HStack {
+          Text("배경색:")
+          ColorPicker("", selection: $backgroundColor)
+        }
+        
+        HStack {
+          Text("글자색:")
+          ColorPicker("", selection: $textColor)
+        }
+        Spacer()
+      }
+      
+      Divider()
+      
+      VStack(alignment: .leading, spacing: 10) {
+        Text("폰트 설정")
+          .font(.title3)
+        
+        Picker("폰트", selection: $selectedFontName) {
+          ForEach(themeViewModel.availableFonts, id: \.self) { fontTitleStr in
+            Text(fontTitleStr)
+              .font(Font.custom(fontTitleStr, size: 14))
+              .tag(fontTitleStr)
+          }
+        }
+        // .frame(maxWidth: 300)
+        
+        HStack {
+          Text("크기")
+          Slider(
+            value: $selectedFontSize,
+            in: MIN_FONT_SIZE...MAX_FONT_SIZE,
+            step: 1
+          )
+          Text("\(Int(selectedFontSize))pt")
+        }
+        
+        Spacer()
       }
       
     }
     .padding()
-    .frame(width: 300)
+    // .frame(width: 300)
     .onAppear {
       initColors()
-      moveFoucsToTextField()
+      initFonts()
+      moveFocusToTextField()
     }
     /*
      문제점
@@ -64,8 +109,8 @@ struct ThemeView: View {
      */
     .onChange(of: theme.id) {
       initColors()
-      moveFoucsToTextField()
-      // print("ThemeView: OnChange")
+      initFonts()
+      moveFocusToTextField()
     }
     .onChange(of: themeName) {
       themeViewModel.updateTheme(id: theme.id, name: themeName)
@@ -82,6 +127,18 @@ struct ThemeView: View {
         textColorHex: textColor.toHex()
       )
     }
+    .onChange(of: selectedFontName) {
+      themeViewModel.updateTheme(
+        id: theme.id,
+        fontName: selectedFontName
+      )
+    }
+    .onChange(of: selectedFontSize) {
+      themeViewModel.updateTheme(
+        id: theme.id,
+        fontSize: selectedFontSize
+      )
+    }
   }
   
   private func initColors() {
@@ -90,7 +147,12 @@ struct ThemeView: View {
     textColor = .init(hex: theme.textColorHex) ?? .black
   }
   
-  private func moveFoucsToTextField() {
+  private func initFonts() {
+    selectedFontName = theme.fontName
+    selectedFontSize = theme.fontSize
+  }
+  
+  private func moveFocusToTextField() {
     if theme.name.contains("New Theme") {
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
         isNameFocused = true
@@ -106,7 +168,10 @@ struct ThemeView: View {
       createdAt: .now,
       name: "rksk",
       backgroundColorHex: "#FFFFFF",
-      textColorHex: "#000000"
+      textColorHex: "#000000",
+      fontName: "Gullim",
+      fontSize: 20,
+      fontTraits: ""
     ),
     themeViewModel: .init(
       repository: ThemeRepositoryImpl(

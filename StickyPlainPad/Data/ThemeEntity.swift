@@ -16,6 +16,10 @@ class ThemeEntity {
   var name: String
   var backgroundColorHex: String
   var textColorHex: String
+  
+  var fontName: String
+  var fontSize: CGFloat
+  var fontTraits: String?
 
   @Relationship(inverse: \NoteEntity.theme)
   var notes: [NoteEntity] = []
@@ -27,6 +31,9 @@ class ThemeEntity {
     self.name = theme.name
     self.backgroundColorHex = theme.backgroundColorHex
     self.textColorHex = theme.textColorHex
+    self.fontName = theme.fontName
+    self.fontSize = theme.fontSize
+    self.fontTraits = theme.fontTraits
   }
 
   func toDomain() -> Theme {
@@ -36,7 +43,10 @@ class ThemeEntity {
       modifiedAt: modifiedAt,
       name: name,
       backgroundColorHex: backgroundColorHex,
-      textColorHex: textColorHex
+      textColorHex: textColorHex,
+      fontName: fontName,
+      fontSize: fontSize,
+      fontTraits: fontTraits
     )
   }
 }
