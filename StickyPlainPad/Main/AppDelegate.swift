@@ -8,8 +8,9 @@
 import AppKit
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+  
   func applicationDidFinishLaunching(_ notification: Notification) {
-    // hideTitleBar()
+    
   }
   
   func applicationWillTerminate(_ notification: Notification) {
@@ -37,6 +38,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     return .terminateLater
   }
+}
+
+extension AppDelegate {
   
   func hideTitleBar() {
     NSApplication.shared.windows.forEach { window in

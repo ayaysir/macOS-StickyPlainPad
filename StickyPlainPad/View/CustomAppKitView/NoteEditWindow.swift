@@ -64,7 +64,7 @@ extension NoteEditWindow: NSWindowDelegate {
   }
   
   func windowWillClose(_ notification: Notification) {
-    isReleasedWhenClosed = true
+    // isReleasedWhenClosed = true
   }
   
   // MARK : - 윈도우 명령

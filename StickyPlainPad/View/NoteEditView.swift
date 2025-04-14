@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Combine
 
 struct NoteEditView: View {
   @State private var note: Note
@@ -27,24 +28,38 @@ struct NoteEditView: View {
         Color.white
           .ignoresSafeArea()
         HStack {
-          Button {
-            note = NoteEditWindowMananger.shared.changeWindowLevel(
-              note: note,
-              noteViewModel: noteViewModel
-            )
-          } label: {
+          Button(action: closeWindow) {
+            Text("Close Window")
+          }
+          
+          Button(action: makeWindowAlwaysOnTop) {
             Text("Always on Top")
               .frame(height: 15)
               .foregroundStyle(note.isPinned ? .red : .primary)
           }
           
-          Button {
-            closeWindow()
-          } label: {
-            Text("Close Window")
+          Button(action: {}) {
+            Text("Select theme")
+          }
+          .overlay {
+            List {
+              Button("AA") {}
+              Button("AA") {}
+              Button("AA") {}
+            }
+            .frame(width: 200, height: 300)
+            .offset(y: 160)
+          }
+          .zIndex(1)
+          
+          Button(action: maximizeWindow) {
+            Text("Maximize Window")
+          }
+          
+          Button(action: { shrinkWindow(to: 20) }) {
+            Text("Shrink Window")
           }
         }
-        
       }
       .frame(height: 20)
       
@@ -68,16 +83,25 @@ struct NoteEditView: View {
       note.fontSize = fontSize
       note = noteViewModel.updateNote(note)
     }
+    .onReceive(noteViewModel.lastUpdatedNoteID.publisher) { noteID in
+      // if noteID == note.id,
+      //    let newNote = noteViewModel.findNote(id: noteID) {
+      //   print("note updated:", newNote.id, note.id)
+      //   note = newNote
+      // }
+    }
   }
 }
 
 extension NoteEditView {
   /// 현재 윈도우를 닫는 메서드
   func closeWindow() {
-    if let window = NSApplication.shared.keyWindow as? NoteEditWindow {
-      window.close()
-      NoteEditWindowMananger.shared.removeWindowMenu(window)
+    guard let window else {
+      return
     }
+    
+    window.close()
+    NoteEditWindowMananger.shared.removeWindowMenu(window)
     
     _ = NoteEditWindowMananger.shared.updateWindowsOpenStatus(
       noteViewModel: noteViewModel,
@@ -85,7 +109,60 @@ extension NoteEditView {
       isWindowOpened: false
     )
   }
+  
+  func shrinkWindow(to height: CGFloat) {
+    guard let window else {
+      return
+    }
+    
+    let frame = note.windowFrame?.toCGRect ?? window.frame
+    
+    let newFrame: NSRect = if note.isWindowShrinked {
+      // 윈도우 원래 크기로 복원
+      NSRect(
+        origin: frame.origin,
+        size: frame.size
+      )
+    } else {
+      // 윈도우 축소
+      NSRect(
+        x: frame.origin.x,
+        y: frame.origin.y + frame.size.height - height,
+        width: frame.width,
+        height: height
+      )
+    }
+    
+    note.isWindowShrinked.toggle()
+    // note = noteViewModel.updateNote(note)
+ 
+    window.setFrame(
+      newFrame,
+      display: true,
+      animate: true
+    )
+  }
+  
+  func maximizeWindow() {
+    guard let window else {
+      return
+    }
+    
+    window.zoom(nil)
+  }
+  
+  func makeWindowAlwaysOnTop() {
+    note = NoteEditWindowMananger.shared.changeWindowLevel(
+      note: note,
+      noteViewModel: noteViewModel
+    )
+  }
+  
+  var window: NoteEditWindow? {
+    NSApplication.shared.keyWindow as? NoteEditWindow
+  }
 }
+
 
 #Preview {
   NoteEditView(

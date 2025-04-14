@@ -20,6 +20,8 @@ class NoteViewModel {
     }
   }
   
+  var lastUpdatedNoteID: Note.ID?
+  
   init(repository: NoteRepository) {
     self.repository = repository
     loadNotes()
@@ -33,7 +35,7 @@ class NoteViewModel {
     return note.windowFrame
   }
   
-  func findNote(id: UUID) -> Note? {
+  func findNote(id: Note.ID) -> Note? {
     notes.first(where: {$0.id == id})
   }
   
@@ -73,6 +75,8 @@ class NoteViewModel {
     
     note.windowFrame = windowFrame
     note.lastWindowFocusedAt = .now
+    
+    lastUpdatedNoteID = note.id
     
     repository.update(note)
     loadNotes()

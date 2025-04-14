@@ -22,6 +22,7 @@ final class NoteEntity {
   var fontSize: CGFloat = 14
   var lastWindowFocusedAt: Date?
   var isWindowOpened: Bool = false
+  var isWindowShrinked: Bool = false
   
   @Relationship
   var theme: ThemeEntity? // 관계 정의 (Many-to-One)
@@ -47,6 +48,8 @@ final class NoteEntity {
       )
       self.theme = try? context.fetch(descriptor).first
     }
+    
+    self.isWindowShrinked = note.isWindowShrinked
   }
 
   func toDomain() -> Note {

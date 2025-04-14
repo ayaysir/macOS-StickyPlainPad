@@ -21,6 +21,7 @@ struct Note: Codable, Identifiable, Hashable {
   var isWindowOpened: Bool = false
   
   var themeID: UUID?
+  var isWindowShrinked: Bool = false
 }
 
 extension Note {

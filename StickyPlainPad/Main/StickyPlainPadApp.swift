@@ -39,24 +39,12 @@ struct StickyPlainPadApp: App {
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
     .commands {
       // TODO: - 커맨드 메뉴 '파일'
-      CommandMenu("테마") {
+      
+      CommandGroup(after: .appInfo) {
         Button("테마 관리...") {
           openWindow(id: "theme-new-window")
         }
-        .keyboardShortcut("n", modifiers: [.command, .shift])
-        
-        Divider()
-        
-        ForEach(themeViewModel.themes, id: \.self) { theme in
-          Button {
-            print(theme)
-          } label: {
-            // TODO - 테마 표시 및 열기
-            Text(theme.name)
-              .foregroundColor(.primary)
-          }
-          
-        }
+        .keyboardShortcut("t", modifiers: [.command, .shift])
       }
     }
     
