@@ -40,6 +40,7 @@ final class NoteEditWindowMananger {
   
   func open(
     noteViewModel: NoteViewModel,
+    themeViewModel: ThemeViewModel,
     note: Note,
     previewText: String? = nil
   ) {
@@ -73,6 +74,7 @@ final class NoteEditWindowMananger {
     // NoteEditView를 NSHostingView로 감싸서 CustomWindow의 콘텐츠로 설정
     let noteEditView = NoteEditView(
       noteViewModel: noteViewModel,
+      themeViewModel: themeViewModel,
       note: note
     )
     

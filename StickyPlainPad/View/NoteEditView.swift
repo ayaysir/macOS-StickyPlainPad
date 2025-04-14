@@ -11,15 +11,28 @@ import Combine
 
 struct NoteEditView: View {
   @State private var note: Note
+  @State private var theme: Theme?
   @State private var noteViewModel: NoteViewModel
+  @State private var themeViewModel: ThemeViewModel
   @State private var currentContent = ""
   @State private var fontSize: CGFloat = 14
   @State private var naviTitle = "가나다"
   // @State private var isAlwaysOnTop = false
   
-  init(noteViewModel: NoteViewModel, note: Note) {
+  @State private var showThemeSelectSheet = false
+  
+  init(
+    noteViewModel: NoteViewModel,
+    themeViewModel: ThemeViewModel,
+    note: Note
+  ) {
     _noteViewModel = State(initialValue: noteViewModel)
+    _themeViewModel = State(initialValue: themeViewModel)
     _note = State(initialValue: note)
+    
+    if let themeID = note.themeID {
+      _theme = State(initialValue: themeViewModel.theme(withID: themeID))
+    }
   }
   
   var body: some View {
@@ -38,19 +51,9 @@ struct NoteEditView: View {
               .foregroundStyle(note.isPinned ? .red : .primary)
           }
           
-          Button(action: {}) {
+          Button(action: { showThemeSelectSheet = true }) {
             Text("Select theme")
           }
-          .overlay {
-            List {
-              Button("AA") {}
-              Button("AA") {}
-              Button("AA") {}
-            }
-            .frame(width: 200, height: 300)
-            .offset(y: 160)
-          }
-          .zIndex(1)
           
           Button(action: maximizeWindow) {
             Text("Maximize Window")
@@ -66,7 +69,8 @@ struct NoteEditView: View {
       // TextEditor(text: $currentContent)
       AutoHidingScrollTextEditor(
         text: $currentContent,
-        fontSize: $fontSize
+        fontSize: $fontSize,
+        theme: $theme
       )
     }
     .navigationTitle(naviTitle)
@@ -74,6 +78,10 @@ struct NoteEditView: View {
       currentContent = note.content
       naviTitle = note.content
       fontSize = note.fontSize
+      
+      if let themeID = note.themeID {
+        print("theme exist: \(themeID)")
+      }
     }
     .onChange(of: currentContent) {
       naviTitle = currentContent.truncated(to: 30)
@@ -89,6 +97,19 @@ struct NoteEditView: View {
       //   print("note updated:", newNote.id, note.id)
       //   note = newNote
       // }
+    }
+    .sheet(isPresented: $showThemeSelectSheet) {
+      // onDismiss
+      if let themeID = note.themeID {
+        theme = themeViewModel.theme(withID: themeID)
+      }
+      
+    } content: {
+      NoteThemeSelectView(
+        note: $note,
+        noteViewModel: noteViewModel,
+        themeViewModel: themeViewModel
+      )
     }
   }
 }
@@ -168,6 +189,9 @@ extension NoteEditView {
   NoteEditView(
     noteViewModel: NoteViewModel(
       repository: NoteRepositoryImpl(context: .forPreviewContext)
+    ),
+    themeViewModel: ThemeViewModel(
+      repository: ThemeRepositoryImpl(context: .forPreviewContext)
     ),
     note: Note(id: .init(), createdAt: .now, content: "가나다라")
   )

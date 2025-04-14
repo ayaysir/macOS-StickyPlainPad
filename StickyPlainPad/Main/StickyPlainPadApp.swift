@@ -34,7 +34,10 @@ struct StickyPlainPadApp: App {
   var body: some Scene {
     // 디버그용 리스트 창 (목록을 어디에 배치할지 추후 결정)
     Window("List", id: "list") {
-      NoteListView(viewModel: noteViewModel)
+      NoteListView(
+        viewModel: noteViewModel,
+        themeViewModel: themeViewModel
+      )
     }
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
     .commands {
@@ -51,6 +54,5 @@ struct StickyPlainPadApp: App {
     Window("테마 관리", id: "theme-new-window") {
       ThemeListView(themeViewModel: themeViewModel)
     }
-    
   }
 }

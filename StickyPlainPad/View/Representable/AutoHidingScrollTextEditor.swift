@@ -10,13 +10,21 @@ import SwiftUI
 struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @Binding var text: String
   @Binding var fontSize: CGFloat
+  @Binding var theme: Theme?
 
   func makeNSView(context: Context) -> NSScrollView {
     let textView = ExpandableTextView()
     textView.isEditable = true
     textView.isSelectable = true
     textView.isRichText = false
-    textView.font = NSFont.systemFont(ofSize: NSFont.systemFontSize)
+    
+    // 테마 적용
+    if let theme {
+      textView.font = NSFont(name: theme.fontName, size: fontSize)
+    } else {
+      textView.font = NSFont.systemFont(ofSize: fontSize)
+    }
+    
     textView.drawsBackground = true
     textView.backgroundColor = NSColor.textBackgroundColor
     textView.isVerticallyResizable = true
@@ -65,10 +73,37 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   }
 
   func updateNSView(_ nsView: NSScrollView, context: Context) {
-    if let textView = nsView.documentView as? NSTextView {
-      if textView.string != text {
-        textView.string = text
+    guard let textView = nsView.documentView as? NSTextView else {
+      return
+    }
+    
+    if textView.string != text {
+      textView.string = text
+    }
+    
+    if let theme {
+      // 🔄 폰트 크기 반영 (폰트명도 포함하여 완전히 새로 설정)
+      let newFont = NSFont(name: theme.fontName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
+      if textView.font?.fontName != newFont.fontName || textView.font?.pointSize != fontSize {
+        textView.font = newFont
       }
+      
+      // 🔄 배경색 적용
+      let newBackgroundColor = NSColor(hex: theme.backgroundColorHex) ?? .textBackgroundColor
+      if textView.backgroundColor != newBackgroundColor {
+        textView.backgroundColor = newBackgroundColor
+      }
+      
+      // 🔄 텍스트 색상 적용
+      let newTextColor = NSColor(hex: theme.textColorHex) ?? .textColor
+      if textView.textColor != newTextColor {
+        textView.textColor = newTextColor
+      }
+    } else {
+      // 테마가 없을 경우 기본 스타일 적용
+      textView.font = NSFont.systemFont(ofSize: fontSize)
+      textView.backgroundColor = .textBackgroundColor
+      textView.textColor = .textColor
       
       // 🔄 폰트 크기 반영
       if let currentFont = textView.font,
@@ -101,8 +136,13 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
 #Preview {
   @Previewable @State var text = "ABCD\n"
   @Previewable @State var fontSize: CGFloat = 14
+  @Previewable @State var theme: Theme? = nil
   
-  AutoHidingScrollTextEditor(text: $text, fontSize: $fontSize)
+  AutoHidingScrollTextEditor(
+    text: $text,
+    fontSize: $fontSize,
+    theme: $theme
+  )
     .frame(width: 400, height: 100)
 }
 

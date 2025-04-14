@@ -23,13 +23,8 @@ struct ThemeListView: View {
       List(selection: $selectedThemeID) {
         ForEach(viewModel.themes) { theme in
           NavigationLink(value: theme.id) {
-            navLabel(theme: theme)
+            ThemeLabelView(theme: theme)
           }
-          // NavigationLink {
-          //   ThemeView(theme: theme, themeViewModel: viewModel)
-          // } label: {
-          //   navLabel(theme: theme)
-          // }
           .contextMenu {
             Button {
               viewModel.deleteTheme(theme)
@@ -62,19 +57,6 @@ struct ThemeListView: View {
       ThemeView(theme: theme, themeViewModel: viewModel)
     } else {
       Text("테마를 선택하세요")
-    }
-  }
-  
-  private func navLabel(theme: Theme) -> some View {
-    HStack {
-      Rectangle()
-        .fill(Color(hex: theme.backgroundColorHex) ?? .black)
-        .frame(width: 20)
-        .overlay {
-          Text("A")
-            .foregroundStyle(Color(hex: theme.textColorHex) ?? .white)
-        }
-      Text(theme.name)
     }
   }
   

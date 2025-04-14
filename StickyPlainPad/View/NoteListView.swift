@@ -12,6 +12,7 @@ struct NoteListView: View {
   @Environment(\.openWindow) private var openWindow
   
   @State private var viewModel: NoteViewModel
+  @State private var themeViewModel: ThemeViewModel
   
   init(context: ModelContext) {
     _viewModel = State(
@@ -19,10 +20,17 @@ struct NoteListView: View {
         repository: NoteRepositoryImpl(context: context)
       )
     )
+    
+    _themeViewModel = State(
+      initialValue: ThemeViewModel(
+        repository: ThemeRepositoryImpl(context: context)
+      )
+    )
   }
   
-  init(viewModel: NoteViewModel) {
+  init(viewModel: NoteViewModel, themeViewModel: ThemeViewModel) {
     _viewModel = State(initialValue: viewModel)
+    _themeViewModel = State(initialValue: themeViewModel)
   }
   
   var body: some View {
@@ -37,6 +45,7 @@ struct NoteListView: View {
             // openWindow(value: note.id)
             NoteEditWindowMananger.shared.open(
               noteViewModel: viewModel,
+              themeViewModel: themeViewModel,
               note: note,
               previewText: note.content
             )
@@ -58,6 +67,7 @@ struct NoteListView: View {
       viewModel.lastOpenedNotes.forEach { note in
         NoteEditWindowMananger.shared.open(
           noteViewModel: viewModel,
+          themeViewModel: themeViewModel,
           note: note,
           previewText: note.content
         )
@@ -85,6 +95,7 @@ struct NoteListView: View {
       
       NoteEditWindowMananger.shared.open(
         noteViewModel: viewModel,
+        themeViewModel: themeViewModel,
         note: note
       )
     }

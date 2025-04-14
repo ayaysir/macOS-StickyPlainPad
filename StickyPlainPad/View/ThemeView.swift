@@ -20,7 +20,6 @@ struct ThemeView: View {
   @FocusState private var isNameFocused: Bool
   
   @State private var selectedFontName: String = ""
-  @State private var selectedFontSize: Double = 14
   
   var body: some View {
     VStack(alignment: .leading, spacing: 16) {
@@ -34,7 +33,7 @@ struct ThemeView: View {
           조정할 수 있습니다.
           """)
         .multilineTextAlignment(.leading)
-        .font(.custom(selectedFontName, size: selectedFontSize))
+        .font(.custom(selectedFontName, size: 17))
         .foregroundStyle(textColor)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(5)
@@ -82,15 +81,7 @@ struct ThemeView: View {
         }
         // .frame(maxWidth: 300)
         
-        HStack {
-          Text("크기")
-          Slider(
-            value: $selectedFontSize,
-            in: MIN_FONT_SIZE...MAX_FONT_SIZE,
-            step: 1
-          )
-          Text("\(Int(selectedFontSize))pt")
-        }
+        
         
         Spacer()
       }
@@ -133,12 +124,6 @@ struct ThemeView: View {
         fontName: selectedFontName
       )
     }
-    .onChange(of: selectedFontSize) {
-      themeViewModel.updateTheme(
-        id: theme.id,
-        fontSize: selectedFontSize
-      )
-    }
   }
   
   private func initColors() {
@@ -149,7 +134,6 @@ struct ThemeView: View {
   
   private func initFonts() {
     selectedFontName = theme.fontName
-    selectedFontSize = theme.fontSize
   }
   
   private func moveFocusToTextField() {
