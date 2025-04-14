@@ -25,25 +25,46 @@ final class ThemeViewModelTests: XCTestCase {
   }
 
   func testAddTheme() {
-    viewModel.addTheme(name: "Dark", backgroundColorHex: "#000000", textColorHex: "#FFFFFF")
+    viewModel.addTheme(
+      name: "Dark",
+      backgroundColorHex: "#000000",
+      textColorHex: "#FFFFFF",
+      fontName: "Impact",
+      fontSize: 30
+    )
 
     XCTAssertEqual(viewModel.themes.count, 1)
     XCTAssertEqual(viewModel.themes.first?.name, "Dark")
+    XCTAssertEqual(viewModel.themes.first?.fontName, "Impact")
   }
 
   func testUpdateTheme() {
-    viewModel.addTheme(name: "Light", backgroundColorHex: "#FFFFFF", textColorHex: "#000000")
+    viewModel.addTheme(
+      name: "Light",
+      backgroundColorHex: "#FFFFFF",
+      textColorHex: "#000000",
+      fontName: "Impact",
+      fontSize: 30
+    )
     var theme = viewModel.themes.first!
     theme.name = "Updated Light"
+    theme.fontName = "Avenir"
 
     viewModel.updateTheme(theme)
 
     XCTAssertEqual(viewModel.themes.first?.name, "Updated Light")
+    XCTAssertEqual(viewModel.themes.first?.fontName, "Avenir")
     XCTAssertNotNil(viewModel.themes.first?.modifiedAt)
   }
 
   func testDeleteTheme() {
-    viewModel.addTheme(name: "ToDelete", backgroundColorHex: "#FF0000", textColorHex: "#000000")
+    viewModel.addTheme(
+      name: "ToDelete",
+      backgroundColorHex: "#FF0000",
+      textColorHex: "#000000",
+      fontName: "Impact",
+      fontSize: 30
+    )
     let theme = viewModel.themes.first!
 
     viewModel.deleteTheme(theme)
@@ -53,8 +74,26 @@ final class ThemeViewModelTests: XCTestCase {
 
   func testFetchAllThemes() {
     mockRepository.themes = [
-      Theme(id: UUID(), createdAt: .now, modifiedAt: nil, name: "Red", backgroundColorHex: "#FF0000", textColorHex: "#000000"),
-      Theme(id: UUID(), createdAt: .now, modifiedAt: nil, name: "Green", backgroundColorHex: "#00FF00", textColorHex: "#000000")
+      Theme(
+        id: UUID(),
+        createdAt: .now,
+        modifiedAt: nil,
+        name: "Red",
+        backgroundColorHex: "#FF0000",
+        textColorHex: "#000000",
+        fontName: "Impact",
+        fontSize: 30
+      ),
+      Theme(
+        id: UUID(),
+        createdAt: .now,
+        modifiedAt: nil,
+        name: "Green",
+        backgroundColorHex: "#00FF00",
+        textColorHex: "#000000",
+        fontName: "Impact",
+        fontSize: 30
+      )
     ]
 
     viewModel.fetchAllThemes()
