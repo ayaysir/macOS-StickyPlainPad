@@ -52,6 +52,7 @@ struct NoteListView: View {
           } label: {
             Text("\(note.content), \(note.createdAt)")
           }
+          .buttonStyle(.plain)
           .contextMenu {
             Button(role: .destructive) {
               viewModel.deleteNote(note)
@@ -108,10 +109,6 @@ struct NoteListView: View {
       }
     }
   }
-}
-
-extension NoteListView {
-
 }
 
 #Preview {

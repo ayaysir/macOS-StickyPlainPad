@@ -28,11 +28,13 @@ struct NoteThemeSelectView: View {
     VStack {
       HStack {
         Text("테마를 선택하세요.")
+          .font(.title2)
         Spacer()
         Button(action: dismiss.callAsFunction) {
           Text("닫기")
         }
       }
+      .padding()
       List {
         ForEach(themeViewModel.themes) { theme in
           Button(action: {
@@ -43,6 +45,7 @@ struct NoteThemeSelectView: View {
           }
         }
       }
+      .buttonStyle(.plain)
     }
   }
   

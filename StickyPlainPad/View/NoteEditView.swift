@@ -10,6 +10,9 @@ import SwiftData
 import Combine
 
 struct NoteEditView: View {
+  let HEADER_HEIGHT: CGFloat = 15
+  let ICON_SIZE: CGFloat = 10
+  
   @State private var note: Note
   @State private var theme: Theme?
   @State private var noteViewModel: NoteViewModel
@@ -38,33 +41,51 @@ struct NoteEditView: View {
   var body: some View {
     VStack(spacing: 0) {
       ZStack {
-        Color.white
-          .ignoresSafeArea()
-        HStack {
-          Button(action: closeWindow) {
-            Text("Close Window")
-          }
-          
-          Button(action: makeWindowAlwaysOnTop) {
-            Text("Always on Top")
-              .frame(height: 15)
-              .foregroundStyle(note.isPinned ? .red : .primary)
-          }
-          
-          Button(action: { showThemeSelectSheet = true }) {
-            Text("Select theme")
-          }
-          
-          Button(action: maximizeWindow) {
-            Text("Maximize Window")
-          }
-          
-          Button(action: { shrinkWindow(to: 20) }) {
-            Text("Shrink Window")
-          }
+        if let theme {
+          Color(hex: theme.backgroundColorHex)
+          Color(hex: theme.textColorHex)?.colorInvert().opacity(0.08)
+        } else {
+          Color.white
         }
+        
+        HStack {
+          // 닫기
+          headerButton(
+            action: closeWindow,
+            imageSystemName: "squareshape"
+          )
+          .help("현재 스티커 닫기")
+          
+          Spacer()
+          
+          headerButton(
+            action: makeWindowAlwaysOnTop,
+            imageSystemName: "pin.fill",
+            isTurnOn: note.isPinned
+          )
+          .help("항상 위에")
+          
+          headerButton(
+            action: { showThemeSelectSheet = true },
+            imageSystemName: "paintpalette"
+          )
+          .help("스티커 테마 변경")
+          
+          headerButton(
+            action: maximizeWindow,
+            imageSystemName: "arrow.up.left.and.arrow.down.right"
+          )
+          .help("창 최대화/복귀")
+          
+          headerButton(
+            action: { shrinkWindow(to: HEADER_HEIGHT) },
+            imageSystemName: "rectangle.topthird.inset.filled"
+          )
+          .help("헤더만 보기")
+        }
+        .padding(4)
       }
-      .frame(height: 20)
+      .frame(height: HEADER_HEIGHT)
       
       // TextEditor(text: $currentContent)
       AutoHidingScrollTextEditor(
@@ -110,7 +131,29 @@ struct NoteEditView: View {
         noteViewModel: noteViewModel,
         themeViewModel: themeViewModel
       )
+      .frame(minHeight: 300, maxHeight: 1000)
     }
+  }
+  
+  func headerButton(
+    action: @escaping VoidCallback,
+    imageSystemName: String,
+    isTurnOn: Bool = false
+  ) -> some View {
+    Button(action: action) {
+      if let theme,
+         let imageColor = Color(hex: theme.backgroundColorHex)?.readableGrayTextColor() {
+        Image(systemName: imageSystemName)
+          .font(.system(size: ICON_SIZE))
+          .foregroundStyle(isTurnOn ? .red : imageColor)
+      } else {
+        Image(systemName: imageSystemName)
+          .font(.system(size: ICON_SIZE))
+          .foregroundStyle(isTurnOn ? .red : .primary)
+      }
+    }
+    .background(isTurnOn ? .black.opacity(0.5) : .clear)
+    .buttonStyle(.plain)
   }
 }
 
@@ -156,7 +199,7 @@ extension NoteEditView {
     
     note.isWindowShrinked.toggle()
     // note = noteViewModel.updateNote(note)
- 
+    
     window.setFrame(
       newFrame,
       display: true,

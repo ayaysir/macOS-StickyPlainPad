@@ -10,6 +10,7 @@ import Foundation
 // MARK: - Typealiases
 
 typealias CGFloatToVoidCallback = (CGFloat) -> Void
+typealias VoidCallback = () -> Void
 
 // MARK: - Variables
 
