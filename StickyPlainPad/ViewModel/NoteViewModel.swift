@@ -21,6 +21,20 @@ class NoteViewModel {
   }
   
   var lastUpdatedNoteID: Note.ID?
+  var currentFocusedNoteID: Note.ID?
+  
+  var firstWindowFrame: Rect {
+    let newPos = NoteEditWindowMananger.shared.newWindowPos
+    let firstPos = NoteEditWindowMananger.shared.newWindowPosFirst
+    let windowSize = NoteEditWindowMananger.shared.windowSize
+    
+    return .init(
+      originX: newPos?.x ?? firstPos.x ,
+      originY: newPos?.y ?? firstPos.y,
+      width: windowSize.width,
+      height: windowSize.height
+    )
+  }
   
   init(repository: NoteRepository) {
     self.repository = repository
@@ -40,13 +54,13 @@ class NoteViewModel {
   }
   
   @discardableResult
-  func addEmptyNote(windowFrame: Rect? = nil) -> Note {
+  func addEmptyNote() -> Note {
     let noteID = UUID()
     let newNote = Note(
       id: noteID,
       createdAt: .now,
       content: "",
-      windowFrame: windowFrame
+      windowFrame: firstWindowFrame
     )
     
     repository.add(newNote)

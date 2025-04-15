@@ -50,7 +50,7 @@ struct NoteListView: View {
               previewText: note.content
             )
           } label: {
-            Text("\(note.content), \(note.createdAt)")
+            Text("\(note.content.truncated()), \(note.createdAt)")
           }
           .buttonStyle(.plain)
           .contextMenu {
@@ -77,29 +77,10 @@ struct NoteListView: View {
   }
   
   private func addItem() {
-    let newPos = NoteEditWindowMananger.shared.newWindowPos
-    let firstPos = NoteEditWindowMananger.shared.newWindowPosFirst
-    let windowSize = NoteEditWindowMananger.shared.windowSize
-    
-    var firstWindowFrame: Rect {
-      .init(
-        originX: newPos?.x ?? firstPos.x ,
-        originY: newPos?.y ?? firstPos.y,
-        width: windowSize.width,
-        height: windowSize.height
-      )
-    }
-    
-    withAnimation {
-      let note = viewModel.addEmptyNote(windowFrame: firstWindowFrame)
-      NoteEditWindowMananger.shared.appendCreateWindowCount()
-      
-      NoteEditWindowMananger.shared.open(
-        noteViewModel: viewModel,
-        themeViewModel: themeViewModel,
-        note: note
-      )
-    }
+    NoteEditWindowMananger.shared.addEmptyNoteAndOpen(
+      noteViewModel: viewModel,
+      themeViewModel: themeViewModel
+    )
   }
   
   private func deleteItems(offsets: IndexSet) {

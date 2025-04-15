@@ -160,7 +160,7 @@ struct NoteEditView: View {
 extension NoteEditView {
   /// 현재 윈도우를 닫는 메서드
   func closeWindow() {
-    guard let window else {
+    guard let window = NoteEditWindowMananger.shared.keyWindow else {
       return
     }
     
@@ -175,7 +175,7 @@ extension NoteEditView {
   }
   
   func shrinkWindow(to height: CGFloat) {
-    guard let window else {
+    guard let window = NoteEditWindowMananger.shared.keyWindow else {
       return
     }
     
@@ -208,7 +208,7 @@ extension NoteEditView {
   }
   
   func maximizeWindow() {
-    guard let window else {
+    guard let window = NoteEditWindowMananger.shared.keyWindow else {
       return
     }
     
@@ -220,10 +220,6 @@ extension NoteEditView {
       note: note,
       noteViewModel: noteViewModel
     )
-  }
-  
-  var window: NoteEditWindow? {
-    NSApplication.shared.keyWindow as? NoteEditWindow
   }
 }
 

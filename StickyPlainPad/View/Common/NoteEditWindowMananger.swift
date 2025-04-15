@@ -18,6 +18,10 @@ final class NoteEditWindowMananger {
     newWindowPos = newWindowPosFirst
   }
   
+  var keyWindow: NoteEditWindow? {
+    NSApplication.shared.keyWindow as? NoteEditWindow
+  }
+  
   var newWindowPosFirst: CGPoint {
     CGPoint(
       x: (screenSize.width - windowSize.width) / 2,
@@ -37,6 +41,23 @@ final class NoteEditWindowMananger {
   }
   private(set) var newWindowPos: CGPoint!
   private var cancellables = Set<AnyCancellable>()
+  
+  func addEmptyNoteAndOpen(
+    noteViewModel: NoteViewModel,
+    themeViewModel: ThemeViewModel,
+    previewText: String? = nil
+  ) {
+    withAnimation {
+      let note = noteViewModel.addEmptyNote()
+      appendCreateWindowCount()
+      
+      open(
+        noteViewModel: noteViewModel,
+        themeViewModel: themeViewModel,
+        note: note
+      )
+    }
+  }
   
   func open(
     noteViewModel: NoteViewModel,
