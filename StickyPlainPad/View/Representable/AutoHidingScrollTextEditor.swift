@@ -27,7 +27,7 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     }
     
     textView.drawsBackground = true
-    textView.backgroundColor = NSColor.textBackgroundColor
+    textView.backgroundColor = .defaultNoteBackground
     textView.isVerticallyResizable = true
     textView.isHorizontallyResizable = false
     textView.autoresizingMask = .width
@@ -103,7 +103,7 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     } else {
       // 테마가 없을 경우 기본 스타일 적용
       textView.font = NSFont.systemFont(ofSize: fontSize)
-      textView.backgroundColor = .textBackgroundColor
+      textView.backgroundColor = .defaultNoteBackground
       textView.textColor = .textColor
       
       // 🔄 폰트 크기 반영

@@ -54,12 +54,12 @@ class NoteViewModel {
   }
   
   @discardableResult
-  func addEmptyNote() -> Note {
+  func addNewNote(content: String = "") -> Note {
     let noteID = UUID()
     let newNote = Note(
       id: noteID,
       createdAt: .now,
-      content: "",
+      content: content,
       windowFrame: firstWindowFrame
     )
     

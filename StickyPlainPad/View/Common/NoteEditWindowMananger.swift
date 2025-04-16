@@ -42,19 +42,20 @@ final class NoteEditWindowMananger {
   private(set) var newWindowPos: CGPoint!
   private var cancellables = Set<AnyCancellable>()
   
-  func addEmptyNoteAndOpen(
+  func addNewNoteAndOpen(
     noteViewModel: NoteViewModel,
     themeViewModel: ThemeViewModel,
-    previewText: String? = nil
+    content: String = ""
   ) {
     withAnimation {
-      let note = noteViewModel.addEmptyNote()
+      let note = noteViewModel.addNewNote(content: content)
       appendCreateWindowCount()
       
       open(
         noteViewModel: noteViewModel,
         themeViewModel: themeViewModel,
-        note: note
+        note: note,
+        previewText: !content.isEmpty ? content.truncated() : nil
       )
     }
   }

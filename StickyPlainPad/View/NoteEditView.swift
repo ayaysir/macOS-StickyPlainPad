@@ -45,7 +45,7 @@ struct NoteEditView: View {
           Color(hex: theme.backgroundColorHex)
           Color(hex: theme.textColorHex)?.colorInvert().opacity(0.08)
         } else {
-          Color.white
+          Color(.defaultNoteBackground).opacity(0.8)
         }
         
         HStack {

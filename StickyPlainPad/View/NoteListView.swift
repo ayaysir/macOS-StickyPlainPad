@@ -77,7 +77,7 @@ struct NoteListView: View {
   }
   
   private func addItem() {
-    NoteEditWindowMananger.shared.addEmptyNoteAndOpen(
+    NoteEditWindowMananger.shared.addNewNoteAndOpen(
       noteViewModel: viewModel,
       themeViewModel: themeViewModel
     )

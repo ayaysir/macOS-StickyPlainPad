@@ -44,19 +44,32 @@ struct StickyPlainPadApp: App {
       // TODO: - 커맨드 메뉴 '파일'
       CommandGroup(after: .newItem) {
         Button("New Sticker") {
-          NoteEditWindowMananger.shared.addEmptyNoteAndOpen(
+          NoteEditWindowMananger.shared.addNewNoteAndOpen(
             noteViewModel: noteViewModel,
             themeViewModel: themeViewModel
           )
         }
+        .keyboardShortcut("n", modifiers: [.command])
+        
         Divider()
+        
         Button("Load from Text File...") {
-          
+          if let result = selectAndReadTextFile() {
+            NoteEditWindowMananger.shared.addNewNoteAndOpen(
+              noteViewModel: noteViewModel,
+              themeViewModel: themeViewModel,
+              content: result
+            )
+          }
         }
+        .keyboardShortcut("l", modifiers: [.command])
+        
         Button("Save to Text File...") {
           
         }
+        
         Divider()
+        
         Button("Print...") {
           guard let window = NoteEditWindowMananger.shared.keyWindow,
                 let note = noteViewModel.notes.first(where: { $0.id == window.noteID }) else {
@@ -87,7 +100,10 @@ struct StickyPlainPadApp: App {
       ThemeListView(themeViewModel: themeViewModel)
     }
   }
-  
+
+}
+
+extension StickyPlainPadApp {
   func printText(_ text: String, font: NSFont?) {
     let printInfo = NSPrintInfo.shared
     printInfo.horizontalPagination = .automatic
@@ -129,5 +145,21 @@ struct StickyPlainPadApp: App {
     printOp.showsPrintPanel = true
     printOp.showsProgressPanel = true
     printOp.run()
+  }
+  
+  func selectAndReadTextFile() -> String? {
+    let panel = NSOpenPanel()
+    panel.allowedContentTypes = [
+      .text, // 모든 종류의 텍스트 기반 파일 (source, json, html, 등 포함)
+    ]
+    panel.allowsMultipleSelection = false
+    panel.canChooseDirectories = false
+
+    let response = panel.runModal()
+    if response == .OK, let url = panel.url {
+      return readTextFileAutoEncoding(at: url)
+    }
+
+    return nil
   }
 }
