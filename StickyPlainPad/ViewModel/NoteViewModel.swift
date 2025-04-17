@@ -54,12 +54,13 @@ class NoteViewModel {
   }
   
   @discardableResult
-  func addNewNote(content: String = "") -> Note {
+  func addNewNote(content: String = "", fileURL: URL? = nil) -> Note {
     let noteID = UUID()
     let newNote = Note(
       id: noteID,
       createdAt: .now,
       content: content,
+      fileURL: fileURL,
       windowFrame: firstWindowFrame
     )
     
@@ -113,6 +114,16 @@ class NoteViewModel {
   func updateNote(_ note: Note, isPinned: Bool) -> Note {
     var note = note
     note.isPinned = isPinned
+    
+    repository.update(note)
+    loadNotes()
+    
+    return note
+  }
+  
+  func updateNote(_ note: Note, fileURL: URL) -> Note {
+    var note = note
+    note.fileURL = fileURL
     
     repository.update(note)
     loadNotes()

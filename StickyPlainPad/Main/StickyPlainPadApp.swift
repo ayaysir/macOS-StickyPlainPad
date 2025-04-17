@@ -54,25 +54,66 @@ struct StickyPlainPadApp: App {
         Divider()
         
         Button("Load from Text File...") {
-          if let result = selectAndReadTextFile() {
+          if let result = selectAndReadTextFile(){
             NoteEditWindowMananger.shared.addNewNoteAndOpen(
               noteViewModel: noteViewModel,
               themeViewModel: themeViewModel,
-              content: result
+              fileURL: result.url,
+              content: result.text ?? ""
             )
           }
         }
         .keyboardShortcut("l", modifiers: [.command])
         
-        Button("Save to Text File...") {
+        // Button("Save") {
+        //   guard let note = noteFromKeyWindow else {
+        //     return
+        //   }
+        //   
+        //   if let fileURL = note.fileURL {
+        //     // fileURL이 있으면 -> 저장 덮어쓰기
+        //     let saveResult = saveWithPanelFallback(text: note.content, fallbackURL: fileURL)
+        //     if !saveResult {
+        //       print(fileURL)
+        //       openSavePanel(
+        //         note.content,
+        //         defaultFileName: fileURL.lastPathComponent
+        //       ) { url in
+        //         _ = noteViewModel.updateNote(note, fileURL: url)
+        //         noteViewModel.lastUpdatedNoteID = note.id
+        //       }
+        //     }
+        //     // TODO: - save 되었다 메시지
+        //   } else {
+        //     // fileURL이 없으면 -> 저장 후 URL을 DB에 저장
+        //     openSavePanel(note.content) { url in
+        //       _ = noteViewModel.updateNote(note, fileURL: url)
+        //       noteViewModel.lastUpdatedNoteID = note.id
+        //     }
+        //   }
+        // }
+        // .keyboardShortcut("s", modifiers: [.command])
+        
+        Button("Save as Text File...") {
+          guard let note = noteFromKeyWindow else {
+            return
+          }
           
+          // 새로 저장 후 fileURL을 덮어쓰기 (무조건)
+          openSavePanel(
+            note.content,
+            defaultFileName: note.fileURL?.lastPathComponent ?? "Untitled.txt"
+          ) { url in
+            _ = noteViewModel.updateNote(note, fileURL: url)
+            noteViewModel.lastUpdatedNoteID = note.id
+          }
         }
+        .keyboardShortcut("s", modifiers: [.command])
         
         Divider()
         
         Button("Print...") {
-          guard let window = NoteEditWindowMananger.shared.keyWindow,
-                let note = noteViewModel.notes.first(where: { $0.id == window.noteID }) else {
+          guard let note = noteFromKeyWindow else {
             return
           }
           
@@ -94,6 +135,15 @@ struct StickyPlainPadApp: App {
         }
         .keyboardShortcut("t", modifiers: [.command, .shift])
       }
+      
+      CommandGroup(after: .pasteboard) {
+        Divider()
+        
+        Button("찾기") {
+          openFindReplaceWindow()
+        }
+        .keyboardShortcut("f", modifiers: [.command])
+      }
     }
     
     Window("테마 관리", id: "theme-new-window") {
@@ -104,6 +154,16 @@ struct StickyPlainPadApp: App {
 }
 
 extension StickyPlainPadApp {
+  var noteFromKeyWindow: Note? {
+    guard let window = NoteEditWindowMananger.shared.keyWindow,
+          let noteID = window.noteID else {
+      return nil
+    }
+    
+    return noteViewModel.findNote(id: noteID)
+  }
+  
+  /// 텍스트 인쇄 대화상자
   func printText(_ text: String, font: NSFont?) {
     let printInfo = NSPrintInfo.shared
     printInfo.horizontalPagination = .automatic
@@ -147,7 +207,8 @@ extension StickyPlainPadApp {
     printOp.run()
   }
   
-  func selectAndReadTextFile() -> String? {
+  /// 파일 읽기 대화상자
+  func selectAndReadTextFile() -> StringWithURL? {
     let panel = NSOpenPanel()
     panel.allowedContentTypes = [
       .text, // 모든 종류의 텍스트 기반 파일 (source, json, html, 등 포함)
@@ -157,9 +218,66 @@ extension StickyPlainPadApp {
 
     let response = panel.runModal()
     if response == .OK, let url = panel.url {
-      return readTextFileAutoEncoding(at: url)
+      return .init(text: readTextFileAutoEncoding(at: url), url: url)
     }
 
     return nil
+  }
+  
+  /// 찾기 대화상자
+  func openFindReplaceWindow() {
+    let window = NSWindow(
+      contentRect: NSRect(x: 0, y: 0, width: 450, height: 260),
+      styleMask: [.titled, .closable], // 닫기 버튼만 활성화
+      backing: .buffered,
+      defer: false
+    )
+    window.center()
+    window.title = "찾기"
+    window.contentView = NSHostingView(rootView: FindReplaceWindowView())
+    window.isReleasedWhenClosed = false
+    window.makeKeyAndOrderFront(nil)
+  }
+  
+  /// 저장 대화상자
+  func openSavePanel(
+    _ text: String,
+    defaultFileName: String = "Untitled.txt",
+    urlCompletionHandler: URLToVoidCallback? = nil
+  ) {
+    let panel = NSSavePanel()
+    panel.allowedContentTypes = [.plainText]
+    panel.nameFieldStringValue = defaultFileName
+
+    panel.begin { response in
+      guard response == .OK, let url = panel.url else { return }
+
+      do {
+        try saveToURL(text: text, to: url, atomically: true, encoding: .utf8)
+        urlCompletionHandler?(url)
+      } catch {
+        print("Save to file failed:", error)
+      }
+    }
+  }
+  
+  /// 쓰기 권한 체크 (샌드박스 이슈)
+  func saveWithPanelFallback(text: String, fallbackURL url: URL) -> Bool {
+    let fileManager = FileManager.default
+    
+    // 쓰기 권한이 있는 경우만 저장 시도
+    if fileManager.isWritableFile(atPath: url.path) {
+      do {
+        try text.write(to: url, atomically: true, encoding: .utf8)
+        print("✅ 기존 경로에 저장 성공")
+        return true
+      } catch {
+        print("⚠️ 기존 경로 저장 실패: \(error.localizedDescription)")
+        return false
+      }
+    }
+    
+    // 🔁 false인 경우 저장 다이얼로그 호출
+    return false
   }
 }

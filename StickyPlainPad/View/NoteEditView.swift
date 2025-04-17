@@ -87,7 +87,6 @@ struct NoteEditView: View {
       }
       .frame(height: HEADER_HEIGHT)
       
-      // TextEditor(text: $currentContent)
       AutoHidingScrollTextEditor(
         text: $currentContent,
         fontSize: $fontSize,
@@ -112,12 +111,17 @@ struct NoteEditView: View {
       note.fontSize = fontSize
       note = noteViewModel.updateNote(note)
     }
-    .onReceive(noteViewModel.lastUpdatedNoteID.publisher) { noteID in
-      // if noteID == note.id,
-      //    let newNote = noteViewModel.findNote(id: noteID) {
-      //   print("note updated:", newNote.id, note.id)
-      //   note = newNote
-      // }
+    .onReceive(
+      noteViewModel.lastUpdatedNoteID.publisher.debounce(
+        for: 0.1,
+        scheduler: RunLoop.main
+      )
+    ) { noteID in
+      if noteID == note.id,
+         let newNote = noteViewModel.findNote(id: noteID) {
+        print("note updated:", newNote.id, note.id)
+        note = newNote
+      }
     }
     .sheet(isPresented: $showThemeSelectSheet) {
       // onDismiss

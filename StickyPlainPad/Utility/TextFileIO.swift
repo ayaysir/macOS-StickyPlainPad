@@ -21,3 +21,14 @@ func readTextFileAutoEncoding(at url: URL) -> String? {
     return nil
   }
 }
+
+/// 텍스트를 url에 저장
+func saveToURL(
+  text: String,
+  to url: URL,
+  atomically useAuxiliaryFile: Bool = true,
+  encoding enc: String.Encoding = .utf8
+) throws {
+  try text.write(to: url, atomically: useAuxiliaryFile, encoding: enc)
+  print("저장 완료: \(url.path)")
+}

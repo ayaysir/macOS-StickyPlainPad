@@ -11,6 +11,7 @@ import Foundation
 
 typealias CGFloatToVoidCallback = (CGFloat) -> Void
 typealias VoidCallback = () -> Void
+typealias URLToVoidCallback = (URL) -> Void
 
 // MARK: - Variables
 

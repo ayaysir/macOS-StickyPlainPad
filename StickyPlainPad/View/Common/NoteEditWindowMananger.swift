@@ -45,10 +45,11 @@ final class NoteEditWindowMananger {
   func addNewNoteAndOpen(
     noteViewModel: NoteViewModel,
     themeViewModel: ThemeViewModel,
+    fileURL: URL? = nil,
     content: String = ""
   ) {
     withAnimation {
-      let note = noteViewModel.addNewNote(content: content)
+      let note = noteViewModel.addNewNote(content: content, fileURL: fileURL)
       appendCreateWindowCount()
       
       open(
@@ -201,7 +202,19 @@ final class NoteEditWindowMananger {
       return
     }
     
+    switchToWindow(window: window)
+  }
+  
+  func switchToWindow(window: NoteEditWindow) {
     // 해당 윈도우를 활성화
+    window.makeKeyAndOrderFront(nil)
+  }
+  
+  func switchToWindow(noteID: Note.ID) {
+    guard let window = openWindows.first(where: { $0.noteID == noteID }) else {
+      return
+    }
+    
     window.makeKeyAndOrderFront(nil)
   }
   
