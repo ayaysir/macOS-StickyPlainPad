@@ -25,21 +25,21 @@ final class NoteViewModelTests: XCTestCase {
   }
 
   func testAddEmptyNote() throws {
-    viewModel.addEmptyNote()
+    viewModel.addNewNote()
     
     XCTAssertEqual(viewModel.notes.count, 1)
     XCTAssertEqual(viewModel.notes.first?.content, "")
   }
   
   func testFetchAllNotes() throws {
-    viewModel.addEmptyNote()
-    viewModel.addEmptyNote()
+    viewModel.addNewNote()
+    viewModel.addNewNote()
     
     XCTAssertEqual(viewModel.notes.count, 2)
   }
   
   func testUpdateNote() throws {
-    viewModel.addEmptyNote()
+    viewModel.addNewNote()
     
     var note = viewModel.notes.first!
     note.modifiedAt = .now
@@ -52,7 +52,7 @@ final class NoteViewModelTests: XCTestCase {
   }
   
   func testDeleteNote() throws {
-    viewModel.addEmptyNote()
+    viewModel.addNewNote()
     let note = viewModel.notes.first!
     
     viewModel.deleteNote(note)
