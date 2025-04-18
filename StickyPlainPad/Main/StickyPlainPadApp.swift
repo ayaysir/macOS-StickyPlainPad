@@ -144,6 +144,26 @@ struct StickyPlainPadApp: App {
         }
         .keyboardShortcut("f", modifiers: [.command])
       }
+      
+      // Close 버튼 대체
+      CommandGroup(replacing: .saveItem) {
+        Button("Close") {
+          if let note = noteFromKeyWindow {
+            if let keyWindow = NSApp.keyWindow as? NoteEditWindow {
+              NoteEditWindowMananger.shared.closWindowAndRemoveFromCommandMenu(
+                keyWindow,
+                note: note,
+                noteViewModel: noteViewModel
+              )
+              
+              return
+            }
+          }
+          
+          NSApp.keyWindow?.close()
+        }
+        .keyboardShortcut("w", modifiers: [.command])
+      }
     }
     
     Window("테마 관리", id: "theme-new-window") {

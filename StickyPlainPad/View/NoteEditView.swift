@@ -169,7 +169,11 @@ extension NoteEditView {
     }
     
     window.close()
-    NoteEditWindowMananger.shared.removeWindowMenu(window)
+    NoteEditWindowMananger.shared.closWindowAndRemoveFromCommandMenu(
+      window,
+      note: note,
+      noteViewModel: noteViewModel
+    )
     
     _ = NoteEditWindowMananger.shared.updateWindowsOpenStatus(
       noteViewModel: noteViewModel,

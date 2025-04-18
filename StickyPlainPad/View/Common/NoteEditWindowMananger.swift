@@ -82,7 +82,7 @@ final class NoteEditWindowMananger {
     // CustomWindow 생성
     let customWindow = NoteEditWindow(
       contentRect: windowFrame,
-      styleMask: [.borderless, .fullSizeContentView, .resizable],
+      styleMask: [.borderless, .fullSizeContentView, .resizable, .closable],
       backing: .buffered,
       defer: false
     )
@@ -116,7 +116,8 @@ final class NoteEditWindowMananger {
     customWindow.isReleasedWhenClosed = false
 
     // 창을 활성화하고 보이게 하기
-    customWindow.makeKeyAndOrderFront(nil)
+    switchToWindow(window: customWindow)
+    
     // 윈도우 리스트에 등록
     openWindows.append(customWindow)
     
@@ -175,8 +176,21 @@ final class NoteEditWindowMananger {
     windowMenu.addItem(windowItem)
   }
   
-  func removeWindowMenu(_ window: NoteEditWindow) {
+  /// 커맨드 윈도우 메뉴에서 윈도우를 제거하고, 윈도우를 닫고, 노트 윈도우 정보를 업데이트
+  func closWindowAndRemoveFromCommandMenu(
+    _ window: NoteEditWindow,
+    note: Note,
+    noteViewModel: NoteViewModel
+  ) {
     let menu = NSApplication.shared.menu
+    
+    window.close()
+    
+    _ = NoteEditWindowMananger.shared.updateWindowsOpenStatus(
+      noteViewModel: noteViewModel,
+      note: note,
+      isWindowOpened: false
+    )
     
     guard let windowMenu = menu?.item(withTitle: "Window")?.submenu else {
       return
@@ -187,6 +201,7 @@ final class NoteEditWindowMananger {
     }
     
     windowMenu.removeItem(item)
+    
   }
   
   func updateWindowsOpenStatus(
@@ -197,6 +212,13 @@ final class NoteEditWindowMananger {
     noteViewModel.updateNote(note, isWindowOpened: isWindowOpened)
   }
   
+  func switchToWindow(window: NoteEditWindow) {
+    // 해당 윈도우를 활성화
+    window.makeKeyAndOrderFront(nil)
+    // SwiftUI View가 닫기 요청을 받을 수 있도록 responder 연결
+    window.makeFirstResponder(window.contentView)
+  }
+  
   @objc func switchToWindow(_ sender: NSMenuItem) {
     guard let window = sender.representedObject as? NoteEditWindow else {
       return
@@ -205,17 +227,12 @@ final class NoteEditWindowMananger {
     switchToWindow(window: window)
   }
   
-  func switchToWindow(window: NoteEditWindow) {
-    // 해당 윈도우를 활성화
-    window.makeKeyAndOrderFront(nil)
-  }
-  
   func switchToWindow(noteID: Note.ID) {
     guard let window = openWindows.first(where: { $0.noteID == noteID }) else {
       return
     }
     
-    window.makeKeyAndOrderFront(nil)
+    switchToWindow(window: window)
   }
   
   /// 윈도우의 플로팅 레벨 변경
