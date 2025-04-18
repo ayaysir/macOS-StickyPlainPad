@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct FindAndReplaceInnerView: View {
-  @Binding var isPresented: Bool
+  // @Binding var isPresented: Bool
+  @Binding var viewModel: FindAndReplaceViewModel
   @State private var showReplaceArea = false
   
   var body: some View {
@@ -19,7 +20,7 @@ struct FindAndReplaceInnerView: View {
             Text("Options")
             Image(systemName: "chevron.down")
           }
-          TextField("Find...", text: .constant(""))
+          TextField("Find...", text: $viewModel.findKeyword)
             .clipShape(RoundedRectangle(cornerRadius: 10))
           
           Button(action: {}) {
@@ -57,7 +58,7 @@ struct FindAndReplaceInnerView: View {
   }
   
   var buttonComplete: some View {
-    Button(action: { isPresented = false }) {
+    Button(action: { viewModel.isSearchWindowPresented = false }) {
       Text("완료")
     }
     .buttonStyle(.borderedProminent)
@@ -66,6 +67,10 @@ struct FindAndReplaceInnerView: View {
 
 #Preview {
   @Previewable @State var isShow = false
-  FindAndReplaceInnerView(isPresented: $isShow)
+  @Previewable @State var viewModel = FindAndReplaceViewModel()
+  
+  FindAndReplaceInnerView(
+    viewModel: $viewModel
+  )
 }
 

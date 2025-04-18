@@ -15,8 +15,10 @@ enum FindKeywordMode {
 
 @Observable
 final class FindAndReplaceViewModel {
-  var text = "예시 텍스트 여기에서 텍스트 텍스트의텍스트를 몇번 찾는지 텍스트모드" // 전체 텍스트
-  var findKeyword = "텍스트" // 찾는 단어
+  var isSearchWindowPresented = false
+  
+  var text = "" // 전체 텍스트
+  var findKeyword = "" // 찾는 단어
   var findKeywordMode: FindKeywordMode = .contain // 찾기 모드 선택
   
   var resultRanges: [NSRange] {

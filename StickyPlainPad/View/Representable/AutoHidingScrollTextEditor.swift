@@ -11,6 +11,7 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @Binding var text: String
   @Binding var fontSize: CGFloat
   @Binding var theme: Theme?
+  @Binding var findAndReplaceViewModel: FindAndReplaceViewModel
 
   func makeNSView(context: Context) -> NSScrollView {
     let textView = ExpandableTextView()
@@ -79,10 +80,50 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
       return
     }
     
+    // 기존 스타일 초기화
+    let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
+    textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
+    
+    // 검색 관련
+    if findAndReplaceViewModel.isSearchWindowPresented, findAndReplaceViewModel.resultRanges.count > 0 {
+      // 창이 떠 있고, 검색 결과가 1 이상 있을 때
+      // applyDimmedStyle(to: textView)
+      // textView.alphaValue = 0.4
+      highlight(using: findAndReplaceViewModel.resultRanges, in: textView)
+    } else {
+      // textView.alphaValue = 1
+    }
+    
     if textView.string != text {
       textView.string = text
     }
     
+    // 테마 업데이트
+    updateTheme(textView: textView)
+  }
+
+  func makeCoordinator() -> Coordinator {
+    Coordinator(self)
+  }
+
+  class Coordinator: NSObject, NSTextViewDelegate {
+    var parent: AutoHidingScrollTextEditor
+    weak var textView: NSTextView?
+
+    init(_ parent: AutoHidingScrollTextEditor) {
+      self.parent = parent
+    }
+
+    func textDidChange(_ notification: Notification) {
+      if let textView {
+        parent.text = textView.string
+      }
+    }
+  }
+}
+
+extension AutoHidingScrollTextEditor {
+  func updateTheme(textView: NSTextView) {
     if let theme {
       // 🔄 폰트 크기 반영 (폰트명도 포함하여 완전히 새로 설정)
       let newFont = NSFont(name: theme.fontName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
@@ -114,22 +155,39 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
       }
     }
   }
-
-  func makeCoordinator() -> Coordinator {
-    Coordinator(self)
+  
+  func applyDimmedStyle(to textView: NSTextView) {
+    let fullRange = NSRange(location: 0, length: textView.string.utf16.count)
+    let dimmedAttributes: [NSAttributedString.Key: Any] = [
+      .foregroundColor: NSColor.labelColor.withAlphaComponent(0.3)
+    ]
+    textView.textStorage?.addAttributes(dimmedAttributes, range: fullRange)
   }
+  
+  
+  private func highlight(using ranges: [NSRange], in textView: NSTextView) {
+    let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
 
-  class Coordinator: NSObject, NSTextViewDelegate {
-    var parent: AutoHidingScrollTextEditor
-    weak var textView: NSTextView?
+    // 기존 스타일 초기화 (흐리게)
+    textView.textStorage?.setAttributes([
+      .foregroundColor: NSColor.labelColor.withAlphaComponent(0.3)
+    ], range: fullRange)
 
-    init(_ parent: AutoHidingScrollTextEditor) {
-      self.parent = parent
-    }
-
-    func textDidChange(_ notification: Notification) {
-      if let textView {
-        parent.text = textView.string
+    // 강조된 부분 다시 설정
+    
+    for range in ranges {
+      if let theme, let textColor = NSColor(hex: theme.textColorHex) {
+        textView.textStorage?.addAttributes([
+          .foregroundColor: textColor.invertedColor,
+          .backgroundColor: textColor.invertedColor.withAlphaComponent(0.7),
+          .font: NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
+        ], range: range)
+      } else {
+        textView.textStorage?.addAttributes([
+          .foregroundColor: NSColor.systemYellow,
+          .backgroundColor: NSColor.systemOrange.withAlphaComponent(0.5),
+          .font: NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
+        ], range: range)
       }
     }
   }
@@ -139,11 +197,13 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @Previewable @State var text = "ABCD\n"
   @Previewable @State var fontSize: CGFloat = 14
   @Previewable @State var theme: Theme? = nil
+  @Previewable @State var findAndReplaceViewModel = FindAndReplaceViewModel()
   
   AutoHidingScrollTextEditor(
     text: $text,
     fontSize: $fontSize,
-    theme: $theme
+    theme: $theme,
+    findAndReplaceViewModel: $findAndReplaceViewModel
   )
     .frame(width: 400, height: 100)
 }

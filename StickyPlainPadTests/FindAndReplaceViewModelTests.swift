@@ -18,6 +18,17 @@ final class FindAndReplaceViewModelTests: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
   
+  func test_Conain모드에서_찾는단어가_한단어만_있는경우() {
+    let viewModel = FindAndReplaceViewModel()
+    viewModel.text = "텍스트 테스트 텍스트 텍스트의텍스트를 텍스트로 감쌈 텍스트!"
+    viewModel.findKeyword = "테스트"
+    viewModel.findKeywordMode = .contain
+    
+    let ranges = viewModel.resultRanges
+    // "[텍스트] 테스트 [텍스트] [텍스트]의[텍스트]를 [텍스트]로 감쌈 [텍스트]!"
+    XCTAssertEqual(ranges.count, 1)
+  }
+  
   func testContainModeFindsAllOccurrences() {
     let viewModel = FindAndReplaceViewModel()
     viewModel.text = "텍스트 테스트 텍스트 텍스트의텍스트를 텍스트로 감쌈 텍스트!"

@@ -13,17 +13,19 @@ struct NoteEditView: View {
   let HEADER_HEIGHT: CGFloat = 15
   let ICON_SIZE: CGFloat = 10
   
-  @State private var note: Note
-  @State private var theme: Theme?
   @State private var noteViewModel: NoteViewModel
   @State private var themeViewModel: ThemeViewModel
+  @State private var findAndReplaceViewModel = FindAndReplaceViewModel()
+  
+  @State private var note: Note
+  @State private var theme: Theme?
   @State private var currentContent = ""
   @State private var fontSize: CGFloat = 14
   @State private var naviTitle = "가나다"
   // @State private var isAlwaysOnTop = false
   
   @State private var showThemeSelectSheet = false
-  @State private var showFindReplaceArea = false
+  // @State private var showFindReplaceArea = false
   
   init(
     noteViewModel: NoteViewModel,
@@ -45,13 +47,14 @@ struct NoteEditView: View {
       headerToolbar
       
       VStack(spacing: 0) {
-        if showFindReplaceArea {
+        if findAndReplaceViewModel.isSearchWindowPresented {
           searchArea
         }
         AutoHidingScrollTextEditor(
           text: $currentContent,
           fontSize: $fontSize,
-          theme: $theme
+          theme: $theme,
+          findAndReplaceViewModel: $findAndReplaceViewModel
         )
       }
       .background(Color.defaultNoteBackground)
@@ -69,6 +72,7 @@ struct NoteEditView: View {
     .onChange(of: currentContent) {
       naviTitle = currentContent.truncated(to: 30)
       note = noteViewModel.updateNote(note, content: currentContent)
+      findAndReplaceViewModel.text = currentContent
     }
     .onChange(of: fontSize) {
       note.fontSize = fontSize
@@ -88,17 +92,25 @@ struct NoteEditView: View {
     }
     .onChange(of: noteViewModel.currentNoteIdForFind) { _, noteID in
       if noteID == note.id {
-        showFindReplaceArea = true
+        findAndReplaceViewModel.isSearchWindowPresented = true
       } else {
-        showFindReplaceArea = false
+        findAndReplaceViewModel.isSearchWindowPresented = false
       }
     }
-    .onChange(of: showFindReplaceArea) { oldValue, newValue in
+    .onChange(of: findAndReplaceViewModel.isSearchWindowPresented) { oldValue, newValue in
       if oldValue == true,
          newValue == false,
          noteViewModel.currentNoteIdForFind == note.id {
         noteViewModel.currentNoteIdForFind = nil
       }
+      
+      if newValue == true {
+        
+      }
+    }
+    .onChange(of: findAndReplaceViewModel.findKeyword) {
+      print("findKeyword:", findAndReplaceViewModel.findKeyword)
+      print(findAndReplaceViewModel.resultRanges)
     }
     .sheet(isPresented: $showThemeSelectSheet) {
       // onDismiss
@@ -187,7 +199,9 @@ struct NoteEditView: View {
   }
   
   private var searchArea: some View {
-    FindAndReplaceInnerView(isPresented: $showFindReplaceArea)
+    FindAndReplaceInnerView(
+      viewModel: $findAndReplaceViewModel
+    )
       .background(.white)
   }
 }
