@@ -13,6 +13,10 @@ typealias CGFloatToVoidCallback = (CGFloat) -> Void
 typealias VoidCallback = () -> Void
 typealias URLToVoidCallback = (URL) -> Void
 
+// MARK: - Dummy Functions
+
+let PureVoid: VoidCallback = { }
+
 // MARK: - Variables
 
 let MIN_FONT_SIZE: CGFloat = 8

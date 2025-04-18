@@ -54,7 +54,7 @@ struct StickyPlainPadApp: App {
         Divider()
         
         Button("Load from Text File...") {
-          if let result = selectAndReadTextFile(){
+          if let result = selectAndReadTextFile() {
             NoteEditWindowMananger.shared.addNewNoteAndOpen(
               noteViewModel: noteViewModel,
               themeViewModel: themeViewModel,
@@ -139,8 +139,11 @@ struct StickyPlainPadApp: App {
       CommandGroup(after: .pasteboard) {
         Divider()
         
-        Button("찾기") {
-          openFindReplaceWindow()
+        Button("Find") {
+          if let note = noteFromKeyWindow {
+            noteViewModel.currentNoteIdForFind = note.id
+          }
+          
         }
         .keyboardShortcut("f", modifiers: [.command])
       }

@@ -23,6 +23,7 @@ struct NoteEditView: View {
   // @State private var isAlwaysOnTop = false
   
   @State private var showThemeSelectSheet = false
+  @State private var showFindReplaceArea = false
   
   init(
     noteViewModel: NoteViewModel,
@@ -40,58 +41,20 @@ struct NoteEditView: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      ZStack {
-        if let theme {
-          Color(hex: theme.backgroundColorHex)
-          Color(hex: theme.textColorHex)?.colorInvert().opacity(0.08)
-        } else {
-          Color(.defaultNoteBackground).opacity(0.8)
-        }
-        
-        HStack {
-          // 닫기
-          headerButton(
-            action: closeWindow,
-            imageSystemName: "squareshape"
-          )
-          .help("현재 스티커 닫기")
-          
-          Spacer()
-          
-          headerButton(
-            action: makeWindowAlwaysOnTop,
-            imageSystemName: "pin.fill",
-            isTurnOn: note.isPinned
-          )
-          .help("항상 위에")
-          
-          headerButton(
-            action: { showThemeSelectSheet = true },
-            imageSystemName: "paintpalette"
-          )
-          .help("스티커 테마 변경")
-          
-          headerButton(
-            action: maximizeWindow,
-            imageSystemName: "arrow.up.left.and.arrow.down.right"
-          )
-          .help("창 최대화/복귀")
-          
-          headerButton(
-            action: { shrinkWindow(to: HEADER_HEIGHT) },
-            imageSystemName: "rectangle.topthird.inset.filled"
-          )
-          .help("헤더만 보기")
-        }
-        .padding(4)
-      }
-      .frame(height: HEADER_HEIGHT)
       
-      AutoHidingScrollTextEditor(
-        text: $currentContent,
-        fontSize: $fontSize,
-        theme: $theme
-      )
+      headerToolbar
+      
+      VStack(spacing: 0) {
+        if showFindReplaceArea {
+          searchArea
+        }
+        AutoHidingScrollTextEditor(
+          text: $currentContent,
+          fontSize: $fontSize,
+          theme: $theme
+        )
+      }
+      .background(Color.defaultNoteBackground)
     }
     .navigationTitle(naviTitle)
     .onAppear {
@@ -121,6 +84,20 @@ struct NoteEditView: View {
          let newNote = noteViewModel.findNote(id: noteID) {
         print("note updated:", newNote.id, note.id)
         note = newNote
+      }
+    }
+    .onChange(of: noteViewModel.currentNoteIdForFind) { _, noteID in
+      if noteID == note.id {
+        showFindReplaceArea = true
+      } else {
+        showFindReplaceArea = false
+      }
+    }
+    .onChange(of: showFindReplaceArea) { oldValue, newValue in
+      if oldValue == true,
+         newValue == false,
+         noteViewModel.currentNoteIdForFind == note.id {
+        noteViewModel.currentNoteIdForFind = nil
       }
     }
     .sheet(isPresented: $showThemeSelectSheet) {
@@ -158,6 +135,60 @@ struct NoteEditView: View {
     }
     .background(isTurnOn ? .black.opacity(0.5) : .clear)
     .buttonStyle(.plain)
+  }
+  
+  private var headerToolbar: some View {
+    ZStack {
+      if let theme {
+        Color(hex: theme.backgroundColorHex)
+        Color(hex: theme.textColorHex)?.colorInvert().opacity(0.08)
+      } else {
+        Color(.defaultNoteBackground).opacity(0.8)
+      }
+      
+      HStack {
+        // 닫기
+        headerButton(
+          action: closeWindow,
+          imageSystemName: "squareshape"
+        )
+        .help("현재 스티커 닫기")
+        
+        Spacer()
+        
+        headerButton(
+          action: makeWindowAlwaysOnTop,
+          imageSystemName: "pin.fill",
+          isTurnOn: note.isPinned
+        )
+        .help("항상 위에")
+        
+        headerButton(
+          action: { showThemeSelectSheet = true },
+          imageSystemName: "paintpalette"
+        )
+        .help("스티커 테마 변경")
+        
+        headerButton(
+          action: maximizeWindow,
+          imageSystemName: "arrow.up.left.and.arrow.down.right"
+        )
+        .help("창 최대화/복귀")
+        
+        headerButton(
+          action: { shrinkWindow(to: HEADER_HEIGHT) },
+          imageSystemName: "rectangle.topthird.inset.filled"
+        )
+        .help("헤더만 보기")
+      }
+      .padding(4)
+    }
+    .frame(height: HEADER_HEIGHT)
+  }
+  
+  private var searchArea: some View {
+    FindAndReplaceInnerView(isPresented: $showFindReplaceArea)
+      .background(.white)
   }
 }
 

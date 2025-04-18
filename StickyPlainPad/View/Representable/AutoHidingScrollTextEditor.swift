@@ -17,6 +17,7 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     textView.isEditable = true
     textView.isSelectable = true
     textView.isRichText = false
+    textView.allowsUndo = true
     textView.textContainerInset = NSSize(width: 0, height: 4) // ← 패딩 추가
     
     // 테마 적용

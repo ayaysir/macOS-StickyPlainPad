@@ -21,7 +21,7 @@ class NoteViewModel {
   }
   
   var lastUpdatedNoteID: Note.ID?
-  var currentFocusedNoteID: Note.ID?
+  var currentNoteIdForFind: Note.ID?
   
   var firstWindowFrame: Rect {
     let newPos = NoteEditWindowMananger.shared.newWindowPos
