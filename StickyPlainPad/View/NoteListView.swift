@@ -81,13 +81,12 @@ struct NoteListView: View {
           Text(verbatim: note.content.truncated())
         }
         Spacer()
-        Text(verbatim: "\(note.createdAt)")
+        Text(verbatim: "\(note.createdAt.formatted(date: .long, time: .shortened))")
           .foregroundStyle(.gray)
           .font(.caption)
       }
       if !searchText.isEmpty,
          let excerpt = note.content.excerpt(around: searchText, maxLength: 70)?.replacingOccurrences(of: "\n", with: " ") {
-        let _ = print(note.content.truncated(), excerpt)
         HighlightedText(
           fullText: "...\(excerpt)...",
           keywords: [searchText]

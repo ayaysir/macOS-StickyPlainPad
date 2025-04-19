@@ -21,7 +21,7 @@ class NoteRepositoryImpl: NoteRepository {
     do {
       try context.save()
     } catch {
-      print("Failed to save context:", error)
+      Log.error("Failed to save context: \(error)")
     }
   }
   
@@ -40,7 +40,7 @@ class NoteRepositoryImpl: NoteRepository {
         $0.toDomain()
       }
     } catch {
-      print(#function, error)
+      Log.error("\(#function): \(error)")
       return []
     }
   }
@@ -53,7 +53,7 @@ class NoteRepositoryImpl: NoteRepository {
   
   func update(_ note: Note) {
     guard let entity = findEntity(by: note.id) else {
-      print(#function, "Cant't find note entity \(note.id)")
+      Log.error("\(#function): Can't find note entity \(note.id)")
       return
     }
     

@@ -243,11 +243,9 @@ final class NoteEditWindowMananger {
       if note.isPinned == true {
         window.level = .normal
         note.isPinned = false
-        print("noteisPinne false")
       } else {
         window.level = .floating
         note.isPinned = true
-        print("noteisPinne true")
       }
     }
     

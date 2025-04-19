@@ -66,7 +66,7 @@ struct NoteEditView: View {
       fontSize = note.fontSize
       
       if let themeID = note.themeID {
-        print("theme exist: \(themeID)")
+        Log.info("Theme exist: \(themeID)")
       }
     }
     .onChange(of: currentContent) {
@@ -90,7 +90,7 @@ struct NoteEditView: View {
     ) { noteID in
       if noteID == note.id,
          let newNote = noteViewModel.findNote(id: noteID) {
-        print("note updated:", newNote.id, note.id)
+        Log.info("Note updated: \(note.id)")
         note = newNote
       }
     }
@@ -112,10 +112,6 @@ struct NoteEditView: View {
         
       }
     }
-    // .onChange(of: findReplaceViewModel.findKeyword) {
-    //   print("findKeyword:", findReplaceViewModel.findKeyword)
-    //   print(findReplaceViewModel.resultRanges)
-    // }
     .sheet(isPresented: $showThemeSelectSheet) {
       // onDismiss
       if let themeID = note.themeID {

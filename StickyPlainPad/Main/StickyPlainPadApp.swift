@@ -54,7 +54,7 @@ struct StickyPlainPadApp: App {
         Divider()
         
         Button("Load from Text File...") {
-          if let result = selectAndReadTextFile() {
+          if let result = openSelectReadFilePanel() {
             NoteEditWindowMananger.shared.addNewNoteAndOpen(
               noteViewModel: noteViewModel,
               themeViewModel: themeViewModel,
@@ -64,35 +64,6 @@ struct StickyPlainPadApp: App {
           }
         }
         .keyboardShortcut("l", modifiers: [.command])
-        
-        // Button("Save") {
-        //   guard let note = noteFromKeyWindow else {
-        //     return
-        //   }
-        //   
-        //   if let fileURL = note.fileURL {
-        //     // fileURL이 있으면 -> 저장 덮어쓰기
-        //     let saveResult = saveWithPanelFallback(text: note.content, fallbackURL: fileURL)
-        //     if !saveResult {
-        //       print(fileURL)
-        //       openSavePanel(
-        //         note.content,
-        //         defaultFileName: fileURL.lastPathComponent
-        //       ) { url in
-        //         _ = noteViewModel.updateNote(note, fileURL: url)
-        //         noteViewModel.lastUpdatedNoteID = note.id
-        //       }
-        //     }
-        //     // TODO: - save 되었다 메시지
-        //   } else {
-        //     // fileURL이 없으면 -> 저장 후 URL을 DB에 저장
-        //     openSavePanel(note.content) { url in
-        //       _ = noteViewModel.updateNote(note, fileURL: url)
-        //       noteViewModel.lastUpdatedNoteID = note.id
-        //     }
-        //   }
-        // }
-        // .keyboardShortcut("s", modifiers: [.command])
         
         Button("Save as Text File...") {
           guard let note = noteFromKeyWindow else {
@@ -124,14 +95,14 @@ struct StickyPlainPadApp: App {
             NSFont.systemFont(ofSize: note.fontSize)
           }
           
-          printText(note.content, font: font)
+          openPrintPanel(note.content, font: font)
         }
         .keyboardShortcut("p", modifiers: [.command])
       }
       
       CommandGroup(after: .appInfo) {
         Button("테마 관리...") {
-          openWindow(id: "theme-new-window")
+          openWindow(id: .idThemeNewWindow)
         }
         .keyboardShortcut("t", modifiers: [.command, .shift])
       }
@@ -169,7 +140,7 @@ struct StickyPlainPadApp: App {
       }
     }
     
-    Window("테마 관리", id: "theme-new-window") {
+    Window("테마 관리", id: .idThemeNewWindow) {
       ThemeListView(themeViewModel: themeViewModel)
     }
   }
@@ -187,7 +158,7 @@ extension StickyPlainPadApp {
   }
   
   /// 텍스트 인쇄 대화상자
-  func printText(_ text: String, font: NSFont?) {
+  func openPrintPanel(_ text: String, font: NSFont?) {
     let printInfo = NSPrintInfo.shared
     printInfo.horizontalPagination = .automatic
     printInfo.verticalPagination = .automatic
@@ -231,7 +202,7 @@ extension StickyPlainPadApp {
   }
   
   /// 파일 읽기 대화상자
-  func selectAndReadTextFile() -> StringWithURL? {
+  func openSelectReadFilePanel() -> StringWithURL? {
     let panel = NSOpenPanel()
     panel.allowedContentTypes = [
       .text, // 모든 종류의 텍스트 기반 파일 (source, json, html, 등 포함)
@@ -279,7 +250,7 @@ extension StickyPlainPadApp {
         try saveToURL(text: text, to: url, atomically: true, encoding: .utf8)
         urlCompletionHandler?(url)
       } catch {
-        print("Save to file failed:", error)
+        Log.error("Save to file failed: \(error.localizedDescription)")
       }
     }
   }
@@ -292,10 +263,10 @@ extension StickyPlainPadApp {
     if fileManager.isWritableFile(atPath: url.path) {
       do {
         try text.write(to: url, atomically: true, encoding: .utf8)
-        print("✅ 기존 경로에 저장 성공")
+        Log.info("✅ 기존 경로에 저장 성공: \(url)")
         return true
       } catch {
-        print("⚠️ 기존 경로 저장 실패: \(error.localizedDescription)")
+        Log.error("⚠️ 기존 경로 저장 실패: \(error.localizedDescription)")
         return false
       }
     }

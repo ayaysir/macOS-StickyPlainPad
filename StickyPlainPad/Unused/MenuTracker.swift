@@ -14,13 +14,13 @@ class MenuTracker: NSObject {
   
   func setupThemeMenus() {
     guard let mainMenu = NSApplication.shared.mainMenu else {
-      print("메인 메뉴를 찾을 수 없습니다.")
+      Log.error("메인 메뉴를 찾을 수 없습니다.")
       return
     }
 
     // "테마" 메뉴 찾기
     guard let themeMenuItem = mainMenu.items.first(where: { $0.title == "테마" }) else {
-      print("테마 메뉴를 찾을 수 없습니다.")
+      Log.error("테마 메뉴를 찾을 수 없습니다.")
       return
     }
     
@@ -40,8 +40,6 @@ class MenuTracker: NSObject {
       }
     }
     themeMenuItem.submenu?.update()
-    
-    print("waitForMainMenu complete 2")
   }
   
   func makeColorItem(title: String, key: String, color: NSColor) -> NSMenuItem {
@@ -98,7 +96,7 @@ class MenuTracker: NSObject {
     sender.state = .on
 
     if let selectedColor = sender.representedObject as? NSColor {
-      print("색상 선택됨:", selectedColor)
+      Log.info("색상 선택됨: \(selectedColor)")
       // 여기서 원하는 동작 수행 (예: 앱 테마 색 변경 등)
     }
   }
@@ -107,7 +105,6 @@ class MenuTracker: NSObject {
 
 extension MenuTracker: NSMenuDelegate {
   func menuWillOpen(_ menu: NSMenu) {
-    // print(menu.title)
     if menu.title == "테마" {
       setupThemeMenus()
     }

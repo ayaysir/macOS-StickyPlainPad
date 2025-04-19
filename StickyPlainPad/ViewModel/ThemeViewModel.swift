@@ -85,7 +85,7 @@ class ThemeViewModel {
     fontSize: CGFloat? = nil
   ) {
     guard var updated = theme(withID: id) else {
-      print(#function, "Error: theme not found.")
+      Log.error("\(#function): theme not found.")
       return
     }
     

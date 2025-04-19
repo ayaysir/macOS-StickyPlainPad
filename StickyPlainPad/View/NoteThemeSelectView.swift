@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NoteThemeSelectView: View {
   @Environment(\.dismiss) var dismiss
+  @Environment(\.openWindow) var openWindow
   
   @Binding private var note: Note
   @State private var noteViewModel: NoteViewModel
@@ -29,6 +30,9 @@ struct NoteThemeSelectView: View {
       HStack {
         Text("테마를 선택하세요.")
           .font(.title2)
+        Button(action: { openWindow(id: .idThemeNewWindow) }) {
+          Text("테마 목록 관리")
+        }
         Spacer()
         Button(action: dismiss.callAsFunction) {
           Text("닫기")

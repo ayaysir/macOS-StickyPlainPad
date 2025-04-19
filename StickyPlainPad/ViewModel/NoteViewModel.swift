@@ -96,8 +96,6 @@ class NoteViewModel {
     repository.update(note)
     loadNotes()
     
-    // print(#function, note.windowFrame)
-    
     return note
   }
   

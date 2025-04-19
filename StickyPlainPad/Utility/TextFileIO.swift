@@ -14,10 +14,10 @@ func readTextFileAutoEncoding(at url: URL) -> String? {
 
   do {
     let text = try String(contentsOf: url, usedEncoding: &usedEncoding)
-    print("감지된 인코딩: \(usedEncoding)")
+    Log.info("감지된 인코딩: \(usedEncoding)")
     return text
   } catch {
-    print("파일 읽기 실패:", error.localizedDescription)
+    Log.error("파일 읽기 실패: \(error.localizedDescription)")
     return nil
   }
 }
@@ -30,5 +30,5 @@ func saveToURL(
   encoding enc: String.Encoding = .utf8
 ) throws {
   try text.write(to: url, atomically: useAuxiliaryFile, encoding: enc)
-  print("저장 완료: \(url.path)")
+  Log.info("저장 완료: \(url.path)")
 }
