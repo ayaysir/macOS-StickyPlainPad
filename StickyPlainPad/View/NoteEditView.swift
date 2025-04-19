@@ -54,7 +54,7 @@ struct NoteEditView: View {
           text: $currentContent,
           fontSize: $fontSize,
           theme: $theme,
-          findReplaceViewModel: $findReplaceViewModel
+          viewModel: $findReplaceViewModel
         )
       }
       .background(Color.defaultNoteBackground)

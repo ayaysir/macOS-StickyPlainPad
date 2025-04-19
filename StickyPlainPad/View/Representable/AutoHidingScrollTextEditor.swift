@@ -11,7 +11,7 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @Binding var text: String
   @Binding var fontSize: CGFloat
   @Binding var theme: Theme?
-  @Binding var findReplaceViewModel: FindReplaceViewModel
+  @Binding var viewModel: FindReplaceViewModel
 
   func makeNSView(context: Context) -> NSScrollView {
     let textView = ExpandableTextView()
@@ -85,11 +85,11 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
     
     // 검색 관련
-    if findReplaceViewModel.isSearchWindowPresented, findReplaceViewModel.resultRanges.count > 0 {
+    if viewModel.isSearchWindowPresented, viewModel.resultRanges.count > 0 {
       // 창이 떠 있고, 검색 결과가 1 이상 있을 때
       // applyDimmedStyle(to: textView)
       // textView.alphaValue = 0.4
-      highlight(using: findReplaceViewModel.resultRanges, in: textView)
+      highlight(using: viewModel.resultRanges, in: textView)
     } else {
       // textView.alphaValue = 1
     }
@@ -100,6 +100,12 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     
     // 테마 업데이트
     updateTheme(textView: textView)
+    
+    // 검색 시 위치 이동
+    if viewModel.currentResultRangeIndex < viewModel.resultRanges.count {
+      let range = viewModel.resultRanges[viewModel.currentResultRangeIndex]
+      textView.scrollRangeToVisible(range)
+    }
   }
 
   func makeCoordinator() -> Coordinator {
@@ -166,29 +172,38 @@ extension AutoHidingScrollTextEditor {
   
   
   private func highlight(using ranges: [NSRange], in textView: NSTextView) {
-    let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
+    // let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
 
     // 기존 스타일 초기화 (흐리게)
-    textView.textStorage?.setAttributes([
-      .foregroundColor: NSColor.labelColor.withAlphaComponent(0.3)
-    ], range: fullRange)
+    // textView.textStorage?.setAttributes([
+    //   .foregroundColor: NSColor.labelColor.withAlphaComponent(0.3)
+    // ], range: fullRange)
+    
+    let LEAST_OPACITY = 0.45
 
     // 강조된 부분 다시 설정
-    
-    for range in ranges {
+    for (index, range) in ranges.enumerated() {
+      let isCurrent = index == viewModel.currentResultRangeIndex
+      let font = NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
+
+      let attributes: [NSAttributedString.Key: Any]
+
       if let theme, let textColor = NSColor(hex: theme.textColorHex) {
-        textView.textStorage?.addAttributes([
-          .foregroundColor: textColor.invertedColor,
-          .backgroundColor: textColor.invertedColor.withAlphaComponent(0.7),
-          .font: NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
-        ], range: range)
+        let color = textColor.invertedColor
+        attributes = [
+          .foregroundColor: color,
+          .backgroundColor: color.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
+          .font: font
+        ]
       } else {
-        textView.textStorage?.addAttributes([
-          .foregroundColor: NSColor.systemYellow,
-          .backgroundColor: NSColor.systemOrange.withAlphaComponent(0.5),
-          .font: NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
-        ], range: range)
+        attributes = [
+          .foregroundColor: NSColor.defaultSelected,
+          .backgroundColor: NSColor.defaultSelected.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
+          .font: font
+        ]
       }
+
+      textView.textStorage?.addAttributes(attributes, range: range)
     }
   }
 }
@@ -203,7 +218,7 @@ extension AutoHidingScrollTextEditor {
     text: $text,
     fontSize: $fontSize,
     theme: $theme,
-    findReplaceViewModel: $findReplaceViewModel
+    viewModel: $findReplaceViewModel
   )
     .frame(width: 400, height: 100)
 }

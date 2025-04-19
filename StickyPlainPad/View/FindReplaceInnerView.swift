@@ -20,20 +20,28 @@ struct FindReplaceInnerView: View {
             Text("Options")
             Image(systemName: "chevron.down")
           }
-          TextField("Find...", text: $viewModel.findKeyword)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+          ZStack(alignment: .trailing) {
+            TextField("Find...", text: $viewModel.findKeyword)
+              .clipShape(RoundedRectangle(cornerRadius: 10))
+            Text("\(viewModel.resultRanges.count) results")
+              .padding(.trailing, 10)
+              .foregroundStyle(.gray.opacity(0.5))
+          }
           
-          Button(action: {}) {
+          Button(action: { viewModel.goToPreviousResult() }) {
             Image(systemName: "chevron.left")
           }
-          Button(action: {}) {
+          
+          Button(action: { viewModel.goToNextResult() }) {
             Image(systemName: "chevron.right")
           }
-          if showReplaceArea {
-            Spacer()
-          } else {
+          
+          if !showReplaceArea {
             buttonComplete
           }
+          
+          Spacer()
+          
           Toggle("Replace", isOn: $showReplaceArea)
         }
         
@@ -116,7 +124,7 @@ extension FindReplaceInnerView {
       case .ignoreCase:
         viewModel.isIgnoreCaseOn ? .on : .off
       case .cycleSearch:
-          .off
+        viewModel.isCycleSearchOn ? .on : .off
       case .findKeywordMode(let mode):
         viewModel.findKeywordMode == mode ? .on : .off
       default:
@@ -148,7 +156,8 @@ extension FindReplaceInnerView {
         // ignore cases
         viewModel.isIgnoreCaseOn.toggle()
       case 1:
-        print("cycle search")
+        // cycle search
+        viewModel.isCycleSearchOn.toggle()
       case 2:
         // 뷰모델을 갱신하면 메뉴 상태도 자동 갱신됨
         viewModel.findKeywordMode = .contain

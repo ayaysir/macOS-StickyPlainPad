@@ -11,12 +11,73 @@ import Foundation
 final class FindReplaceViewModel {
   var isSearchWindowPresented = false
   
+  /*
+   currentResultRangeIndex가 0이 되는 조건
+   1. findKeyword 변경
+   2. findKeywordMode 변경
+   3. isIgnoreCaseOn 변경
+   4. isCycleSearchOn 변경
+   
+   text: 검색 및 대체 모드일 때는 텍스트를 변경할 수 없어야함
+   */
+  
   var text = "" // 전체 텍스트
-  var findKeyword = "" // 찾는 단어
-  var findKeywordMode: FindKeywordMode = .contain // 찾기 모드 선택
-  var isIgnoreCaseOn = true
+  
+  // 찾는 단어
+  var findKeyword = "" {
+    didSet { currentResultRangeIndex = 0 }
+  }
+  
+  // 찾기 모드 선택
+  var findKeywordMode: FindKeywordMode = .contain {
+    didSet { currentResultRangeIndex = 0 }
+  }
+  
+  var isIgnoreCaseOn = true {
+    didSet { currentResultRangeIndex = 0 }
+  }
+  
+  var isCycleSearchOn = true {
+    didSet { currentResultRangeIndex = 0 }
+  }
   
   var resultRanges: [NSRange] {
+    getResultRanges()
+  }
+  
+  private(set) var currentResultRangeIndex = 0
+  
+  func goToNextResult() {
+    guard !resultRanges.isEmpty else {
+      currentResultRangeIndex = 0
+      return
+    }
+    
+    let next = currentResultRangeIndex + 1
+    if next < resultRanges.count {
+      currentResultRangeIndex = next
+    } else if isCycleSearchOn {
+      currentResultRangeIndex = 0
+    } // else: 범위 넘어가면 그대로 유지
+  }
+  
+  func goToPreviousResult() {
+    guard !resultRanges.isEmpty else {
+      currentResultRangeIndex = 0
+      return
+    }
+    
+    let prev = currentResultRangeIndex - 1
+    if prev >= 0 {
+      currentResultRangeIndex = prev
+    } else if isCycleSearchOn {
+      currentResultRangeIndex = resultRanges.count - 1
+    }
+  }
+}
+
+extension FindReplaceViewModel {
+  private func getResultRanges() -> [NSRange] {
     guard !findKeyword.isEmpty else {
       return []
     }
@@ -120,9 +181,7 @@ final class FindReplaceViewModel {
         }
       }
     }
-
+    
     return foundRanges
   }
-  
-  var currentResultRangeIndex: Int?
 }
