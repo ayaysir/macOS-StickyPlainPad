@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct FindReplaceInnerView: View {
-  // @Binding var isPresented: Bool
   @Binding var viewModel: FindReplaceViewModel
-  @State private var showReplaceArea = false
   
   var body: some View {
     ZStack {
@@ -28,31 +26,31 @@ struct FindReplaceInnerView: View {
               .foregroundStyle(.gray.opacity(0.5))
           }
           
-          Button(action: { viewModel.goToPreviousResult() }) {
+          Button(action: viewModel.goToPreviousResult) {
             Image(systemName: "chevron.left")
           }
           
-          Button(action: { viewModel.goToNextResult() }) {
+          Button(action: viewModel.goToNextResult) {
             Image(systemName: "chevron.right")
           }
           
-          if !showReplaceArea {
+          if !viewModel.isReplaceAreaPresented {
             buttonComplete
           }
           
           Spacer()
           
-          Toggle("Replace", isOn: $showReplaceArea)
+          Toggle("Replace", isOn: $viewModel.isReplaceAreaPresented)
         }
         
-        if showReplaceArea {
+        if viewModel.isReplaceAreaPresented {
           HStack(spacing: 2) {
-            TextField("Replace...", text: .constant(""))
+            TextField("Replace...", text: $viewModel.replaceKeyword)
               .clipShape(RoundedRectangle(cornerRadius: 10))
-            Button(action: {}) {
+            Button(action: viewModel.replaceCurrent) {
               Text("Replace")
             }
-            Button(action: {}) {
+            Button(action: viewModel.replaceAll) {
               Text("All")
             }
             Spacer()

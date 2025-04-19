@@ -90,8 +90,10 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
       // applyDimmedStyle(to: textView)
       // textView.alphaValue = 0.4
       highlight(using: viewModel.resultRanges, in: textView)
+      textView.isEditable = false
     } else {
       // textView.alphaValue = 1
+      textView.isEditable = true
     }
     
     if textView.string != text {

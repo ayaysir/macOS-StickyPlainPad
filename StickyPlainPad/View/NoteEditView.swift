@@ -74,6 +74,10 @@ struct NoteEditView: View {
       note = noteViewModel.updateNote(note, content: currentContent)
       findReplaceViewModel.text = currentContent
     }
+    .onChange(of: findReplaceViewModel.text) {
+      currentContent = findReplaceViewModel.text
+      note = noteViewModel.updateNote(note, content: currentContent)
+    }
     .onChange(of: fontSize) {
       note.fontSize = fontSize
       note = noteViewModel.updateNote(note)

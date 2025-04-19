@@ -10,6 +10,7 @@ import Foundation
 @Observable
 final class FindReplaceViewModel {
   var isSearchWindowPresented = false
+  var isReplaceAreaPresented = false
   
   /*
    currentResultRangeIndex가 0이 되는 조건
@@ -27,6 +28,9 @@ final class FindReplaceViewModel {
   var findKeyword = "" {
     didSet { currentResultRangeIndex = 0 }
   }
+  
+  // 대체할 단어
+  var replaceKeyword = ""
   
   // 찾기 모드 선택
   var findKeywordMode: FindKeywordMode = .contain {
@@ -73,6 +77,41 @@ final class FindReplaceViewModel {
     } else if isCycleSearchOn {
       currentResultRangeIndex = resultRanges.count - 1
     }
+  }
+  
+  func replaceCurrent() {
+    guard isReplaceAreaPresented else {
+      return
+    }
+    guard !resultRanges.isEmpty else {
+      return
+    }
+    guard currentResultRangeIndex >= 0,
+          currentResultRangeIndex < resultRanges.count else {
+      return
+    }
+
+    let nsText = NSMutableString(string: text)
+    let range = resultRanges[currentResultRangeIndex]
+    nsText.replaceCharacters(in: range, with: replaceKeyword)
+    text = nsText as String
+  }
+
+  func replaceAll() {
+    guard isReplaceAreaPresented else {
+      return
+    }
+    guard !resultRanges.isEmpty else {
+      return
+    }
+
+    let nsText = NSMutableString(string: text)
+
+    for range in resultRanges.reversed() {
+      nsText.replaceCharacters(in: range, with: replaceKeyword)
+    }
+
+    text = nsText as String
   }
 }
 
