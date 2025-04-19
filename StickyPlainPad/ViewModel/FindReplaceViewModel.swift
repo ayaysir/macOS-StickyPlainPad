@@ -7,12 +7,6 @@
 
 import Foundation
 
-enum FindKeywordMode {
-  case contain // ~을 포함
-  case startWith // ~로 시작
-  case shouldEntireMatch // 단어가 일치하는 경우에만
-}
-
 @Observable
 final class FindReplaceViewModel {
   var isSearchWindowPresented = false

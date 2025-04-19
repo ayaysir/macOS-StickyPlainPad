@@ -108,10 +108,10 @@ struct NoteEditView: View {
         
       }
     }
-    .onChange(of: findReplaceViewModel.findKeyword) {
-      print("findKeyword:", findReplaceViewModel.findKeyword)
-      print(findReplaceViewModel.resultRanges)
-    }
+    // .onChange(of: findReplaceViewModel.findKeyword) {
+    //   print("findKeyword:", findReplaceViewModel.findKeyword)
+    //   print(findReplaceViewModel.resultRanges)
+    // }
     .sheet(isPresented: $showThemeSelectSheet) {
       // onDismiss
       if let themeID = note.themeID {
