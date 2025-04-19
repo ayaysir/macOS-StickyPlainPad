@@ -22,6 +22,7 @@ final class FindReplaceViewModel {
    text: 검색 및 대체 모드일 때는 텍스트를 변경할 수 없어야함
    */
   
+  // TODO: - text 제거 및 리팩토링 (이거 제거하면 빨간색 엄청뜸)
   var text = "" // 전체 텍스트
   
   // 찾는 단어
