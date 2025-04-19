@@ -1,5 +1,5 @@
 //
-//  FindAndReplaceViewModel.swift
+//  FindReplaceViewModel.swift
 //  StickyPlainPad
 //
 //  Created by 윤범태 on 4/19/25.
@@ -14,7 +14,7 @@ enum FindKeywordMode {
 }
 
 @Observable
-final class FindAndReplaceViewModel {
+final class FindReplaceViewModel {
   var isSearchWindowPresented = false
   
   var text = "" // 전체 텍스트

@@ -11,7 +11,7 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @Binding var text: String
   @Binding var fontSize: CGFloat
   @Binding var theme: Theme?
-  @Binding var findAndReplaceViewModel: FindAndReplaceViewModel
+  @Binding var findReplaceViewModel: FindReplaceViewModel
 
   func makeNSView(context: Context) -> NSScrollView {
     let textView = ExpandableTextView()
@@ -85,11 +85,11 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
     
     // 검색 관련
-    if findAndReplaceViewModel.isSearchWindowPresented, findAndReplaceViewModel.resultRanges.count > 0 {
+    if findReplaceViewModel.isSearchWindowPresented, findReplaceViewModel.resultRanges.count > 0 {
       // 창이 떠 있고, 검색 결과가 1 이상 있을 때
       // applyDimmedStyle(to: textView)
       // textView.alphaValue = 0.4
-      highlight(using: findAndReplaceViewModel.resultRanges, in: textView)
+      highlight(using: findReplaceViewModel.resultRanges, in: textView)
     } else {
       // textView.alphaValue = 1
     }
@@ -197,13 +197,13 @@ extension AutoHidingScrollTextEditor {
   @Previewable @State var text = "ABCD\n"
   @Previewable @State var fontSize: CGFloat = 14
   @Previewable @State var theme: Theme? = nil
-  @Previewable @State var findAndReplaceViewModel = FindAndReplaceViewModel()
+  @Previewable @State var findReplaceViewModel = FindReplaceViewModel()
   
   AutoHidingScrollTextEditor(
     text: $text,
     fontSize: $fontSize,
     theme: $theme,
-    findAndReplaceViewModel: $findAndReplaceViewModel
+    findReplaceViewModel: $findReplaceViewModel
   )
     .frame(width: 400, height: 100)
 }

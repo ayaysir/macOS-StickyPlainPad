@@ -15,7 +15,7 @@ struct NoteEditView: View {
   
   @State private var noteViewModel: NoteViewModel
   @State private var themeViewModel: ThemeViewModel
-  @State private var findAndReplaceViewModel = FindAndReplaceViewModel()
+  @State private var findReplaceViewModel = FindReplaceViewModel()
   
   @State private var note: Note
   @State private var theme: Theme?
@@ -47,14 +47,14 @@ struct NoteEditView: View {
       headerToolbar
       
       VStack(spacing: 0) {
-        if findAndReplaceViewModel.isSearchWindowPresented {
+        if findReplaceViewModel.isSearchWindowPresented {
           searchArea
         }
         AutoHidingScrollTextEditor(
           text: $currentContent,
           fontSize: $fontSize,
           theme: $theme,
-          findAndReplaceViewModel: $findAndReplaceViewModel
+          findReplaceViewModel: $findReplaceViewModel
         )
       }
       .background(Color.defaultNoteBackground)
@@ -72,7 +72,7 @@ struct NoteEditView: View {
     .onChange(of: currentContent) {
       naviTitle = currentContent.truncated(to: 30)
       note = noteViewModel.updateNote(note, content: currentContent)
-      findAndReplaceViewModel.text = currentContent
+      findReplaceViewModel.text = currentContent
     }
     .onChange(of: fontSize) {
       note.fontSize = fontSize
@@ -92,12 +92,12 @@ struct NoteEditView: View {
     }
     .onChange(of: noteViewModel.currentNoteIdForFind) { _, noteID in
       if noteID == note.id {
-        findAndReplaceViewModel.isSearchWindowPresented = true
+        findReplaceViewModel.isSearchWindowPresented = true
       } else {
-        findAndReplaceViewModel.isSearchWindowPresented = false
+        findReplaceViewModel.isSearchWindowPresented = false
       }
     }
-    .onChange(of: findAndReplaceViewModel.isSearchWindowPresented) { oldValue, newValue in
+    .onChange(of: findReplaceViewModel.isSearchWindowPresented) { oldValue, newValue in
       if oldValue == true,
          newValue == false,
          noteViewModel.currentNoteIdForFind == note.id {
@@ -108,9 +108,9 @@ struct NoteEditView: View {
         
       }
     }
-    .onChange(of: findAndReplaceViewModel.findKeyword) {
-      print("findKeyword:", findAndReplaceViewModel.findKeyword)
-      print(findAndReplaceViewModel.resultRanges)
+    .onChange(of: findReplaceViewModel.findKeyword) {
+      print("findKeyword:", findReplaceViewModel.findKeyword)
+      print(findReplaceViewModel.resultRanges)
     }
     .sheet(isPresented: $showThemeSelectSheet) {
       // onDismiss
@@ -199,8 +199,8 @@ struct NoteEditView: View {
   }
   
   private var searchArea: some View {
-    FindAndReplaceInnerView(
-      viewModel: $findAndReplaceViewModel
+    FindReplaceInnerView(
+      viewModel: $findReplaceViewModel
     )
       .background(.white)
   }

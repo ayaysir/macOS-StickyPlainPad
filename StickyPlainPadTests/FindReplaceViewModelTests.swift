@@ -1,5 +1,5 @@
 //
-//  FindAndReplaceViewModelTests.swift
+//  FindReplaceViewModelTests.swift
 //  StickyPlainPadTests
 //
 //  Created by 윤범태 on 4/19/25.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import StickyPlainPad
 
-final class FindAndReplaceViewModelTests: XCTestCase {
+final class FindReplaceViewModelTests: XCTestCase {
   
   override func setUpWithError() throws {
     // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -19,7 +19,7 @@ final class FindAndReplaceViewModelTests: XCTestCase {
   }
   
   func test_Conain모드에서_찾는단어가_한단어만_있는경우() {
-    let viewModel = FindAndReplaceViewModel()
+    let viewModel = FindReplaceViewModel()
     viewModel.text = "텍스트 테스트 텍스트 텍스트의텍스트를 텍스트로 감쌈 텍스트!"
     viewModel.findKeyword = "테스트"
     viewModel.findKeywordMode = .contain
@@ -30,7 +30,7 @@ final class FindAndReplaceViewModelTests: XCTestCase {
   }
   
   func testContainModeFindsAllOccurrences() {
-    let viewModel = FindAndReplaceViewModel()
+    let viewModel = FindReplaceViewModel()
     viewModel.text = "텍스트 테스트 텍스트 텍스트의텍스트를 텍스트로 감쌈 텍스트!"
     viewModel.findKeyword = "텍스트"
     viewModel.findKeywordMode = .contain
@@ -41,7 +41,7 @@ final class FindAndReplaceViewModelTests: XCTestCase {
   }
 
   func testStartWithModeOnlyMatchesAtStartOfWords() {
-    let viewModel = FindAndReplaceViewModel()
+    let viewModel = FindReplaceViewModel()
     viewModel.text = "텍스트 테스트 텍스트의 텍스트입니다 의텍스트 텍스트로"
     viewModel.findKeyword = "텍스트"
     viewModel.findKeywordMode = .startWith
@@ -52,7 +52,7 @@ final class FindAndReplaceViewModelTests: XCTestCase {
   }
 
   func testShouldEntireMatchOnlyMatchesExactWords() {
-    let viewModel = FindAndReplaceViewModel()
+    let viewModel = FindReplaceViewModel()
     viewModel.text = "텍스트 테스트 텍스트의 텍스트입니다 텍스트"
     viewModel.findKeyword = "텍스트"
     viewModel.findKeywordMode = .shouldEntireMatch
@@ -63,7 +63,7 @@ final class FindAndReplaceViewModelTests: XCTestCase {
   }
 
   func testEmptyKeywordReturnsNoResults() {
-    let viewModel = FindAndReplaceViewModel()
+    let viewModel = FindReplaceViewModel()
     viewModel.text = "텍스트 텍스트"
     viewModel.findKeyword = ""
     viewModel.findKeywordMode = .contain
