@@ -114,7 +114,7 @@ extension FindReplaceInnerView {
       // OBJC 함수에서 뷰모델을 갱신하면 메뉴 상태도 자동 갱신됨
       menu.state = switch info.category {
       case .ignoreCase:
-          .off
+        viewModel.isIgnoreCaseOn ? .on : .off
       case .cycleSearch:
           .off
       case .findKeywordMode(let mode):
@@ -145,7 +145,8 @@ extension FindReplaceInnerView {
     @objc func menuAction(_ sender: NSMenuItem) {
       switch sender.tag {
       case 0:
-        print("ignore case, \(sender.state == .off)")
+        // ignore cases
+        viewModel.isIgnoreCaseOn.toggle()
       case 1:
         print("cycle search")
       case 2:
