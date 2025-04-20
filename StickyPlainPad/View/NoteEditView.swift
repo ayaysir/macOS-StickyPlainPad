@@ -116,8 +116,9 @@ struct NoteEditView: View {
       // onDismiss
       if let themeID = note.themeID {
         theme = themeViewModel.theme(withID: themeID)
+      } else {
+        theme = nil
       }
-      
     } content: {
       NoteThemeSelectView(
         note: $note,

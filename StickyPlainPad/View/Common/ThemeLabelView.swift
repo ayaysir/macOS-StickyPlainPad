@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ThemeLabelView: View {
   let theme: Theme
+  var baseFontOption: Font = .body
   
   var body: some View {
     HStack {
@@ -21,6 +22,7 @@ struct ThemeLabelView: View {
             .foregroundStyle(Color(hex: theme.textColorHex) ?? .white)
         }
       Text(theme.name)
+        .font(baseFontOption)
     }
     .frame(height: 20)
     .frame(maxHeight: 50)

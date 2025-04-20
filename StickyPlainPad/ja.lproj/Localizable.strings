@@ -60,3 +60,5 @@
 "loc_contains" = "含む";
 "loc_starts_with" = "で始まる";
 "loc_whole_word" = "完全一致単語";
+
+"loc_restore_default_theme" = "（デフォルトテーマに戻す）";

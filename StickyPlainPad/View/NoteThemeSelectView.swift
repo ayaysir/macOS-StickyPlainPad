@@ -39,7 +39,25 @@ struct NoteThemeSelectView: View {
         }
       }
       .padding()
+      
       List {
+        Button(action: {
+          updateThemeToNil()
+          dismiss()
+        }) {
+          ThemeLabelView(
+            theme: .init(
+              id: .init(),
+              createdAt: .now,
+              name: "loc_restore_default_theme".localized,
+              backgroundColorHex: "#FCF4A7",
+              textColorHex: "#000000",
+              fontName: "SF Pro",
+              fontSize: 15
+            )
+          )
+        }
+        
         ForEach(themeViewModel.themes) { theme in
           Button(action: {
             updateTheme(themeID: theme.id)
@@ -55,6 +73,11 @@ struct NoteThemeSelectView: View {
   
   private func updateTheme(themeID: Theme.ID) {
     note.themeID = themeID
+    note = noteViewModel.updateNote(note)
+  }
+  
+  private func updateThemeToNil() {
+    note.themeID = nil
     note = noteViewModel.updateNote(note)
   }
 }

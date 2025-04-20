@@ -44,6 +44,13 @@ struct ThemeListView: View {
             Label("loc_add_theme", systemImage: "plus")
           }
         }
+#if DEBUG
+        ToolbarItem {
+          Button("to Json") {
+            print(viewModel.themes.encodeToJSON() ?? "-")
+          }
+        }
+#endif
       }
     } detail: {
       detail

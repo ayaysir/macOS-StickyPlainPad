@@ -54,6 +54,8 @@
 "loc_font_settings" = "Font settings";
 "loc_font" = "Font";
 
+"loc_restore_default_theme" = "(Restore to default theme)";
+
 
 // 윈도우 타이틀
 "loc_window_find_title" = "Find/Replace";

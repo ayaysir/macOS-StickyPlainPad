@@ -60,3 +60,5 @@
 "loc_contains" = "다음을 포함";
 "loc_starts_with" = "다음으로 시작";
 "loc_whole_word" = "전체 단어";
+
+"loc_restore_default_theme" = "(기본 테마로 복원)";
