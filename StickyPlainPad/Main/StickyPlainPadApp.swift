@@ -104,10 +104,17 @@ struct StickyPlainPadApp: App {
       }
       
       CommandGroup(after: .appInfo) {
+        Divider()
+        
         Button("loc_theme_manager_ellipsis") {
           openWindow(id: .idThemeNewWindow)
         }
         .keyboardShortcut("t", modifiers: [.command, .shift])
+        
+        Button("loc_editor_settings_ellipsis") {
+          openWindow(id: .idEditorSettingWindow)
+        }
+        .keyboardShortcut(",", modifiers: .command)
       }
       
       CommandGroup(after: .pasteboard) {
@@ -145,6 +152,10 @@ struct StickyPlainPadApp: App {
     
     Window("loc_theme_manager", id: .idThemeNewWindow) {
       ThemeListView(themeViewModel: themeViewModel)
+    }
+    
+    Window("loc_editor_settings", id: .idEditorSettingWindow) {
+      EditorOptionsSettingsView()
     }
   }
 }

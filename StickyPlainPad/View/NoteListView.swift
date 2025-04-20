@@ -29,10 +29,6 @@ struct NoteListView: View {
   var body: some View {
     VStack {
       List {
-        Button(action: addItem) {
-          Label("loc_add_note", systemImage: "plus")
-        }
-        
         ForEach(filteredNotes) { note in
           Button {
             // openWindow(value: note.id)
@@ -57,6 +53,21 @@ struct NoteListView: View {
         .onDelete(perform: deleteItems)
       }
       .searchable(text: $searchText, prompt: "loc_search_content")
+      .toolbar {
+        ToolbarItem {
+          Button(action: addItem) {
+            Label("loc_add_note", systemImage: "plus")
+          }
+          .help("loc_add_note")
+        }
+#if DEBUG
+        ToolbarItem {
+          Button("to JSON") {
+            print(viewModel.notes.encodeToJSON() ?? "-")
+          }
+        }
+#endif
+      }
     }
     .onAppear {
       viewModel.lastOpenedNotes.forEach { note in

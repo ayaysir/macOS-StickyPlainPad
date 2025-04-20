@@ -24,6 +24,7 @@ struct Note: Codable, Identifiable, Hashable {
   var isWindowShrinked: Bool = false
 }
 
-extension Note {
- 
+struct InitNote: Codable, Identifiable, Hashable {
+  let id: UUID
+  var content: String
 }

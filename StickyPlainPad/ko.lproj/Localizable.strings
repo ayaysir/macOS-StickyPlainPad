@@ -26,8 +26,8 @@
 "loc_close_note" = "현재 메모 닫기";
 "loc_always_on_top" = "항상 위에 고정";
 "loc_change_theme_ellipsis" = "테마 변경…";
-"loc_maxres_window" = "창 크기 최대화/복원";
-"loc_shrink_header" = "창을 헤더만 보이게 축소";
+"loc_maxres_window" = "메모 윈도우 크기 최대화/복원";
+"loc_shrink_header" = "메모 윈도우를 헤더만 보이게 축소";
 
 "loc_add_note" = "메모 추가";
 "loc_delete_note" = "이 메모 삭제";
@@ -62,3 +62,17 @@
 "loc_whole_word" = "전체 단어";
 
 "loc_restore_default_theme" = "(기본 테마로 복원)";
+
+"loc_editor_substitution_option_note" = "이 옵션 설정은 이후에 새로 여는 메모 에디터에 적용되며, 에디터의 마우스 오른쪽 버튼 -> [대체] 메뉴에서 조절할 수 있습니다. 에디터 내에서 개별적으로 변경한 설정은 저장되지 않습니다."; // ko
+"loc_editor_settings" = "텍스트 에디터 설정";
+"loc_text_correction_options" = "텍스트 자동 교정 옵션";
+
+"loc_smart_copy_paste" = "스마트 복사/붙여넣기";
+"loc_smart_quotes" = "스마트 인용 부호 (\" → “ ”)";
+"loc_smart_dashes" = "스마트 대시 (-- → –)";
+"loc_text_replacement" = "텍스트 대치 (예: :) → 😊)";
+"loc_data_detection" = "데이터 탐지기 (날짜, 주소)";
+"loc_link_detection" = "링크 탐지기";
+"loc_spelling_correction" = "철자 자동 수정";
+
+"loc_editor_settings_ellipsis" = "텍스트 에디터 설정…";

@@ -12,6 +12,14 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @Binding var fontSize: CGFloat
   @Binding var theme: Theme?
   @Binding var viewModel: FindReplaceViewModel
+  
+  @AppStorage(.cfgEditorAutoCopyPaste) private var autoCopyPaste = true
+  @AppStorage(.cfgEditorAutoQuotes) private var autoQuotes = false
+  @AppStorage(.cfgEditorAutoDashes) private var autoDashes = true
+  @AppStorage(.cfgEditorAutoSpelling) private var autoSpelling = false
+  @AppStorage(.cfgEditorAutoTextReplacement) private var autoTextReplacement = true
+  @AppStorage(.cfgEditorAutoDataDetection) private var autoDataDetection = false
+  @AppStorage(.cfgEditorAutoLinkDetection) private var autoLinkDetection = false
 
   func makeNSView(context: Context) -> NSScrollView {
     let textView = ExpandableTextView()
@@ -20,6 +28,15 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     textView.isRichText = false
     textView.allowsUndo = true
     textView.textContainerInset = NSSize(width: 0, height: 4) // ← 패딩 추가
+    
+    // AppStorage 값들을 NSTextView에 적용
+    textView.smartInsertDeleteEnabled = autoCopyPaste
+    textView.isAutomaticQuoteSubstitutionEnabled = autoQuotes
+    textView.isAutomaticDashSubstitutionEnabled = autoDashes
+    textView.isAutomaticSpellingCorrectionEnabled = autoSpelling
+    textView.isAutomaticTextReplacementEnabled = autoTextReplacement
+    textView.isAutomaticDataDetectionEnabled = autoDataDetection
+    textView.isAutomaticLinkDetectionEnabled = autoLinkDetection
     
     // 테마 적용
     if let theme {
@@ -36,6 +53,7 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     textView.textContainer?.containerSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
     textView.textContainer?.widthTracksTextView = true
 
+    // 스크롤 뷰
     let scrollView = NSScrollView()
     scrollView.documentView = textView
     scrollView.hasVerticalScroller = true
