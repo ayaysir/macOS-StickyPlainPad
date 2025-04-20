@@ -178,12 +178,11 @@ final class NoteEditWindowManager {
   }
   
   /// 커맨드 윈도우 메뉴에서 윈도우를 제거하고, 윈도우를 닫고, 노트 윈도우 정보를 업데이트
-  func closWindowAndRemoveFromCommandMenu(
+  func closeWindowAndRemoveFromCommandMenu(
     _ window: NoteEditWindow,
     note: Note,
     noteViewModel: NoteViewModel
   ) {
-    let menu = NSApplication.shared.menu
     
     window.close()
     
@@ -192,6 +191,21 @@ final class NoteEditWindowManager {
       note: note,
       isWindowOpened: false
     )
+    
+    removeMenuItem(window: window)
+  }
+  
+  func closeGhostWindow(noteID: Note.ID) {
+    guard let window = NoteEditWindowManager.shared.openWindows.first(where: { $0.noteID == noteID }) else {
+      return
+    }
+    
+    removeMenuItem(window: window)
+    window.close()
+  }
+  
+  private func removeMenuItem(window: NSWindow) {
+    let menu = NSApplication.shared.menu
     
     guard let windowMenu = menu?.item(withTitle: "loc_menu_window".localized)?.submenu else {
       Log.error("loc_menu_window not found. Localized: \("loc_menu_window".localized)")
@@ -203,7 +217,6 @@ final class NoteEditWindowManager {
     }
     
     windowMenu.removeItem(item)
-    
   }
   
   func updateWindowsOpenStatus(

@@ -70,6 +70,19 @@ class NoteViewModel {
     return newNote
   }
   
+  func addNote(_ note: Note) {
+    repository.add(note)
+    loadNotes()
+  }
+  
+  func addNotes(from notes: [Note]) {
+    notes.forEach { note in
+      repository.add(note)
+    }
+    
+    loadNotes()
+  }
+  
   func updateNote(_ note: Note, content: String) -> Note {
     var note = note
     note.content = content
@@ -141,8 +154,12 @@ class NoteViewModel {
     loadNotes()
   }
   
-  func deleteNote(index: Int) {
+  @discardableResult
+  func deleteNote(index: Int) -> Note.ID {
+    let noteID = notes[index].id
     repository.delete(notes[index])
     loadNotes()
+    
+    return noteID
   }
 }

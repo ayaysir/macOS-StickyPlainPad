@@ -23,6 +23,9 @@ extension String {
   static let idThemeNewWindow = "theme-new-window"
   static let idEditorSettingWindow = "editor-setting-window"
   
+  static let onceHasLoadedInitialThemes = "hasLoadedInitialThemes"
+  static let onceHasLoadedInitialNotes  = "hasLoadedInitialNotes"
+  
   static let cfgEditorAutoQuotes           = "cfg_editor_auto_quotes"
   static let cfgEditorAutoDashes           = "cfg_editor_auto_dashes"
   static let cfgEditorAutoSpelling         = "cfg_editor_auto_spelling"

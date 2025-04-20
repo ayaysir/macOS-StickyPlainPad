@@ -44,9 +44,11 @@ struct NoteListView: View {
           .buttonStyle(.plain)
           .contextMenu {
             Button(role: .destructive) {
+              let noteID = note.id
               viewModel.deleteNote(note)
+              NoteEditWindowManager.shared.closeGhostWindow(noteID: noteID)
             } label: {
-              Text("삭제")
+              Text("loc_delete_note")
             }
           }
         }
@@ -63,7 +65,11 @@ struct NoteListView: View {
 #if DEBUG
         ToolbarItem {
           Button("to JSON") {
-            print(viewModel.notes.encodeToJSON() ?? "-")
+            let simpleNotes = viewModel.notes.map {
+              InitNote(id: $0.id, content: $0.content)
+            }
+            
+            print(simpleNotes.encodeToJSON() ?? "-")
           }
         }
 #endif
@@ -116,8 +122,15 @@ struct NoteListView: View {
   private func deleteItems(offsets: IndexSet) {
     withAnimation {
       for index in offsets {
-        viewModel.deleteNote(index: index)
+        let noteID = viewModel.deleteNote(index: index)
+        NoteEditWindowManager.shared.closeGhostWindow(noteID: noteID)
       }
+    }
+  }
+  
+  private func closeWindow(note: Note) {
+    if let window = NoteEditWindowManager.shared.openWindows.first(where: { $0.noteID == note.id }) {
+      NoteEditWindowManager.shared.closeWindowAndRemoveFromCommandMenu(window, note: note, noteViewModel: viewModel)
     }
   }
   

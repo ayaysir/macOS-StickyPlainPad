@@ -215,7 +215,7 @@ extension NoteEditView {
     }
     
     window.close()
-    NoteEditWindowManager.shared.closWindowAndRemoveFromCommandMenu(
+    NoteEditWindowManager.shared.closeWindowAndRemoveFromCommandMenu(
       window,
       note: note,
       noteViewModel: noteViewModel

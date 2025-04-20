@@ -40,6 +40,7 @@ struct StickyPlainPadApp: App {
       )
       .onAppear {
         loadInitialThemesIfNeeded()
+        loadInitialNotesIfNeeded()
       }
     }
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
@@ -134,7 +135,7 @@ struct StickyPlainPadApp: App {
         Button("loc_close") {
           if let note = noteFromKeyWindow {
             if let keyWindow = NSApp.keyWindow as? NoteEditWindow {
-              NoteEditWindowManager.shared.closWindowAndRemoveFromCommandMenu(
+              NoteEditWindowManager.shared.closeWindowAndRemoveFromCommandMenu(
                 keyWindow,
                 note: note,
                 noteViewModel: noteViewModel
@@ -292,8 +293,7 @@ extension StickyPlainPadApp {
 extension StickyPlainPadApp {
   /// 앱 설치 직후, 초기 테마 추가
   private func loadInitialThemesIfNeeded() {
-    let hasLoadedKey = "hasLoadedInitialThemes"
-    guard !UserDefaults.standard.bool(forKey: hasLoadedKey) else { return }
+    guard !UserDefaults.standard.bool(forKey: .onceHasLoadedInitialThemes) else { return }
     guard themeViewModel.deleteAllThemes() else { return }
 
     guard let url = Bundle.main.url(forResource: "InitialThemes", withExtension: "json"),
@@ -306,7 +306,84 @@ extension StickyPlainPadApp {
     }
 
     themeViewModel.addThemes(from: themes)
-    UserDefaults.standard.set(true, forKey: hasLoadedKey)
+    UserDefaults.standard.set(true, forKey: .onceHasLoadedInitialThemes)
     Log.notice("✅ 초기 테마를 성공적으로 로드했습니다")
+  }
+  
+  /// 앱 설치 직후, 초기 노트 추가
+  private func loadInitialNotesIfNeeded() {
+    guard !UserDefaults.standard.bool(forKey: .onceHasLoadedInitialNotes) else { return }
+    
+    guard let url = Bundle.main.url(forResource: "loc_InitialNotes".localized, withExtension: "json"),
+          let jsonData = try? Data(contentsOf: url),
+          let jsonString = String(data: jsonData, encoding: .utf8),
+          let initNotes = [InitNote].decodeFromJSON(jsonString, as: [InitNote].self)
+    else {
+      Log.error("❌ 초기 노트 로딩 실패")
+      return
+    }
+    
+    let notes = initNotes.enumerated().map { index, initNote in
+      return Note(
+        id: .init(),
+        createdAt: .now,
+        modifiedAt: .now,
+        content: initNote.content,
+        fileURL: nil,
+        // 위치: index 0: 메인 모니터의 오른쪽 상단, index 1: 메인 모니터의 왼쪽 상단, index 2: 메인 모니터의 왼쪽 하단
+        // 크기: 500, 300
+        windowFrame: windowFrame(for: index),
+        isPinned: false,
+        fontSize: 17,
+        lastWindowFocusedAt: nil,
+        isWindowOpened: true,
+        themeID: nil,
+        isWindowShrinked: false
+      )
+    }
+    
+    noteViewModel.addNotes(from: notes)
+    UserDefaults.standard.set(true, forKey: .onceHasLoadedInitialNotes)
+    Log.notice("✅ 초기 노트를 성공적으로 로드했습니다")
+  }
+  
+  private func windowFrame(for index: Int, padding: CGFloat = 20) -> Rect? {
+    guard let screen = NSScreen.main else { return nil }
+
+    let screenFrame = screen.visibleFrame
+    let windowWidth: CGFloat = 550
+    let windowHeight: CGFloat = 350
+
+    return switch index {
+    case 0:
+      // 오른쪽 상단 (왼쪽/아래로 padding)
+      Rect(
+        originX: screenFrame.maxX - windowWidth - padding,
+        originY: screenFrame.maxY - windowHeight - padding,
+        width: windowWidth,
+        height: windowHeight
+      )
+
+    case 2:
+      // 왼쪽 상단 (오른쪽/아래로 padding)
+      Rect(
+        originX: screenFrame.minX + padding,
+        originY: screenFrame.maxY - windowHeight - padding,
+        width: windowWidth,
+        height: windowHeight
+      )
+
+    case 1:
+      // 왼쪽 하단 (오른쪽/위로 padding)
+      Rect(
+        originX: screenFrame.minX + padding,
+        originY: screenFrame.minY + padding,
+        width: windowWidth,
+        height: windowHeight
+      )
+
+    default:
+      nil
+    }
   }
 }
