@@ -169,6 +169,9 @@ struct NoteEditView: View {
         .help("loc_close_note")
         
         Spacer()
+          .frame(height: HEADER_HEIGHT)
+          .contentShape(Rectangle())
+          .onTapGesture(count: 2, perform: maximizeWindow)
         
         headerButton(
           action: makeWindowAlwaysOnTop,
