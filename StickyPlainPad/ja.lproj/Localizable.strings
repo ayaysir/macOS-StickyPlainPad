@@ -83,3 +83,7 @@
 "loc_developer_store" = "App Storeの開発者ページ";
 "loc_request_review" = "レビューを書く";
 "loc_share_app" = "このアプリを共有";
+
+"loc_ask_to_developer" = "お問い合わせメールを送信";
+"loc_email_subject" = "StickyPlainPadに関するお問い合わせ";
+"loc_email_body" = "アプリバージョン: %@\n\n";

@@ -83,3 +83,7 @@
 "loc_developer_store" = "개발자의 App Store";
 "loc_request_review" = "리뷰 작성하기";
 "loc_share_app" = "앱 공유하기";
+
+"loc_email_subject" = "StickyPlainPad 문의";
+"loc_email_body" = "앱 버전: %@\n\n";
+"loc_ask_to_developer" = "문의 이메일 보내기";

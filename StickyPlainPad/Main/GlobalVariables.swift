@@ -44,3 +44,4 @@ let MAX_FONT_SIZE: CGFloat = 104
 
 let APP_ID = "6744865328"
 let MAKER_ID = "1578285460"
+let MAKER_MAIL = "yoonbumatae@gmail.com"

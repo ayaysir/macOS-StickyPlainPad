@@ -45,7 +45,6 @@ struct StickyPlainPadApp: App {
     }
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
     .commands {
-      // TODO: - 커맨드 메뉴 '파일'
       CommandGroup(after: .newItem) {
         Button("loc_new_note") {
           NoteEditWindowManager.shared.addNewNoteAndOpen(
@@ -153,6 +152,12 @@ struct StickyPlainPadApp: App {
       CommandGroup(after: .help) {
         Divider()
         
+        Button("loc_ask_to_developer") {
+          openEmailApp()
+        }
+        
+        Divider()
+        
         Button("loc_developer_info") {
           openWebsite("http://yoonbumtae.com")
         }
@@ -201,6 +206,20 @@ extension StickyPlainPadApp {
     if let window = NSApp.keyWindow,
        let contentView = window.contentView {
       picker.show(relativeTo: .zero, of: contentView, preferredEdge: .minY)
+    }
+  }
+  
+  func openEmailApp() {
+    let versionString = Bundle.main.appVersionString
+    let subject = "loc_email_subject".localized
+    let body = "loc_email_body".localizedFormat(versionString)
+
+    // URL encoding
+    let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+    let encodedBody = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+
+    if let url = URL(string: "mailto:\(MAKER_MAIL)?subject=\(encodedSubject)&body=\(encodedBody)") {
+      NSWorkspace.shared.open(url)
     }
   }
 }

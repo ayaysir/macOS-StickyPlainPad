@@ -97,3 +97,7 @@
 "loc_developer_store" = "Developer on the App Store";
 "loc_request_review" = "Write a Review";
 "loc_share_app" = "Share This App";
+
+"loc_ask_to_developer" = "Send inquiry email to developer";
+"loc_email_subject" = "StickyPlainPad Support Inquiry";
+"loc_email_body" = "App Version: %@\n\n";
