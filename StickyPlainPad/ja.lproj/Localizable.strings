@@ -78,3 +78,8 @@
 "loc_editor_settings_ellipsis" = "テキスト自動修正オプション…";
 
 "loc_InitialNotes" = "InitialNotes_ja";
+
+"loc_developer_info" = "開発者のブログ（韓国語）";
+"loc_developer_store" = "App Storeの開発者ページ";
+"loc_request_review" = "レビューを書く";
+"loc_share_app" = "このアプリを共有";

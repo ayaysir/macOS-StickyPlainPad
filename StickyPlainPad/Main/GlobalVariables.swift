@@ -39,3 +39,8 @@ extension String {
 
 let MIN_FONT_SIZE: CGFloat = 8
 let MAX_FONT_SIZE: CGFloat = 104
+
+// MARK : - App Info
+
+let APP_ID = "6744865328"
+let MAKER_ID = "1578285460"

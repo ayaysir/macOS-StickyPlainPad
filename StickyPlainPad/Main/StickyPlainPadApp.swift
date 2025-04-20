@@ -149,6 +149,28 @@ struct StickyPlainPadApp: App {
         }
         .keyboardShortcut("w", modifiers: [.command])
       }
+      
+      CommandGroup(after: .help) {
+        Divider()
+        
+        Button("loc_developer_info") {
+          openWebsite("http://yoonbumtae.com")
+        }
+        
+        Button("loc_developer_store") {
+          openWebsite("https://apps.apple.com/developer/id\(MAKER_ID)")
+        }
+        
+        Divider()
+        
+        Button("loc_request_review") {
+          openWebsite("https://apps.apple.com/app/id\(APP_ID)?action=write-review")
+        }
+        
+        Button("loc_share_app") {
+          shareAppURL("https://apps.apple.com/app/id\(APP_ID)")
+        }
+      }
     }
     
     Window("loc_theme_manager", id: .idThemeNewWindow) {
@@ -157,6 +179,28 @@ struct StickyPlainPadApp: App {
     
     Window("loc_editor_settings", id: .idEditorSettingWindow) {
       EditorOptionsSettingsView()
+    }
+  }
+}
+
+extension StickyPlainPadApp {
+  func openWebsite(_ urlString: String) {
+    if let url = URL(string: urlString) {
+      NSWorkspace.shared.open(url)
+    }
+  }
+  
+  func shareAppURL(_ urlString: String) {
+    guard let url = URL(string: urlString) else  {
+      return
+    }
+    
+    let picker = NSSharingServicePicker(items: [url])
+    
+    // 현재 앱의 key window를 기준으로 공유창 표시
+    if let window = NSApp.keyWindow,
+       let contentView = window.contentView {
+      picker.show(relativeTo: .zero, of: contentView, preferredEdge: .minY)
     }
   }
 }
