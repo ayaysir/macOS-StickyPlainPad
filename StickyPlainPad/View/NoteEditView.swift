@@ -156,6 +156,7 @@ struct NoteEditView: View {
         Color(hex: theme.backgroundColorHex)
         Color(hex: theme.textColorHex)?.colorInvert().opacity(0.08)
       } else {
+        // Color(.gray)
         Color(.defaultNoteBackground).opacity(0.8)
       }
       
@@ -203,7 +204,7 @@ struct NoteEditView: View {
     FindReplaceInnerView(
       viewModel: $findReplaceViewModel
     )
-      .background(.white)
+    .background(Color(nsColor: .textBackgroundColor))
   }
 }
 

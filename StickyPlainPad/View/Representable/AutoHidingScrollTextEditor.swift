@@ -172,7 +172,7 @@ extension AutoHidingScrollTextEditor {
       // 테마가 없을 경우 기본 스타일 적용
       textView.font = NSFont.systemFont(ofSize: fontSize)
       textView.backgroundColor = .defaultNoteBackground
-      textView.textColor = .textColor
+      textView.textColor = .defaultText
       
       // 🔄 폰트 크기 반영
       if let currentFont = textView.font,
