@@ -1,5 +1,5 @@
 //
-//  NoteEditWindowMananger.swift
+//  NoteEditWindowManager.swift
 //  StickyPlainPad
 //
 //  Created by 윤범태 on 3/31/25.
@@ -9,8 +9,8 @@ import AppKit
 import SwiftUI
 import Combine
 
-final class NoteEditWindowMananger {
-  static let shared = NoteEditWindowMananger()
+final class NoteEditWindowManager {
+  static let shared = NoteEditWindowManager()
 
   let screenSize = NSScreen.main?.frame ?? .zero
   let windowSize = CGSize(width: 400, height: 300)
@@ -156,7 +156,8 @@ final class NoteEditWindowMananger {
   func addWindowToMenu(_ window: NoteEditWindow) {
     let menu = NSApplication.shared.menu
     
-    guard let windowMenu = menu?.item(withTitle: "Window")?.submenu else {
+    guard let windowMenu = menu?.item(withTitle: "loc_menu_window".localized)?.submenu else {
+      Log.error("loc_menu_window not found. Localized: \("loc_menu_window".localized)")
       return
     }
     
@@ -186,13 +187,14 @@ final class NoteEditWindowMananger {
     
     window.close()
     
-    _ = NoteEditWindowMananger.shared.updateWindowsOpenStatus(
+    _ = NoteEditWindowManager.shared.updateWindowsOpenStatus(
       noteViewModel: noteViewModel,
       note: note,
       isWindowOpened: false
     )
     
-    guard let windowMenu = menu?.item(withTitle: "Window")?.submenu else {
+    guard let windowMenu = menu?.item(withTitle: "loc_menu_window".localized)?.submenu else {
+      Log.error("loc_menu_window not found. Localized: \("loc_menu_window".localized)")
       return
     }
     

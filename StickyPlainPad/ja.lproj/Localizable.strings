@@ -1,0 +1,62 @@
+/* 
+  Localizable.strings
+  StickyPlainPad
+
+  Created by 윤범태 on 4/20/25.
+  
+*/
+
+"loc_list_title" = "メモ一覧";
+"loc_new_note" = "新規メモ";
+"loc_load_file_ellipsis" = "テキストファイルから読み込み…";
+"loc_save_file_ellipsis" = "テキストファイルとして保存…";
+"loc_print_ellipsis" = "印刷…";
+"loc_theme_manager_ellipsis" = "テーママネージャ…";
+"loc_findreplace_ellipsis" = "検索／置換…";
+"loc_close" = "閉じる";
+"loc_theme_manager" = "テーママネージャ";
+
+"loc_options" = "オプション";
+"loc_find_ellipsis" = "検索…";
+"loc_replace" = "置換";
+"loc_replace_ellipsis" = "置換…";
+"loc_all" = "すべて";
+"loc_done" = "完了";
+
+"loc_close_note" = "現在のメモを閉じる";
+"loc_always_on_top" = "常に最前面に表示";
+"loc_change_theme_ellipsis" = "テーマを変更…";
+"loc_maxres_window" = "ウィンドウサイズを最大化／元に戻す";
+"loc_shrink_header" = "ウィンドウをヘッダーに縮小";
+
+"loc_add_note" = "メモを追加";
+"loc_delete_note" = "このメモを削除";
+"loc_search_content" = "内容で検索";
+"loc_empty_note" = "空のメモ";
+
+"loc_select_theme" = "テーマを選択してください";
+"loc_delete_theme" = "このテーマを削除";
+"loc_add_theme" = "テーマを追加";
+
+"loc_preview" = "プレビュー";
+"loc_new_theme" = "新しいテーマ";
+
+"loc_adjust_font_size_instruction" = "メモ上でトラックパッドを拡大するか、\nショートカットキー Command + [+] または [-] を押して文字サイズを調整できます。";
+
+"loc_theme_name" = "テーマ名";
+"loc_enter_theme_name" = "テーマ名を入力してください";
+"loc_color_settings" = "色設定";
+"loc_background_color_colon" = "背景色:";
+"loc_text_color_colon" = "文字色:";
+"loc_font_settings" = "フォント設定";
+"loc_font" = "フォント";
+
+"loc_window_find_title" = "検索／置換";
+
+"loc_menu_window" = "ウインドウ";
+
+"loc_ignore_case" = "大文字と小文字を無視";
+"loc_cycle_search" = "循環検索";
+"loc_contains" = "含む";
+"loc_starts_with" = "で始まる";
+"loc_whole_word" = "完全一致単語";

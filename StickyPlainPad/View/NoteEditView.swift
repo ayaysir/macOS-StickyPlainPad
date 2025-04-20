@@ -164,7 +164,7 @@ struct NoteEditView: View {
           action: closeWindow,
           imageSystemName: "squareshape"
         )
-        .help("현재 스티커 닫기")
+        .help("loc_close_note")
         
         Spacer()
         
@@ -173,25 +173,25 @@ struct NoteEditView: View {
           imageSystemName: "pin.fill",
           isTurnOn: note.isPinned
         )
-        .help("항상 위에")
+        .help("loc_always_on_top")
         
         headerButton(
           action: { showThemeSelectSheet = true },
           imageSystemName: "paintpalette"
         )
-        .help("스티커 테마 변경")
+        .help("loc_change_theme_ellipsis")
         
         headerButton(
           action: maximizeWindow,
           imageSystemName: "arrow.up.left.and.arrow.down.right"
         )
-        .help("창 최대화/복귀")
+        .help("loc_maxres_window")
         
         headerButton(
           action: { shrinkWindow(to: HEADER_HEIGHT) },
           imageSystemName: "rectangle.topthird.inset.filled"
         )
-        .help("헤더만 보기")
+        .help("loc_shrink_header")
       }
       .padding(4)
     }
@@ -209,18 +209,18 @@ struct NoteEditView: View {
 extension NoteEditView {
   /// 현재 윈도우를 닫는 메서드
   func closeWindow() {
-    guard let window = NoteEditWindowMananger.shared.keyWindow else {
+    guard let window = NoteEditWindowManager.shared.keyWindow else {
       return
     }
     
     window.close()
-    NoteEditWindowMananger.shared.closWindowAndRemoveFromCommandMenu(
+    NoteEditWindowManager.shared.closWindowAndRemoveFromCommandMenu(
       window,
       note: note,
       noteViewModel: noteViewModel
     )
     
-    _ = NoteEditWindowMananger.shared.updateWindowsOpenStatus(
+    _ = NoteEditWindowManager.shared.updateWindowsOpenStatus(
       noteViewModel: noteViewModel,
       note: note,
       isWindowOpened: false
@@ -228,7 +228,7 @@ extension NoteEditView {
   }
   
   func shrinkWindow(to height: CGFloat) {
-    guard let window = NoteEditWindowMananger.shared.keyWindow else {
+    guard let window = NoteEditWindowManager.shared.keyWindow else {
       return
     }
     
@@ -261,7 +261,7 @@ extension NoteEditView {
   }
   
   func maximizeWindow() {
-    guard let window = NoteEditWindowMananger.shared.keyWindow else {
+    guard let window = NoteEditWindowManager.shared.keyWindow else {
       return
     }
     
@@ -269,7 +269,7 @@ extension NoteEditView {
   }
   
   func makeWindowAlwaysOnTop() {
-    note = NoteEditWindowMananger.shared.changeWindowLevel(
+    note = NoteEditWindowManager.shared.changeWindowLevel(
       note: note,
       noteViewModel: noteViewModel
     )

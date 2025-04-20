@@ -23,15 +23,12 @@ struct ThemeView: View {
   
   var body: some View {
     VStack(alignment: .leading, spacing: 16) {
-      Text("미리 보기")
+      Text("loc_preview")
         .font(.title3)
+        .fontWeight(.semibold)
       ZStack(alignment: .top) {
         backgroundColor
-        Text("""
-          글자 크기는 스티커에서 트랙패드를 확대하거나
-          단축키 command와 [+], [-] 버튼을 눌러
-          조정할 수 있습니다.
-          """)
+        Text("loc_adjust_font_size_instruction")
         .multilineTextAlignment(.leading)
         .font(.custom(selectedFontName, size: 17))
         .foregroundStyle(textColor)
@@ -41,9 +38,10 @@ struct ThemeView: View {
       .frame(height: 150)
       
       HStack {
-        Text("테마 이름")
+        Text("loc_theme_name")
           .font(.title3)
-        TextField("테마 이름을 입력하세요.", text: $themeName)
+          .fontWeight(.semibold)
+        TextField("loc_enter_theme_name", text: $themeName)
           .focused($isNameFocused)
           .padding()
       }
@@ -51,16 +49,17 @@ struct ThemeView: View {
       Divider()
       
       VStack(alignment: .leading) {
-        Text("색상 설정")
+        Text("loc_color_settings")
           .font(.title3)
+          .fontWeight(.semibold)
         
         HStack {
-          Text("배경색:")
+          Text("loc_background_color_colon")
           ColorPicker("", selection: $backgroundColor)
         }
         
         HStack {
-          Text("글자색:")
+          Text("loc_text_color_colon")
           ColorPicker("", selection: $textColor)
         }
         Spacer()
@@ -69,26 +68,22 @@ struct ThemeView: View {
       Divider()
       
       VStack(alignment: .leading, spacing: 10) {
-        Text("폰트 설정")
+        Text("loc_font_settings")
           .font(.title3)
+          .fontWeight(.semibold)
         
-        Picker("폰트", selection: $selectedFontName) {
+        Picker("loc_font", selection: $selectedFontName) {
           ForEach(themeViewModel.availableFonts, id: \.self) { fontTitleStr in
             Text(fontTitleStr)
               .font(Font.custom(fontTitleStr, size: 14))
               .tag(fontTitleStr)
           }
         }
-        // .frame(maxWidth: 300)
-        
-        
         
         Spacer()
       }
-      
     }
     .padding()
-    // .frame(width: 300)
     .onAppear {
       initColors()
       initFonts()

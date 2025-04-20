@@ -30,13 +30,13 @@ struct NoteListView: View {
     VStack {
       List {
         Button(action: addItem) {
-          Label("Add", systemImage: "plus")
+          Label("loc_add_note", systemImage: "plus")
         }
         
         ForEach(filteredNotes) { note in
           Button {
             // openWindow(value: note.id)
-            NoteEditWindowMananger.shared.open(
+            NoteEditWindowManager.shared.open(
               noteViewModel: viewModel,
               themeViewModel: themeViewModel,
               note: note,
@@ -56,11 +56,11 @@ struct NoteListView: View {
         }
         .onDelete(perform: deleteItems)
       }
-      .searchable(text: $searchText, prompt: "제목, 내용으로 검색")
+      .searchable(text: $searchText, prompt: "loc_search_content")
     }
     .onAppear {
       viewModel.lastOpenedNotes.forEach { note in
-        NoteEditWindowMananger.shared.open(
+        NoteEditWindowManager.shared.open(
           noteViewModel: viewModel,
           themeViewModel: themeViewModel,
           note: note,
@@ -74,7 +74,7 @@ struct NoteListView: View {
     VStack(alignment: .leading) {
       HStack {
         if note.content.isEmpty {
-          Text("Empty Sticker")
+          Text("loc_empty_note")
             .italic()
             .foregroundStyle(.gray)
         } else {
@@ -96,7 +96,7 @@ struct NoteListView: View {
   }
   
   private func addItem() {
-    NoteEditWindowMananger.shared.addNewNoteAndOpen(
+    NoteEditWindowManager.shared.addNewNoteAndOpen(
       noteViewModel: viewModel,
       themeViewModel: themeViewModel
     )

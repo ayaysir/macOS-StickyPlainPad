@@ -1,0 +1,76 @@
+/* 
+  Localizable.strings
+  StickyPlainPad
+
+  Created by 윤범태 on 4/20/25.
+  
+*/
+
+"loc_list_title" = "Memo List";
+"loc_new_note" = "New Memo";
+"loc_load_file_ellipsis" = "Load from Text File…";
+"loc_save_file_ellipsis" = "Save as Text File…";
+"loc_print_ellipsis" = "Print…";
+"loc_theme_manager_ellipsis" = "Theme Manager…";
+"loc_findreplace_ellipsis" = "Find/Replace…";
+"loc_close" = "Close";
+"loc_theme_manager" = "Theme Manager";
+
+"loc_options" = "Options";
+"loc_find_ellipsis" = "Find…";
+"loc_replace" = "Replace";
+"loc_replace_ellipsis" = "Replace…";
+"loc_all" = "All";
+"loc_done" = "Done";
+
+"loc_close_note" = "Close the current memo";
+"loc_always_on_top" = "Always on top";
+"loc_change_theme_ellipsis" = "Change theme…";
+"loc_maxres_window" = "Maximize/Restore window size";
+"loc_shrink_header" = "Shrink window to header";
+
+"loc_add_note" = "Add a memo";
+"loc_delete_note" = "Delete this memo";
+"loc_search_content" = "Search by content";
+"loc_empty_note" = "Empty memo";
+
+"loc_select_theme" = "Select a theme";
+"loc_delete_theme" = "Delete this theme";
+"loc_add_theme" = "Add a theme";
+
+"loc_preview" = "Preview";
+"loc_new_theme" = "New Theme";
+/*
+ 글자 크기는 메모에서 트랙패드를 확대하거나\n
+ 단축키 command와 [+], [-] 버튼을 눌러\n
+ 조정할 수 있습니다.
+ */
+"loc_adjust_font_size_instruction" = "You can adjust the font size by zooming on the memo with the trackpad,\nor by pressing the Command key along with [+] or [-].";
+"loc_theme_name" = "Theme name";
+"loc_enter_theme_name" = "Enter a theme name";
+"loc_color_settings" = "Color settings";
+"loc_background_color_colon" = "Background color:";
+"loc_text_color_colon" = "Text color:";
+"loc_font_settings" = "Font settings";
+"loc_font" = "Font";
+
+
+// 윈도우 타이틀
+"loc_window_find_title" = "Find/Replace";
+
+// 커맨드 메뉴
+"loc_menu_window" = "Window";
+
+// 검색 옵션
+/*
+ "영문 대/소문자 무시",
+ "순환 검색",
+ "다음을 포함",
+ "다음으로 시작",
+ "전체 단어",
+ */
+"loc_ignore_case" = "Ignore case";
+"loc_cycle_search" = "Cycle search";
+"loc_contains" = "Contains";
+"loc_starts_with" = "Starts with";
+"loc_whole_word" = "Whole word";

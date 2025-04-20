@@ -24,9 +24,9 @@ class NoteViewModel {
   var currentNoteIdForFind: Note.ID?
   
   var firstWindowFrame: Rect {
-    let newPos = NoteEditWindowMananger.shared.newWindowPos
-    let firstPos = NoteEditWindowMananger.shared.newWindowPosFirst
-    let windowSize = NoteEditWindowMananger.shared.windowSize
+    let newPos = NoteEditWindowManager.shared.newWindowPos
+    let firstPos = NoteEditWindowManager.shared.newWindowPosFirst
+    let windowSize = NoteEditWindowManager.shared.windowSize
     
     return .init(
       originX: newPos?.x ?? firstPos.x ,

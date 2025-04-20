@@ -29,7 +29,7 @@ struct ThemeListView: View {
             Button {
               viewModel.deleteTheme(theme)
             } label: {
-              Text("삭제")
+              Text("loc_delete_theme")
             }
           }
         }
@@ -41,7 +41,7 @@ struct ThemeListView: View {
           Button {
             addNewTheme()
           } label: {
-            Label("Add Theme", systemImage: "plus")
+            Label("loc_add_theme", systemImage: "plus")
           }
         }
       }
@@ -56,7 +56,7 @@ struct ThemeListView: View {
        let theme = viewModel.theme(withID: selectedThemeID) {
       ThemeView(theme: theme, themeViewModel: viewModel)
     } else {
-      Text("테마를 선택하세요")
+      Text("loc_select_theme")
     }
   }
   
@@ -70,7 +70,7 @@ struct ThemeListView: View {
   
   private func addNewTheme() {
     let newTheme = viewModel.addTheme(
-      name: "New Theme",
+      name: "loc_new_theme".localized,
       backgroundColorHex: "#FFFFFF",
       textColorHex: "#000000",
       fontName: "SF Pro",

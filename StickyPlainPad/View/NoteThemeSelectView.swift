@@ -28,14 +28,14 @@ struct NoteThemeSelectView: View {
   var body: some View {
     VStack {
       HStack {
-        Text("테마를 선택하세요.")
+        Text("loc_select_theme")
           .font(.title2)
         Button(action: { openWindow(id: .idThemeNewWindow) }) {
-          Text("테마 목록 관리")
+          Text("loc_theme_manager_ellipsis")
         }
         Spacer()
         Button(action: dismiss.callAsFunction) {
-          Text("닫기")
+          Text("loc_close")
         }
       }
       .padding()

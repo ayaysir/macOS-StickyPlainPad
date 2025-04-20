@@ -23,7 +23,7 @@ struct FindReplaceWindowView: View {
       }
 
       HStack {
-        Text("대체할 단어:")
+        Text("대체할 단어:") // 대체할 단어
           .frame(width: 80, alignment: .trailing)
         TextField("", text: $replaceText)
           .textFieldStyle(RoundedBorderTextFieldStyle())

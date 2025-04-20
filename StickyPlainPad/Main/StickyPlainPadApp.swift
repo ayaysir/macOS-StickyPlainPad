@@ -33,7 +33,7 @@ struct StickyPlainPadApp: App {
   
   var body: some Scene {
     // 디버그용 리스트 창 (목록을 어디에 배치할지 추후 결정)
-    Window("List", id: "list") {
+    Window("loc_list_title", id: "list") {
       NoteListView(
         viewModel: noteViewModel,
         themeViewModel: themeViewModel
@@ -43,8 +43,8 @@ struct StickyPlainPadApp: App {
     .commands {
       // TODO: - 커맨드 메뉴 '파일'
       CommandGroup(after: .newItem) {
-        Button("New Sticker") {
-          NoteEditWindowMananger.shared.addNewNoteAndOpen(
+        Button("loc_new_note") {
+          NoteEditWindowManager.shared.addNewNoteAndOpen(
             noteViewModel: noteViewModel,
             themeViewModel: themeViewModel
           )
@@ -53,9 +53,9 @@ struct StickyPlainPadApp: App {
         
         Divider()
         
-        Button("Load from Text File...") {
+        Button("loc_load_file_ellipsis") {
           if let result = openSelectReadFilePanel() {
-            NoteEditWindowMananger.shared.addNewNoteAndOpen(
+            NoteEditWindowManager.shared.addNewNoteAndOpen(
               noteViewModel: noteViewModel,
               themeViewModel: themeViewModel,
               fileURL: result.url,
@@ -65,7 +65,7 @@ struct StickyPlainPadApp: App {
         }
         .keyboardShortcut("l", modifiers: [.command])
         
-        Button("Save as Text File...") {
+        Button("loc_save_file_ellipsis") {
           guard let note = noteFromKeyWindow else {
             return
           }
@@ -83,7 +83,7 @@ struct StickyPlainPadApp: App {
         
         Divider()
         
-        Button("Print...") {
+        Button("loc_print_ellipsis") {
           guard let note = noteFromKeyWindow else {
             return
           }
@@ -101,7 +101,7 @@ struct StickyPlainPadApp: App {
       }
       
       CommandGroup(after: .appInfo) {
-        Button("테마 관리...") {
+        Button("loc_theme_manager_ellipsis") {
           openWindow(id: .idThemeNewWindow)
         }
         .keyboardShortcut("t", modifiers: [.command, .shift])
@@ -110,7 +110,7 @@ struct StickyPlainPadApp: App {
       CommandGroup(after: .pasteboard) {
         Divider()
         
-        Button("Find") {
+        Button("loc_findreplace_ellipsis") {
           if let note = noteFromKeyWindow {
             noteViewModel.currentNoteIdForFind = note.id
           }
@@ -121,10 +121,10 @@ struct StickyPlainPadApp: App {
       
       // Close 버튼 대체
       CommandGroup(replacing: .saveItem) {
-        Button("Close") {
+        Button("loc_close") {
           if let note = noteFromKeyWindow {
             if let keyWindow = NSApp.keyWindow as? NoteEditWindow {
-              NoteEditWindowMananger.shared.closWindowAndRemoveFromCommandMenu(
+              NoteEditWindowManager.shared.closWindowAndRemoveFromCommandMenu(
                 keyWindow,
                 note: note,
                 noteViewModel: noteViewModel
@@ -140,7 +140,7 @@ struct StickyPlainPadApp: App {
       }
     }
     
-    Window("테마 관리", id: .idThemeNewWindow) {
+    Window("loc_theme_manager", id: .idThemeNewWindow) {
       ThemeListView(themeViewModel: themeViewModel)
     }
   }
@@ -149,7 +149,7 @@ struct StickyPlainPadApp: App {
 
 extension StickyPlainPadApp {
   var noteFromKeyWindow: Note? {
-    guard let window = NoteEditWindowMananger.shared.keyWindow,
+    guard let window = NoteEditWindowManager.shared.keyWindow,
           let noteID = window.noteID else {
       return nil
     }
@@ -227,7 +227,7 @@ extension StickyPlainPadApp {
       defer: false
     )
     window.center()
-    window.title = "찾기"
+    window.title = "window_find_title".localized
     window.contentView = NSHostingView(rootView: FindReplaceWindowView())
     window.isReleasedWhenClosed = false
     window.makeKeyAndOrderFront(nil)

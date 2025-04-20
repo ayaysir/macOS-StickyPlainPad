@@ -15,13 +15,13 @@ struct FindReplaceInnerView: View {
       VStack(spacing: 2) {
         HStack(spacing: 2) {
           Button(action: showMenu) {
-            Text("Options")
+            Text("loc_options")
             Image(systemName: "chevron.down")
           }
           ZStack(alignment: .trailing) {
-            TextField("Find...", text: $viewModel.findKeyword)
+            TextField("loc_find_ellipsis", text: $viewModel.findKeyword)
               .clipShape(RoundedRectangle(cornerRadius: 10))
-            Text("\(viewModel.resultRanges.count) results")
+            Text("\(viewModel.resultRanges.count)")
               .padding(.trailing, 10)
               .foregroundStyle(.gray.opacity(0.5))
           }
@@ -40,18 +40,18 @@ struct FindReplaceInnerView: View {
           
           Spacer()
           
-          Toggle("Replace", isOn: $viewModel.isReplaceAreaPresented)
+          Toggle("loc_replace", isOn: $viewModel.isReplaceAreaPresented)
         }
         
         if viewModel.isReplaceAreaPresented {
           HStack(spacing: 2) {
-            TextField("Replace...", text: $viewModel.replaceKeyword)
+            TextField("loc_replace_ellipsis", text: $viewModel.replaceKeyword)
               .clipShape(RoundedRectangle(cornerRadius: 10))
             Button(action: viewModel.replaceCurrent) {
-              Text("Replace")
+              Text("loc_replace")
             }
             Button(action: viewModel.replaceAll) {
-              Text("All")
+              Text("loc_all")
             }
             Spacer()
             buttonComplete
@@ -65,7 +65,7 @@ struct FindReplaceInnerView: View {
   
   var buttonComplete: some View {
     Button(action: { viewModel.isSearchWindowPresented = false }) {
-      Text("완료")
+      Text("loc_done")
     }
     .buttonStyle(.borderedProminent)
   }
@@ -75,24 +75,24 @@ extension FindReplaceInnerView {
   var searchDetailMenus: [MenuItemInfo] {
     [
       .init(
-        title: "영문 대/소문자 무시",
+        title: "loc_ignore_case".localized,
         category: .ignoreCase
       ),
       .init(
-        title: "순환 검색",
+        title: "loc_cycle_search".localized,
         category: .cycleSearch
       ),
       .separtor,
       .init(
-        title: "다음을 포함",
+        title: "loc_contains".localized,
         category: .findKeywordMode(.contain)
       ),
       .init(
-        title: "다음으로 시작",
+        title: "loc_starts_with".localized,
         category: .findKeywordMode(.startWith)
       ),
       .init(
-        title: "전체 단어",
+        title: "loc_whole_word".localized,
         category: .findKeywordMode(.shouldEntireMatch)
       ),
     ]

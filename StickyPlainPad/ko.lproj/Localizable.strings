@@ -1,0 +1,62 @@
+/* 
+  Localizable.strings
+  StickyPlainPad
+
+  Created by 윤범태 on 4/20/25.
+  
+*/
+
+"loc_list_title" = "메모 목록";
+"loc_new_note" = "새 메모";
+"loc_load_file_ellipsis" = "텍스트 파일에서 불러오기…";
+"loc_save_file_ellipsis" = "텍스트 파일로 저장…";
+"loc_print_ellipsis" = "인쇄…";
+"loc_theme_manager_ellipsis" = "테마 관리자…";
+"loc_findreplace_ellipsis" = "찾기/바꾸기…";
+"loc_close" = "닫기";
+"loc_theme_manager" = "테마 관리자";
+
+"loc_options" = "옵션";
+"loc_find_ellipsis" = "찾기…";
+"loc_replace" = "바꾸기";
+"loc_replace_ellipsis" = "바꾸기…";
+"loc_all" = "전체";
+"loc_done" = "완료";
+
+"loc_close_note" = "현재 메모 닫기";
+"loc_always_on_top" = "항상 위에 고정";
+"loc_change_theme_ellipsis" = "테마 변경…";
+"loc_maxres_window" = "창 크기 최대화/복원";
+"loc_shrink_header" = "창을 헤더만 보이게 축소";
+
+"loc_add_note" = "메모 추가";
+"loc_delete_note" = "이 메모 삭제";
+"loc_search_content" = "내용으로 검색";
+"loc_empty_note" = "빈 메모";
+
+"loc_select_theme" = "테마를 선택하세요";
+"loc_delete_theme" = "이 테마 삭제";
+"loc_add_theme" = "테마 추가";
+
+"loc_preview" = "미리보기";
+"loc_new_theme" = "새 테마";
+
+"loc_adjust_font_size_instruction" = "글자 크기는 메모에서 트랙패드를 확대하거나,\n단축키 command와 [+], [-] 버튼을 눌러 조정할 수 있습니다.";
+
+"loc_theme_name" = "테마 이름";
+"loc_enter_theme_name" = "테마 이름을 입력하세요";
+"loc_color_settings" = "색상 설정";
+"loc_background_color_colon" = "배경색:";
+"loc_text_color_colon" = "글자색:";
+"loc_font_settings" = "폰트 설정";
+"loc_font" = "폰트";
+
+"loc_window_find_title" = "찾기/바꾸기";
+
+"loc_menu_window" = "윈도우";
+
+"loc_ignore_case" = "영문 대/소문자 무시";
+"loc_cycle_search" = "순환 검색";
+"loc_contains" = "다음을 포함";
+"loc_starts_with" = "다음으로 시작";
+"loc_whole_word" = "전체 단어";
