@@ -58,6 +58,11 @@
 			path = StickyPlainPadUITests;
 			sourceTree = "<group>";
 		};
+		44F0C0282DB544E1002F93C6 /* App Manual */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "App Manual";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +93,7 @@
 		443CACA62D92E2DC006AA89C = {
 			isa = PBXGroup;
 			children = (
+				44F0C0282DB544E1002F93C6 /* App Manual */,
 				443CACB12D92E2DC006AA89C /* StickyPlainPad */,
 				443CACC52D92E2DE006AA89C /* StickyPlainPadTests */,
 				443CACCF2D92E2DE006AA89C /* StickyPlainPadUITests */,
@@ -122,6 +128,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				443CACB12D92E2DC006AA89C /* StickyPlainPad */,
+				44F0C0282DB544E1002F93C6 /* App Manual */,
 			);
 			name = StickyPlainPad;
 			packageProductDependencies = (
