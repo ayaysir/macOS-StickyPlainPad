@@ -38,6 +38,9 @@ struct StickyPlainPadApp: App {
         viewModel: noteViewModel,
         themeViewModel: themeViewModel
       )
+      .onAppear {
+        loadInitialThemesIfNeeded()
+      }
     }
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
     .commands {
@@ -144,7 +147,6 @@ struct StickyPlainPadApp: App {
       ThemeListView(themeViewModel: themeViewModel)
     }
   }
-
 }
 
 extension StickyPlainPadApp {
@@ -273,5 +275,27 @@ extension StickyPlainPadApp {
     
     // 🔁 false인 경우 저장 다이얼로그 호출
     return false
+  }
+}
+
+extension StickyPlainPadApp {
+  /// 앱 설치 직후, 초기 테마 추가
+  private func loadInitialThemesIfNeeded() {
+    let hasLoadedKey = "hasLoadedInitialThemes"
+    guard !UserDefaults.standard.bool(forKey: hasLoadedKey) else { return }
+    guard themeViewModel.deleteAllThemes() else { return }
+
+    guard let url = Bundle.main.url(forResource: "InitialThemes", withExtension: "json"),
+          let jsonData = try? Data(contentsOf: url),
+          let jsonString = String(data: jsonData, encoding: .utf8),
+          let themes = [Theme].decodeFromJSON(jsonString, as: [Theme].self)
+    else {
+      Log.error("❌ 초기 테마 로딩 실패")
+      return
+    }
+
+    themeViewModel.addThemes(from: themes)
+    UserDefaults.standard.set(true, forKey: hasLoadedKey)
+    Log.notice("✅ 초기 테마를 성공적으로 로드했습니다")
   }
 }

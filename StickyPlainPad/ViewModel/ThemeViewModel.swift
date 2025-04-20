@@ -68,6 +68,14 @@ class ThemeViewModel {
     
     return theme
   }
+  
+  func addThemes(from themes: [Theme]) {
+    themes.forEach { theme in
+      repository.add(theme)
+    }
+    
+    fetchAllThemes()
+  }
 
   func updateTheme(_ theme: Theme) {
     var updated = theme
@@ -118,5 +126,21 @@ class ThemeViewModel {
   func deleteTheme(_ theme: Theme) {
     repository.delete(theme)
     fetchAllThemes()
+  }
+  
+  @discardableResult
+  func deleteAllThemes() -> Bool {
+    guard themes.isEmpty else {
+      Log.warning("이미 테마가 있습니다.")
+      return false
+    }
+    
+    themes.forEach {
+      deleteTheme($0)
+    }
+    
+    fetchAllThemes()
+    
+    return true
   }
 }
