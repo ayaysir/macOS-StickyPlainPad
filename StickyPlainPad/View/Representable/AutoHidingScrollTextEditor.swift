@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @Binding var text: String
@@ -20,6 +21,8 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @AppStorage(.cfgEditorAutoTextReplacement) private var autoTextReplacement = true
   @AppStorage(.cfgEditorAutoDataDetection) private var autoDataDetection = false
   @AppStorage(.cfgEditorAutoLinkDetection) private var autoLinkDetection = false
+  
+  // @State private var isLoadFirstTime = true
 
   func makeNSView(context: Context) -> NSScrollView {
     let textView = ExpandableTextView()
@@ -50,7 +53,10 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     textView.isVerticallyResizable = true
     textView.isHorizontallyResizable = false
     textView.autoresizingMask = .width
-    textView.textContainer?.containerSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+    textView.textContainer?.containerSize = NSSize(
+      width: CGFloat.greatestFiniteMagnitude,
+      height: CGFloat.greatestFiniteMagnitude
+    )
     textView.textContainer?.widthTracksTextView = true
     
     // 20250425: 렌더링 속도 빠르게 하기 위함
@@ -104,36 +110,40 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
       return
     }
     
-    // 기존 스타일 초기화
-    let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
-    textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
-    
-    // 검색 관련
-    if viewModel.isSearchWindowPresented, viewModel.resultRanges.count > 0 {
-      // 창이 떠 있고, 검색 결과가 1 이상 있을 때
-      // applyDimmedStyle(to: textView)
-      // textView.alphaValue = 0.4
-      highlight(using: viewModel.resultRanges, in: textView)
-      textView.isEditable = false
-    } else {
-      // textView.alphaValue = 1
-      textView.isEditable = true
-    }
-    
+    // ⚠️ 이 부분은 영향 없음
     if textView.string != text {
       DispatchQueue.main.async {
         textView.string = text
       }
     }
     
-    // 테마 업데이트
-    updateTheme(textView: textView)
+    // 기존 스타일 초기화 <- ❌ 실행되면 안됨 (스크롤 이상 현상)
+    // -> 서치 모드일 때만 실행되도록
+    // -> 테마 업데이트는 반드시 이부분보다 나중에 실행 (폰트 적용 위해)
+    if viewModel.isSearchWindowPresented {
+      let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
+      textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
+    }
     
-    // 검색 시 위치 이동
-    if viewModel.currentResultRangeIndex < viewModel.resultRanges.count {
+    // 검색 관련 <- ⚠️ , 대신 && 사용? (기분탓?)
+    if viewModel.isSearchWindowPresented && viewModel.resultRanges.count > 0 {
+      // 창이 떠 있고, 검색 결과가 1 이상 있을 때
+      highlight(using: viewModel.resultRanges, in: textView)
+      textView.isEditable = false
+    } else if !viewModel.isSearchWindowPresented && !textView.isEditable {
+      // ⚠️ 이 부분이 너무 자주 호출되면 안됨 -> else if 조건 추가
+      textView.isEditable = true
+      Log.debug("text view is editable now")
+    }
+    
+    // 검색 시 위치 이동 <- ⚠️ , 대신 && 사용? (기분탓?)
+    if viewModel.isSearchWindowPresented && viewModel.currentResultRangeIndex < viewModel.resultRanges.count {
       let range = viewModel.resultRanges[viewModel.currentResultRangeIndex]
       textView.scrollRangeToVisible(range)
     }
+    
+    // 테마 업데이트 (영향 없음, 지우면 테마 적용 안됨)
+    updateTheme(textView: textView)
   }
 
   func makeCoordinator() -> Coordinator {
@@ -143,14 +153,32 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   class Coordinator: NSObject, NSTextViewDelegate {
     var parent: AutoHidingScrollTextEditor
     weak var textView: NSTextView?
+    
+    private var cancellable: AnyCancellable?
+    private let textSubject = PassthroughSubject<String, Never>()
 
     init(_ parent: AutoHidingScrollTextEditor) {
       self.parent = parent
+      
+      super.init()
+      
+      cancellable = textSubject
+        .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+        .sink { [weak self] text in
+          self?.parent.text = text
+        }
     }
 
+    // ⚠️ 여기가 문제, 호출되고 뭔가 하면 무조건 깨짐
+    // ⚠️ updateNSView 문제 해결하면 이 부분 문제 또한 해결됨
     func textDidChange(_ notification: Notification) {
+      // if let textView {
+      //   parent.text = textView.string
+      // }
+      
+      // 퍼포먼스 향상 위해 debounce 도입
       if let textView {
-        parent.text = textView.string
+        textSubject.send(textView.string)
       }
     }
   }
@@ -198,17 +226,9 @@ extension AutoHidingScrollTextEditor {
     textView.textStorage?.addAttributes(dimmedAttributes, range: fullRange)
   }
   
-  
   private func highlight(using ranges: [NSRange], in textView: NSTextView) {
-    // let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
-
-    // 기존 스타일 초기화 (흐리게)
-    // textView.textStorage?.setAttributes([
-    //   .foregroundColor: NSColor.labelColor.withAlphaComponent(0.3)
-    // ], range: fullRange)
-    
     let LEAST_OPACITY = 0.45
-
+    
     // 강조된 부분 다시 설정
     for (index, range) in ranges.enumerated() {
       let isCurrent = index == viewModel.currentResultRangeIndex
@@ -216,7 +236,8 @@ extension AutoHidingScrollTextEditor {
 
       let attributes: [NSAttributedString.Key: Any]
 
-      if let theme, let textColor = NSColor(hex: theme.textColorHex) {
+      if let theme,
+         let textColor = NSColor(hex: theme.textColorHex) {
         let color = textColor.invertedColor
         attributes = [
           .foregroundColor: color,

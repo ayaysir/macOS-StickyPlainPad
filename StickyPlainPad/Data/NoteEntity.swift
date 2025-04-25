@@ -11,7 +11,7 @@ import SwiftUICore
 
 @Model
 final class NoteEntity {
-  @Attribute(.unique) var id: UUID = UUID()
+  @Attribute(.unique) var id: UUID
   var createdAt: Date = Date.now
   var modifiedAt: Date?
   var content: String = ""

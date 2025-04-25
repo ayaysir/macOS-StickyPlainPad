@@ -70,18 +70,9 @@ struct NoteEditView: View {
     .onChange(of: currentContent) {
       naviTitle = currentContent.truncated(to: 30)
       note = noteViewModel.updateNote(note, content: currentContent)
-      findReplaceViewModel.text = currentContent
+      // findReplaceViewModel.text = currentContent
     }
-    // .onReceive(
-    //   currentContent.publisher.debounce(
-    //     for: 0.2,
-    //     scheduler: RunLoop.main
-    //   )
-    // ) { fd in
-    //     // naviTitle = currentContent.truncated(to: 30)
-    //     note = noteViewModel.updateNote(note, content: currentContent)
-    //     // findReplaceViewModel.text = currentContent
-    // }
+
     .onChange(of: findReplaceViewModel.text) {
       currentContent = findReplaceViewModel.text
       note = noteViewModel.updateNote(note, content: currentContent)
@@ -116,8 +107,8 @@ struct NoteEditView: View {
         noteViewModel.currentNoteIdForFind = nil
       }
       
-      if newValue == true {
-        
+      if oldValue == false, newValue == true {
+        findReplaceViewModel.text = currentContent
       }
     }
     .sheet(isPresented: $showThemeSelectSheet) {
