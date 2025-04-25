@@ -122,7 +122,12 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     // -> 테마 업데이트는 반드시 이부분보다 나중에 실행 (폰트 적용 위해)
     if viewModel.isSearchWindowPresented {
       let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
-      textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
+      if let theme,
+         let labelColor = NSColor(hex: theme.textColorHex) {
+        textView.textStorage?.setAttributes([.foregroundColor: labelColor], range: fullRange)
+      } else {
+        textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
+      }
     }
     
     // 검색 관련 <- ⚠️ , 대신 && 사용? (기분탓?)
@@ -201,7 +206,7 @@ extension AutoHidingScrollTextEditor {
       
       // 🔄 텍스트 색상 적용
       let newTextColor = NSColor(hex: theme.textColorHex) ?? .textColor
-      if textView.textColor != newTextColor {
+      if !viewModel.isSearchWindowPresented, textView.textColor != newTextColor {
         textView.textColor = newTextColor
       }
     } else {
@@ -218,16 +223,8 @@ extension AutoHidingScrollTextEditor {
     }
   }
   
-  func applyDimmedStyle(to textView: NSTextView) {
-    let fullRange = NSRange(location: 0, length: textView.string.utf16.count)
-    let dimmedAttributes: [NSAttributedString.Key: Any] = [
-      .foregroundColor: NSColor.labelColor.withAlphaComponent(0.3)
-    ]
-    textView.textStorage?.addAttributes(dimmedAttributes, range: fullRange)
-  }
-  
   private func highlight(using ranges: [NSRange], in textView: NSTextView) {
-    let LEAST_OPACITY = 0.45
+    let LEAST_OPACITY = 0.7
     
     // 강조된 부분 다시 설정
     for (index, range) in ranges.enumerated() {
@@ -237,11 +234,14 @@ extension AutoHidingScrollTextEditor {
       let attributes: [NSAttributedString.Key: Any]
 
       if let theme,
+         let backgroundColor = NSColor(hex: theme.backgroundColorHex),
          let textColor = NSColor(hex: theme.textColorHex) {
-        let color = textColor.invertedColor
+        let newBGColor = backgroundColor.contrastingColor
+        let newTextColor = newBGColor.invertedColor
+        
         attributes = [
-          .foregroundColor: color,
-          .backgroundColor: color.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
+          .foregroundColor: newTextColor,
+          .backgroundColor: newBGColor.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
           .font: font
         ]
       } else {
