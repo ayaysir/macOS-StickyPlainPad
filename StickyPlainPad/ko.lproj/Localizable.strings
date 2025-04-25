@@ -63,7 +63,7 @@
 
 "loc_restore_default_theme" = "(기본 테마로 복원)";
 
-"loc_editor_substitution_option_note" = "이 옵션 설정은 이후에 새로 여는 메모 에디터에 적용되며, 에디터의 마우스 오른쪽 버튼 -> [대체] 메뉴에서 조절할 수 있습니다. 에디터 내에서 개별적으로 변경한 설정은 저장되지 않습니다."; // ko
+"loc_editor_substitution_option_note" = "이 옵션 설정은 이후에 새로 여는 메모 에디터에 적용됩니다."; // ko
 "loc_editor_settings" = "텍스트 에디터 설정";
 "loc_text_correction_options" = "텍스트 자동 교정 옵션";
 

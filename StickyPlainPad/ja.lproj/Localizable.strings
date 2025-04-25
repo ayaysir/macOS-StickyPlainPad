@@ -63,7 +63,7 @@
 
 "loc_restore_default_theme" = "（デフォルトテーマに戻す）";
 
-"loc_editor_substitution_option_note" = "このオプション設定は新しく開いたメモエディタに適用されます。エディタ内で右クリック > ［代替］メニューから調整できます。エディタごとに変更した設定は保存されません。"; // ja
+"loc_editor_substitution_option_note" = "このオプション設定は新しく開いたメモエディタに適用されます。"; // ja
 "loc_editor_settings" = "テキストエディタの設定"; // ja
 "loc_text_correction_options" = "テキスト自動修正オプション";
 

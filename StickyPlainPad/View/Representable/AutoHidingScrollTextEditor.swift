@@ -52,6 +52,10 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     textView.autoresizingMask = .width
     textView.textContainer?.containerSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
     textView.textContainer?.widthTracksTextView = true
+    
+    // 20250425: 렌더링 속도 빠르게 하기 위함
+    textView.usesFontPanel = false // 효과 X
+    textView.wantsLayer = true // 효과 O?
 
     // 스크롤 뷰
     let scrollView = NSScrollView()
@@ -62,6 +66,8 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     scrollView.drawsBackground = false
     scrollView.hasHorizontalScroller = false
     scrollView.autoresizingMask = [.width, .height]
+    
+    scrollView.postsBoundsChangedNotifications = true
 
     context.coordinator.textView = textView
     textView.delegate = context.coordinator
@@ -115,7 +121,9 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     }
     
     if textView.string != text {
-      textView.string = text
+      DispatchQueue.main.async {
+        textView.string = text
+      }
     }
     
     // 테마 업데이트

@@ -22,10 +22,8 @@ struct NoteEditView: View {
   @State private var currentContent = ""
   @State private var fontSize: CGFloat = 14
   @State private var naviTitle = "가나다"
-  // @State private var isAlwaysOnTop = false
   
   @State private var showThemeSelectSheet = false
-  // @State private var showFindReplaceArea = false
   
   init(
     noteViewModel: NoteViewModel,
@@ -74,6 +72,16 @@ struct NoteEditView: View {
       note = noteViewModel.updateNote(note, content: currentContent)
       findReplaceViewModel.text = currentContent
     }
+    // .onReceive(
+    //   currentContent.publisher.debounce(
+    //     for: 0.2,
+    //     scheduler: RunLoop.main
+    //   )
+    // ) { fd in
+    //     // naviTitle = currentContent.truncated(to: 30)
+    //     note = noteViewModel.updateNote(note, content: currentContent)
+    //     // findReplaceViewModel.text = currentContent
+    // }
     .onChange(of: findReplaceViewModel.text) {
       currentContent = findReplaceViewModel.text
       note = noteViewModel.updateNote(note, content: currentContent)

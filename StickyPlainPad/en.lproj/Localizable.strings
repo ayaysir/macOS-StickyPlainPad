@@ -77,7 +77,7 @@
 "loc_starts_with" = "Starts with";
 "loc_whole_word" = "Whole word";
 
-"loc_editor_substitution_option_note" = "These options will apply to newly opened memo editors. You can adjust them via Right-Click > Substitutions in the editor. Settings changed per editor are not saved."; // en
+"loc_editor_substitution_option_note" = "These options will apply to newly opened memo editors."; // en
 "loc_editor_settings" = "Text Editor Settings";
 "loc_text_correction_options" = "Text Correction Options";
 
