@@ -234,8 +234,7 @@ extension AutoHidingScrollTextEditor {
       let attributes: [NSAttributedString.Key: Any]
 
       if let theme,
-         let backgroundColor = NSColor(hex: theme.backgroundColorHex),
-         let textColor = NSColor(hex: theme.textColorHex) {
+         let backgroundColor = NSColor(hex: theme.backgroundColorHex) {
         let newBGColor = backgroundColor.contrastingColor
         let newTextColor = newBGColor.invertedColor
         
