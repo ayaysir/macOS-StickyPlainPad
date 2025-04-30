@@ -122,6 +122,7 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     // -> 테마 업데이트는 반드시 이부분보다 나중에 실행 (폰트 적용 위해)
     if viewModel.isSearchWindowPresented {
       let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
+      
       if let theme,
          let labelColor = NSColor(hex: theme.textColorHex) {
         textView.textStorage?.setAttributes([.foregroundColor: labelColor], range: fullRange)
@@ -211,14 +212,20 @@ extension AutoHidingScrollTextEditor {
       }
     } else {
       // 테마가 없을 경우 기본 스타일 적용
-      textView.font = NSFont.systemFont(ofSize: fontSize)
-      textView.backgroundColor = .defaultNoteBackground
-      textView.textColor = .defaultText
+      // 20250430: 기본 테마에서 텍스트 뷰 문제 있어서 이전 배경, 텍스트 색과 비교하는 로직 추가
       
       // 🔄 폰트 크기 반영
       if let currentFont = textView.font,
           currentFont.pointSize != fontSize {
         textView.font = NSFont(descriptor: currentFont.fontDescriptor, size: fontSize)
+      }
+      
+      if textView.backgroundColor != .defaultNoteBackground {
+        textView.backgroundColor = .defaultNoteBackground
+      }
+      
+      if textView.textColor != .defaultText {
+        textView.textColor = .defaultText
       }
     }
   }
@@ -233,8 +240,7 @@ extension AutoHidingScrollTextEditor {
 
       let attributes: [NSAttributedString.Key: Any]
 
-      if let theme,
-         let backgroundColor = NSColor(hex: theme.backgroundColorHex) {
+      if let theme, let backgroundColor = NSColor(hex: theme.backgroundColorHex) {
         let newBGColor = backgroundColor.contrastingColor
         let newTextColor = newBGColor.invertedColor
         
