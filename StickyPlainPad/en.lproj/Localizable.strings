@@ -101,3 +101,5 @@
 "loc_ask_to_developer" = "Send inquiry email to developer";
 "loc_email_subject" = "StickyPlainPad Support Inquiry";
 "loc_email_body" = "App Version: %@\n\n";
+
+"loc_memo_list_ellipsis" = "Open memo list…";

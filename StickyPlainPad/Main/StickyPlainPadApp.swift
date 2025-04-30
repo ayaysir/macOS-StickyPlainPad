@@ -33,7 +33,7 @@ struct StickyPlainPadApp: App {
   
   var body: some Scene {
     // 디버그용 리스트 창 (목록을 어디에 배치할지 추후 결정)
-    Window("loc_list_title", id: "list") {
+    Window("loc_list_title", id: .idMemoListWindow) {
       NoteListView(
         viewModel: noteViewModel,
         themeViewModel: themeViewModel
@@ -191,7 +191,7 @@ extension StickyPlainPadApp {
           )
         }
       }
-      .keyboardShortcut("l", modifiers: [.command])
+      .keyboardShortcut("o", modifiers: [.command])
       
       Button("loc_save_file_ellipsis") {
         guard let note = noteFromKeyWindow else {
@@ -230,6 +230,11 @@ extension StickyPlainPadApp {
     
     CommandGroup(after: .appInfo) {
       Divider()
+      
+      Button("loc_memo_list_ellipsis") {
+        openWindow(id: .idMemoListWindow)
+      }
+      .keyboardShortcut("l", modifiers: [.command])
       
       Button("loc_theme_manager_ellipsis") {
         openWindow(id: .idThemeNewWindow)
@@ -284,7 +289,7 @@ extension StickyPlainPadApp {
       Divider()
       
       Button("loc_developer_info") {
-        openWebsite("http://yoonbumtae.com")
+        openWebsite(MAKER_WEBSITE)
       }
       
       Button("loc_developer_store") {

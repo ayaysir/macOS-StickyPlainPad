@@ -22,6 +22,7 @@ let Log = Logger()
 extension String {
   static let idThemeNewWindow = "theme-new-window"
   static let idEditorSettingWindow = "editor-setting-window"
+  static let idMemoListWindow = "memo-list-window"
   
   static let onceHasLoadedInitialThemes = "hasLoadedInitialThemes"
   static let onceHasLoadedInitialNotes  = "hasLoadedInitialNotes"
@@ -45,3 +46,4 @@ let MAX_FONT_SIZE: CGFloat = 104
 let APP_ID = "6744865328"
 let MAKER_ID = "1578285460"
 let MAKER_MAIL = "yoonbumatae@gmail.com"
+let MAKER_WEBSITE = "http://yoonbumtae.com"

@@ -52,7 +52,7 @@ You can also use the 📌 **pin icon** to keep it always on top of other windows
 - **File > New Memo** — ⌘ + N  
   Create a new memo.
 
-- **File > Load from Text File…** — ⌘ + L  
+- **File > Load from Text File…** — ⌘ + O  
   Load a memo from a text file.
 
 - **File > Save as Text File…** — ⌘ + S  

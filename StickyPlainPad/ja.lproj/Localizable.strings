@@ -87,3 +87,5 @@
 "loc_ask_to_developer" = "お問い合わせメールを送信";
 "loc_email_subject" = "StickyPlainPadに関するお問い合わせ";
 "loc_email_body" = "アプリバージョン: %@\n\n";
+
+"loc_memo_list_ellipsis" = "メモ一覧を開く…";
