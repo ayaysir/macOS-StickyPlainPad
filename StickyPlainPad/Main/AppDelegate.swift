@@ -13,6 +13,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
   }
   
+  func application(_ sender: NSApplication, openFile filename: String) -> Bool {
+    print("파일 열기 요청 받음: \(filename)")
+    
+    return true
+  }
+  
+  func application(_ application: NSApplication, open urls: [URL]) {
+    print("URLs 열림: \(urls)")
+    
+    urls.forEach { url in
+      // 파일 경로를 SwiftUI로 전달 (NotificationCenter 등 사용 가능)
+      DispatchQueue.main.async {
+        NotificationCenter.default.post(name: .didOpenFileURL, object: url)
+      }
+    }
+  }
+  
   func applicationWillTerminate(_ notification: Notification) {
     // Dock 아이콘 -> 종료의 경우 익스포트된 독립 앱으로 작동 여부 확인
     

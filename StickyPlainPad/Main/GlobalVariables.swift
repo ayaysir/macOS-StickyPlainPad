@@ -18,7 +18,14 @@ typealias URLToVoidCallback = (URL) -> Void
 
 let Log = Logger()
 
+// MARK: - Notification Namess
+
+extension Notification.Name {
+  static let didOpenFileURL = Notification.Name("didOpenFileURL")
+}
+
 // MARK: - String IDs
+
 extension String {
   static let idThemeNewWindow = "theme-new-window"
   static let idEditorSettingWindow = "editor-setting-window"
@@ -41,7 +48,7 @@ extension String {
 let MIN_FONT_SIZE: CGFloat = 8
 let MAX_FONT_SIZE: CGFloat = 104
 
-// MARK : - App Info
+// MARK: - App Info
 
 let APP_ID = "6744865328"
 let MAKER_ID = "1578285460"

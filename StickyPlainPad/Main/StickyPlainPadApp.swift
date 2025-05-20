@@ -42,6 +42,16 @@ struct StickyPlainPadApp: App {
         loadInitialThemesIfNeeded()
         loadInitialNotesIfNeeded()
       }
+      .onReceive(NotificationCenter.default.publisher(for: .didOpenFileURL)) { output in
+        // print("onReceive: \(output)")
+        guard let url = output.object as? URL else { return }
+        NoteEditWindowManager.shared.addNewNoteAndOpen(
+          noteViewModel: noteViewModel,
+          themeViewModel: themeViewModel,
+          fileURL: url,
+          content: readTextFileAutoEncoding(at: url) ?? ""
+        )
+      }
     }
     .defaultSize(width: 600, height: 400) // 기본 창 크기 설정
     .commands { commands() }
