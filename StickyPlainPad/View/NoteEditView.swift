@@ -171,6 +171,13 @@ struct NoteEditView: View {
           .frame(height: HEADER_HEIGHT)
           .contentShape(Rectangle())
           .onTapGesture(count: 2, perform: maximizeWindow)
+      
+      
+        // 새 노트 추가
+        headerButton(
+          action: makeNewNote,
+          imageSystemName: "doc.badge.plus"
+        )
         
         headerButton(
           action: makeWindowAlwaysOnTop,
@@ -276,6 +283,13 @@ extension NoteEditView {
     note = NoteEditWindowManager.shared.changeWindowLevel(
       note: note,
       noteViewModel: noteViewModel
+    )
+  }
+  
+  func makeNewNote() {
+    NoteEditWindowManager.shared.addNewNoteAndOpen(
+      noteViewModel: noteViewModel,
+      themeViewModel: themeViewModel
     )
   }
 }
