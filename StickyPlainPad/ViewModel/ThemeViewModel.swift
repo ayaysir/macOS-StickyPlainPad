@@ -12,7 +12,7 @@ import AppKit
 class ThemeViewModel {
   private let repository: ThemeRepository
 
-  // 외부에서 바인딩 가능한 Theme 목록
+  /// 외부에서 바인딩 가능한 Theme 목록
   private(set) var themes: [Theme] = []
   
   var availableFonts: [String] {
