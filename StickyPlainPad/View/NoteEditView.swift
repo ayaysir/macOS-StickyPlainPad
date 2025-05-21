@@ -124,7 +124,7 @@ struct NoteEditView: View {
         noteViewModel: noteViewModel,
         themeViewModel: themeViewModel
       )
-      .frame(minHeight: 300, maxHeight: 1000)
+      .frame(minHeight: 500, maxHeight: 1000)
     }
   }
   

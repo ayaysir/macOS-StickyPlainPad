@@ -10,7 +10,7 @@ import Combine
 
 /*
  main: environment, vm, stored property, body { TopView().{modifier...} }
- ext1: view element
+ ext1: 분리된 view element
  ext2: init, view related function
  ext3: utility function
  */
@@ -22,6 +22,7 @@ struct ThemeView: View {
   @State private var showDuplicateAlert = false
   @FocusState private var isNameFocused: Bool
   @State private var selectedFontName: String = ""
+  @State private var selectedFontMember: FontMember? = nil
   // Combine Subject
   @StateObject private var debounce = DebounceController()
   
@@ -36,6 +37,7 @@ struct ThemeView: View {
       Divider()
       ColorSection
       Divider()
+      FontSection
     }
     .padding()
     .onAppear(perform: setup)
@@ -58,6 +60,7 @@ struct ThemeView: View {
     .onReceive(debounce.textColor.publisher, perform: updateTextColor)
     .onReceive(debounce.themeName.publisher, perform: updateThemeName)
     .onChange(of: selectedFontName, updateFontName)
+    .onChange(of: selectedFontMember, updateFontMember)
   }
 }
 
@@ -73,7 +76,8 @@ extension ThemeView {
         backgroundColor
         Text("loc_adjust_font_size_instruction")
         .multilineTextAlignment(.leading)
-        .font(.custom(selectedFontName, size: 17))
+        .font(.custom(selectedFontMember?.postScriptName ?? selectedFontName, size: 17)
+        )
         .foregroundStyle(textColor)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(5)
@@ -128,6 +132,14 @@ extension ThemeView {
         }
       }
       
+      Picker("loc_font_style", selection: $selectedFontMember) {
+        ForEach(themeViewModel.availableFontStyles, id: \.self) { fontStyle in
+          Text(fontStyle.displayName)
+            .font(Font.custom(fontStyle.postScriptName, size: 14))
+            .tag(fontStyle)
+        }
+      }
+      
       Spacer()
     }
   }
@@ -150,6 +162,12 @@ extension ThemeView {
   
   private func setFonts() {
     selectedFontName = theme.fontName
+    setFontTraitsPicker()
+  }
+  
+  private func setFontTraitsPicker() {
+    themeViewModel.availableFontMembers(ofFontFamily: selectedFontName)
+    selectedFontMember = theme.fontMember ?? themeViewModel.availableFontStyles.first
   }
   
   private func moveFocusToTextField() {
@@ -159,6 +177,8 @@ extension ThemeView {
       }
     }
   }
+  
+  // MARK: - Data update methods
   
   private func updateThemeNameIfUnfocused() {
     if !isNameFocused {
@@ -188,9 +208,22 @@ extension ThemeView {
   }
   
   private func updateFontName() {
+    setFontTraitsPicker()
+    
     themeViewModel.updateTheme(
       id: theme.id,
       fontName: selectedFontName
+    )
+  }
+  
+  private func updateFontMember() {
+    guard let selectedFontMember else {
+      return
+    }
+
+    themeViewModel.updateTheme(
+      id: theme.id,
+      fontTraits: selectedFontMember.dataDescription
     )
   }
 }

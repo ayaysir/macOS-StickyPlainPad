@@ -41,6 +41,7 @@ final class ThemeRepositoryImpl: ThemeRepository {
       entity.textColorHex = theme.textColorHex
       entity.fontName = theme.fontName
       entity.fontSize = theme.fontSize
+      entity.fontTraits = theme.fontTraits
       try? context.save()
     }
   }

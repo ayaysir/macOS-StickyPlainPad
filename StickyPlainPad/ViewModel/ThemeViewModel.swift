@@ -18,10 +18,34 @@ class ThemeViewModel {
   var availableFonts: [String] {
     NSFontManager.shared.availableFontFamilies
   }
+  var availableFontStyles: [FontMember] = []
 
   init(repository: ThemeRepository) {
     self.repository = repository
     fetchAllThemes()
+  }
+  
+  func availableFontMembers(ofFontFamily family: String) {
+    guard let members = NSFontManager.shared.availableMembers(ofFontFamily: family) else {
+      return
+    }
+
+    availableFontStyles = members.compactMap { member in
+      guard
+        let postScriptName = member[0] as? String,
+        let displayName = member[1] as? String,
+        let weight = member[2] as? Int,
+        let traits = member[3] as? UInt
+      else {
+        Log.error("compactMap Error: \(member)")
+        return nil
+      }
+
+      return FontMember(displayName: displayName,
+                        postScriptName: postScriptName,
+                        weight: weight,
+                        traits: traits)
+    }
   }
 
   func fetchAllThemes() {
@@ -42,7 +66,8 @@ class ThemeViewModel {
     backgroundColorHex: String,
     textColorHex: String,
     fontName: String,
-    fontSize: CGFloat
+    fontSize: CGFloat,
+    fontTraits: String?
   ) -> Theme {
     let theme = Theme(
       id: UUID(),
@@ -52,7 +77,8 @@ class ThemeViewModel {
       backgroundColorHex: backgroundColorHex,
       textColorHex: textColorHex,
       fontName: fontName,
-      fontSize: fontSize
+      fontSize: fontSize,
+      fontTraits: fontTraits
     )
     
     repository.add(theme)
@@ -90,7 +116,8 @@ class ThemeViewModel {
     backgroundColorHex: String? = nil,
     textColorHex: String? = nil,
     fontName: String? = nil,
-    fontSize: CGFloat? = nil
+    fontSize: CGFloat? = nil,
+    fontTraits: String? = nil
   ) {
     guard var updated = theme(withID: id) else {
       Log.error("\(#function): theme not found.")
@@ -117,6 +144,10 @@ class ThemeViewModel {
     
     if let fontSize {
       updated.fontSize = fontSize
+    }
+    
+    if let fontTraits {
+      updated.fontTraits = fontTraits
     }
 
     repository.update(updated)

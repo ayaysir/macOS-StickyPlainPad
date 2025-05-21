@@ -30,7 +30,8 @@ final class ThemeViewModelTests: XCTestCase {
       backgroundColorHex: "#000000",
       textColorHex: "#FFFFFF",
       fontName: "Impact",
-      fontSize: 30
+      fontSize: 30,
+      fontTraits: nil
     )
 
     XCTAssertEqual(viewModel.themes.count, 1)
@@ -39,12 +40,14 @@ final class ThemeViewModelTests: XCTestCase {
   }
 
   func testUpdateTheme() {
+    let fontMember = FontMember(displayName: "Gullim", postScriptName: "Gullim-Black", weight: 1, traits: 1)
     viewModel.addTheme(
       name: "Light",
       backgroundColorHex: "#FFFFFF",
       textColorHex: "#000000",
       fontName: "Impact",
-      fontSize: 30
+      fontSize: 30,
+      fontTraits: fontMember.dataDescription
     )
     var theme = viewModel.themes.first!
     theme.name = "Updated Light"
@@ -55,6 +58,7 @@ final class ThemeViewModelTests: XCTestCase {
     XCTAssertEqual(viewModel.themes.first?.name, "Updated Light")
     XCTAssertEqual(viewModel.themes.first?.fontName, "Avenir")
     XCTAssertNotNil(viewModel.themes.first?.modifiedAt)
+    XCTAssertEqual(viewModel.themes.first?.fontMember?.postScriptName, "Gullim-Black")
   }
 
   func testDeleteTheme() {
@@ -63,7 +67,8 @@ final class ThemeViewModelTests: XCTestCase {
       backgroundColorHex: "#FF0000",
       textColorHex: "#000000",
       fontName: "Impact",
-      fontSize: 30
+      fontSize: 30,
+      fontTraits: nil
     )
     let theme = viewModel.themes.first!
 

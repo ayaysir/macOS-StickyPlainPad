@@ -19,4 +19,12 @@ struct Theme: Codable, Identifiable, Hashable {
   var fontName: String
   var fontSize: CGFloat
   var fontTraits: String?
+  
+  var fontMember: FontMember? {
+    return if let fontTraits {
+      FontMember.fromDataDescription(fontTraits)
+    } else {
+      nil
+    }
+  }
 }

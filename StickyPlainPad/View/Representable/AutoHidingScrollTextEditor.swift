@@ -43,7 +43,11 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     
     // 테마 적용
     if let theme {
-      textView.font = NSFont(name: theme.fontName, size: fontSize)
+      if let postScriptName = theme.fontMember?.postScriptName {
+        textView.font = NSFont(name: postScriptName, size: fontSize)
+      } else {
+        textView.font = NSFont(name: theme.fontName, size: fontSize)
+      }
     } else {
       textView.font = NSFont.systemFont(ofSize: fontSize)
     }
@@ -197,6 +201,18 @@ extension AutoHidingScrollTextEditor {
       let newFont = NSFont(name: theme.fontName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
       if textView.font?.fontName != newFont.fontName || textView.font?.pointSize != fontSize {
         textView.font = newFont
+      }
+      
+      if let postScriptName = theme.fontMember?.postScriptName {
+        let newFont = NSFont(name: postScriptName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
+        if textView.font?.fontName != newFont.fontName || textView.font?.pointSize != fontSize {
+          textView.font = newFont
+        }
+      } else {
+        let newFont = NSFont(name: theme.fontName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
+        if textView.font?.fontName != newFont.fontName || textView.font?.pointSize != fontSize {
+          textView.font = newFont
+        }
       }
       
       // 🔄 배경색 적용

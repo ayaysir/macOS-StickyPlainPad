@@ -76,12 +76,15 @@ struct ThemeListView: View {
   }
   
   private func addNewTheme() {
+    viewModel.availableFontMembers(ofFontFamily: "SF Pro")
+    
     let newTheme = viewModel.addTheme(
       name: "loc_new_theme".localized,
       backgroundColorHex: "#FFFFFF",
       textColorHex: "#000000",
       fontName: "SF Pro",
-      fontSize: 14
+      fontSize: 14,
+      fontTraits: viewModel.availableFontStyles.first?.dataDescription ?? nil
     )
     
     DispatchQueue.main.async {
