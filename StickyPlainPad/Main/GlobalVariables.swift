@@ -41,6 +41,8 @@ extension String {
   static let cfgEditorAutoDataDetection    = "cfg_editor_auto_data_detection"
   static let cfgEditorAutoLinkDetection    = "cfg_editor_auto_link_detection"
   static let cfgEditorAutoCopyPaste        = "cfg_editor_auto_copy_paste"
+  
+  static let cfgThemeDefaultID             = "cfg_theme_default_id"
 }
 
 // MARK: - Constant Variables

@@ -14,6 +14,9 @@ final class NoteEditWindowManager {
 
   let screenSize = NSScreen.main?.frame ?? .zero
   let windowSize = CGSize(width: 400, height: 300)
+  
+  @AppStorage(.cfgThemeDefaultID) var defaultThemeID: String = ""
+  
   private init() {
     newWindowPos = newWindowPosFirst
   }
@@ -42,6 +45,7 @@ final class NoteEditWindowManager {
   private(set) var newWindowPos: CGPoint!
   private var cancellables = Set<AnyCancellable>()
   
+  /// 새로운 노트를 생성하고 윈도우를 엽니다.
   func addNewNoteAndOpen(
     noteViewModel: NoteViewModel,
     themeViewModel: ThemeViewModel,
@@ -49,7 +53,8 @@ final class NoteEditWindowManager {
     content: String = ""
   ) {
     withAnimation {
-      let note = noteViewModel.addNewNote(content: content, fileURL: fileURL)
+      let defaultThemeID = UUID(uuidString: self.defaultThemeID)
+      let note = noteViewModel.addNewNote(content: content, fileURL: fileURL, themeID: defaultThemeID)
       appendCreateWindowCount()
       
       open(

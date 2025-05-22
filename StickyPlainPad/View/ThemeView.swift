@@ -16,23 +16,28 @@ import Combine
  */
 
 struct ThemeView: View {
-  @Environment(\.dismissWindow) private var dismissWindow
   let theme: Theme
+  
+  @Environment(\.dismissWindow) private var dismissWindow
+
   @Bindable var themeViewModel: ThemeViewModel
-  @State private var showDuplicateAlert = false
-  @FocusState private var isNameFocused: Bool
-  @State private var selectedFontName: String = ""
-  @State private var selectedFontMember: FontMember? = nil
   // Combine Subject
   @StateObject private var debounce = DebounceController()
   
+  @State private var showDuplicateAlert = false
+  @State private var selectedFontName: String = ""
+  @State private var selectedFontMember: FontMember? = nil
   @State private var themeName = ""
   @State private var backgroundColor: Color = .white
   @State private var textColor: Color = .black
+  @FocusState private var isNameFocused: Bool
+  
+  @AppStorage(.cfgThemeDefaultID) var defaultThemeID: String = ""
   
   var body: some View {
     VStack(alignment: .leading, spacing: 16) {
       PreviewSection
+      ToggleThemeSection
       ThemeNameSection
       Divider()
       ColorSection
@@ -132,7 +137,7 @@ extension ThemeView {
         }
       }
       
-      Picker("loc_font_style", selection: $selectedFontMember) {
+      Picker("loc.font_style_member", selection: $selectedFontMember) {
         ForEach(themeViewModel.availableFontStyles, id: \.self) { fontStyle in
           Text(fontStyle.displayName)
             .font(Font.custom(fontStyle.postScriptName, size: 14))
@@ -141,6 +146,24 @@ extension ThemeView {
       }
       
       Spacer()
+    }
+  }
+  
+  private var ToggleThemeSection: some View {
+    HStack {
+      if defaultThemeID == theme.id.uuidString {
+        Text("loc.theme_is_default")
+      } else {
+        Text("loc.theme_is_not_default")
+      }
+      
+      Spacer()
+      Button("loc.set_as_default_theme") {
+        defaultThemeID = theme.id.uuidString
+      }
+      Button("loc.reset_default_theme") {
+        defaultThemeID = ""
+      }
     }
   }
 }

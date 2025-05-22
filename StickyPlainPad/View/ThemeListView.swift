@@ -14,51 +14,28 @@ struct ThemeListView: View {
   @State private var showNewTheme = false
   @State private var selectedThemeID: Theme.ID?
   
+  @AppStorage(.cfgThemeDefaultID) var defaultThemeID: String = ""
+  
   init(themeViewModel: ThemeViewModel) {
     _viewModel = State(initialValue: themeViewModel)
   }
   
   var body: some View {
     NavigationSplitView {
-      List(selection: $selectedThemeID) {
-        ForEach(viewModel.themes) { theme in
-          NavigationLink(value: theme.id) {
-            ThemeLabelView(theme: theme)
-          }
-          .contextMenu {
-            Button {
-              viewModel.deleteTheme(theme)
-            } label: {
-              Text("loc_delete_theme")
-            }
-          }
-        }
-        .onDelete(perform: deleteItems)
-      }
+      ListArea
       .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-      .toolbar {
-        ToolbarItem {
-          Button {
-            addNewTheme()
-          } label: {
-            Label("loc_add_theme", systemImage: "plus")
-          }
-        }
-#if DEBUG
-        ToolbarItem {
-          Button("to Json") {
-            print(viewModel.themes.encodeToJSON() ?? "-")
-          }
-        }
-#endif
-      }
+      .toolbar { themeToolbar }
     } detail: {
-      detail
+      DetailArea
     }
   }
+}
+
+extension ThemeListView {
+  // MARK: - Serapated views
   
   @ViewBuilder
-  private var detail: some View {
+  private var DetailArea: some View {
     if let selectedThemeID,
        let theme = viewModel.theme(withID: selectedThemeID) {
       ThemeView(theme: theme, themeViewModel: viewModel)
@@ -66,6 +43,52 @@ struct ThemeListView: View {
       Text("loc_select_theme")
     }
   }
+  
+  private var ListArea: some View {
+    List(selection: $selectedThemeID) {
+      ForEach(viewModel.themes) { theme in
+        NavigationLink(value: theme.id) {
+          HStack {
+            ThemeLabelView(theme: theme)
+            if defaultThemeID == theme.id.uuidString {
+              Text("loc.default")
+                .italic()
+                .foregroundStyle(Color.gray)
+            }
+          }
+        }
+        .contextMenu {
+          Button {
+            viewModel.deleteTheme(theme)
+          } label: {
+            Text("loc_delete_theme")
+          }
+        }
+      }
+      .onDelete(perform: deleteItems)
+    }
+  }
+  
+  // 분리한 클로저 (ToolbarContent 반환)
+  private var themeToolbar: some ToolbarContent {
+    ToolbarItemGroup {
+      Button {
+        addNewTheme()
+      } label: {
+        Label("loc_add_theme", systemImage: "plus")
+      }
+
+  #if DEBUG
+      Button("to Json") {
+        print(viewModel.themes.encodeToJSON() ?? "-")
+      }
+  #endif
+    }
+  }
+}
+
+extension ThemeListView {
+  // MARK: - View related functions
   
   private func deleteItems(offsets: IndexSet) {
     withAnimation {

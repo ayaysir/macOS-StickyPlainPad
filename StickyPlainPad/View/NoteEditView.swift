@@ -176,7 +176,7 @@ struct NoteEditView: View {
         // 새 노트 추가
         headerButton(
           action: makeNewNote,
-          imageSystemName: "doc.badge.plus"
+          imageSystemName: "plus"
         )
         
         headerButton(

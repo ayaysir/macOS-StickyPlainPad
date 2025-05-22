@@ -89,3 +89,10 @@
 "loc_ask_to_developer" = "문의 이메일 보내기";
 
 "loc_memo_list_ellipsis" = "메모 리스트 열기…";
+
+"loc.default" = "(기본)";
+"loc.font_style_member" = "폰트 스타일 (멤버)";
+"loc.theme_is_default" = "현재 기본 테마입니다.";
+"loc.theme_is_not_default" = "현재 기본 테마로 설정되지 않았습니다.";
+"loc.set_as_default_theme" = "기본 테마로 설정";
+"loc.reset_default_theme" = "기본 테마 초기화";

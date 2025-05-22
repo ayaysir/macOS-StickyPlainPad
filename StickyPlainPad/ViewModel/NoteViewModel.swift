@@ -54,14 +54,19 @@ class NoteViewModel {
   }
   
   @discardableResult
-  func addNewNote(content: String = "", fileURL: URL? = nil) -> Note {
+  func addNewNote(
+    content: String = "",
+    fileURL: URL? = nil,
+    themeID: UUID? = nil
+  ) -> Note {
     let noteID = UUID()
     let newNote = Note(
       id: noteID,
       createdAt: .now,
       content: content,
       fileURL: fileURL,
-      windowFrame: firstWindowFrame
+      windowFrame: firstWindowFrame,
+      themeID: themeID
     )
     
     repository.add(newNote)

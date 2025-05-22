@@ -103,3 +103,10 @@
 "loc_email_body" = "App Version: %@\n\n";
 
 "loc_memo_list_ellipsis" = "Open memo list…";
+
+"loc.default" = "(Default)";
+"loc.font_style_member" = "Font Style (Member)";
+"loc.theme_is_default" = "This is the current default theme.";
+"loc.theme_is_not_default" = "This theme is not set as the default.";
+"loc.set_as_default_theme" = "Set as Default Theme";
+"loc.reset_default_theme" = "Reset Default Theme";

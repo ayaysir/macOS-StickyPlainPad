@@ -27,50 +27,65 @@ struct NoteThemeSelectView: View {
   
   var body: some View {
     VStack {
-      HStack {
-        Text("loc_select_theme")
-          .font(.title2)
-        Button(action: { openWindow(id: .idThemeNewWindow) }) {
-          Text("loc_theme_manager_ellipsis")
-        }
-        Spacer()
-        Button(action: dismiss.callAsFunction) {
-          Text("loc_close")
-        }
-      }
-      .padding()
+      HeaderSection
       
       List {
-        Button(action: {
-          updateThemeToNil()
-          dismiss()
-        }) {
-          ThemeLabelView(
-            theme: .init(
-              id: .init(),
-              createdAt: .now,
-              name: "loc_restore_default_theme".localized,
-              backgroundColorHex: "#FCF4A7",
-              textColorHex: "#000000",
-              fontName: "SF Pro",
-              fontSize: 15
-            )
-          )
-        }
-        
-        ForEach(themeViewModel.themes) { theme in
-          Button(action: {
-            updateTheme(themeID: theme.id)
-            dismiss()
-          }) {
-            ThemeLabelView(theme: theme)
-          }
-        }
+        DefaultThemeButton
+        ThemeButtonList
       }
       .buttonStyle(.plain)
     }
   }
+}
+
+extension NoteThemeSelectView {
+  private var HeaderSection: some View {
+    HStack {
+      Text("loc_select_theme")
+        .font(.title2)
+      Button(action: { openWindow(id: .idThemeNewWindow) }) {
+        Text("loc_theme_manager_ellipsis")
+      }
+      Spacer()
+      Button(action: dismiss.callAsFunction) {
+        Text("loc_close")
+      }
+    }
+    .padding()
+  }
   
+  private var DefaultThemeButton: some View {
+    Button(action: {
+      updateThemeToNil()
+      dismiss()
+    }) {
+      ThemeLabelView(
+        theme: .init(
+          id: .init(),
+          createdAt: .now,
+          name: "loc_restore_default_theme".localized,
+          backgroundColorHex: "#FCF4A7",
+          textColorHex: "#000000",
+          fontName: "SF Pro",
+          fontSize: 15
+        )
+      )
+    }
+  }
+  
+  private var ThemeButtonList: some View {
+    ForEach(themeViewModel.themes) { theme in
+      Button(action: {
+        updateTheme(themeID: theme.id)
+        dismiss()
+      }) {
+        ThemeLabelView(theme: theme)
+      }
+    }
+  }
+}
+
+extension NoteThemeSelectView {
   private func updateTheme(themeID: Theme.ID) {
     note.themeID = themeID
     note = noteViewModel.updateNote(note)
