@@ -44,9 +44,9 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     // 테마 적용
     if let theme {
       if let postScriptName = theme.fontMember?.postScriptName {
-        textView.font = NSFont(name: postScriptName, size: fontSize)
+        textView.font = NSFont(name: postScriptName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
       } else {
-        textView.font = NSFont(name: theme.fontName, size: fontSize)
+        textView.font = NSFont(name: theme.fontName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
       }
     } else {
       textView.font = NSFont.systemFont(ofSize: fontSize)
@@ -198,19 +198,14 @@ extension AutoHidingScrollTextEditor {
   func updateTheme(textView: NSTextView) {
     if let theme {
       // 🔄 폰트 크기 반영 (폰트명도 포함하여 완전히 새로 설정)
-      let newFont = NSFont(name: theme.fontName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
-      if textView.font?.fontName != newFont.fontName || textView.font?.pointSize != fontSize {
-        textView.font = newFont
-      }
-      
       if let postScriptName = theme.fontMember?.postScriptName {
         let newFont = NSFont(name: postScriptName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
-        if textView.font?.fontName != newFont.fontName || textView.font?.pointSize != fontSize {
+        if textView.font?.fontName != postScriptName || textView.font?.pointSize != fontSize {
           textView.font = newFont
         }
       } else {
         let newFont = NSFont(name: theme.fontName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
-        if textView.font?.fontName != newFont.fontName || textView.font?.pointSize != fontSize {
+        if textView.font?.fontName != theme.fontName || textView.font?.pointSize != fontSize {
           textView.font = newFont
         }
       }

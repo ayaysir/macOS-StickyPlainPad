@@ -23,9 +23,11 @@ struct ThemeLabelView: View {
         }
       Text(theme.name)
         .font(baseFontOption)
+      Spacer()
     }
     .frame(height: 20)
     .frame(maxHeight: 50)
+    .contentShape(.rect)
   }
 }
 

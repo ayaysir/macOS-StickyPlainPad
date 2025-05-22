@@ -64,8 +64,8 @@ struct ThemeView: View {
     .onReceive(debounce.backgroundColor.publisher, perform: updateBackgroundColor)
     .onReceive(debounce.textColor.publisher, perform: updateTextColor)
     .onReceive(debounce.themeName.publisher, perform: updateThemeName)
-    .onChange(of: selectedFontName, updateFontName)
-    .onChange(of: selectedFontMember, updateFontMember)
+    // .onChange(of: selectedFontName, updateFontName)
+    // .onChange(of: selectedFontMember, updateFontMember)
   }
 }
 
@@ -129,7 +129,10 @@ extension ThemeView {
         .font(.title3)
         .fontWeight(.semibold)
       
-      Picker("loc_font", selection: $selectedFontName) {
+      Picker("loc_font", selection: Binding(
+        get: { selectedFontName },
+        set: { updateFontName($0) }
+      )) {
         ForEach(themeViewModel.availableFonts, id: \.self) { fontTitleStr in
           Text(fontTitleStr)
             .font(Font.custom(fontTitleStr, size: 14))
@@ -137,7 +140,10 @@ extension ThemeView {
         }
       }
       
-      Picker("loc.font_style_member", selection: $selectedFontMember) {
+      Picker("loc.font_style_member", selection: Binding(
+        get: { selectedFontMember },
+        set: { updateFontMember($0) }
+      )) {
         ForEach(themeViewModel.availableFontStyles, id: \.self) { fontStyle in
           Text(fontStyle.displayName)
             .font(Font.custom(fontStyle.postScriptName, size: 14))
@@ -183,14 +189,16 @@ extension ThemeView {
     textColor = .init(hex: theme.textColorHex) ?? .black
   }
   
+  /// FontName, Picker 설정 (SwiftData 업데이트 없음)
   private func setFonts() {
     selectedFontName = theme.fontName
-    setFontTraitsPicker()
-  }
-  
-  private func setFontTraitsPicker() {
     themeViewModel.availableFontMembers(ofFontFamily: selectedFontName)
     selectedFontMember = theme.fontMember ?? themeViewModel.availableFontStyles.first
+  }
+  
+  private func updateFontTraitsPickerWhenFontNameChanged() {
+    themeViewModel.availableFontMembers(ofFontFamily: selectedFontName)
+    selectedFontMember = themeViewModel.availableFontStyles.first
   }
   
   private func moveFocusToTextField() {
@@ -221,6 +229,8 @@ extension ThemeView {
       id: theme.id,
       backgroundColorHex: backgroundColor.toHex()
     )
+    
+    sendNotifiation()
   }
   
   private func updateTextColor() {
@@ -228,26 +238,53 @@ extension ThemeView {
       id: theme.id,
       textColorHex: textColor.toHex()
     )
-  }
-  
-  private func updateFontName() {
-    setFontTraitsPicker()
     
-    themeViewModel.updateTheme(
-      id: theme.id,
-      fontName: selectedFontName
-    )
+    sendNotifiation()
   }
   
-  private func updateFontMember() {
+  private func updateFontName(_ value: String) {
+    selectedFontName = value
+    updateFontTraitsPickerWhenFontNameChanged()
+    
     guard let selectedFontMember else {
       return
     }
-
+    
+    themeViewModel.updateTheme(
+      id: theme.id,
+      fontName: selectedFontName,
+      fontTraits: selectedFontMember.dataDescription
+    )
+    
+    sendNotifiation()
+  }
+  
+  /*
+   처음 로딩때
+    - 폰트 멤버가 있다면 SwiftData 업데이트 안함
+    - 폰트 멤버가 없다면 기본(first)로 SD 업데이트
+   이름 피커를 바꿀 떄
+    - 바꾼 직후 기본을 업데이트
+   멤버 피커를 바꿀 때
+    - 바뀐 멤버로 업데이트
+   */
+  
+  private func updateFontMember(_ value: FontMember?) {
+    selectedFontMember = value
+    guard let selectedFontMember else {
+      return
+    }
+    
     themeViewModel.updateTheme(
       id: theme.id,
       fontTraits: selectedFontMember.dataDescription
     )
+    
+    sendNotifiation()
+  }
+  
+  private func sendNotifiation() {
+    NotificationCenter.default.post(name: .didThemeChanged, object: theme.id)
   }
 }
 

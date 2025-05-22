@@ -22,6 +22,7 @@ let Log = Logger()
 
 extension Notification.Name {
   static let didOpenFileURL = Notification.Name("didOpenFileURL")
+  static let didThemeChanged = Notification.Name("didThemeChanged")
 }
 
 // MARK: - String IDs

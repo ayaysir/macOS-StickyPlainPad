@@ -159,19 +159,11 @@ class ThemeViewModel {
     fetchAllThemes()
   }
   
-  @discardableResult
-  func deleteAllThemes() -> Bool {
-    guard themes.isEmpty else {
-      Log.warning("이미 테마가 있습니다.")
-      return false
-    }
-    
+  func deleteAllThemes(){
     themes.forEach {
       deleteTheme($0)
     }
     
     fetchAllThemes()
-    
-    return true
   }
 }

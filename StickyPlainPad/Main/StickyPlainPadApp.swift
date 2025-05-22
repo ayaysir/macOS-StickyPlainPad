@@ -71,8 +71,14 @@ struct StickyPlainPadApp: App {
 extension StickyPlainPadApp {
   /// 앱 설치 직후, 초기 테마 추가
   private func loadInitialThemesIfNeeded() {
-    guard !UserDefaults.standard.bool(forKey: .onceHasLoadedInitialThemes) else { return }
-    guard themeViewModel.deleteAllThemes() else { return }
+    guard !UserDefaults.standard.bool(forKey: .onceHasLoadedInitialThemes) else {
+      return
+    }
+    
+    guard themeViewModel.themes.isEmpty else {
+      Log.warning("\(#function): theme is not empty, 이미 테마가 있습니다.")
+      return
+    }
     
     guard let url = Bundle.main.url(forResource: "InitialThemes", withExtension: "json"),
           let jsonData = try? Data(contentsOf: url),

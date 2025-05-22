@@ -58,21 +58,11 @@ struct NoteEditView: View {
       .background(Color.defaultNoteBackground)
     }
     .navigationTitle(naviTitle)
-    .onAppear {
-      currentContent = note.content
-      naviTitle = note.content
-      fontSize = note.fontSize
-      
-      if let themeID = note.themeID {
-        Log.info("Theme exist: \(themeID)")
-      }
-    }
+    .onAppear(perform: setup)
     .onChange(of: currentContent) {
       naviTitle = currentContent.truncated(to: 30)
       note = noteViewModel.updateNote(note, content: currentContent)
-      // findReplaceViewModel.text = currentContent
     }
-
     .onChange(of: findReplaceViewModel.text) {
       currentContent = findReplaceViewModel.text
       note = noteViewModel.updateNote(note, content: currentContent)
@@ -111,13 +101,10 @@ struct NoteEditView: View {
         findReplaceViewModel.text = currentContent
       }
     }
+    .onReceive(NotificationCenter.default.publisher(for: .didThemeChanged), perform: handleThemeChanged)
     .sheet(isPresented: $showThemeSelectSheet) {
       // onDismiss
-      if let themeID = note.themeID {
-        theme = themeViewModel.theme(withID: themeID)
-      } else {
-        theme = nil
-      }
+      updateTheme()
     } content: {
       NoteThemeSelectView(
         note: $note,
@@ -214,6 +201,37 @@ struct NoteEditView: View {
       viewModel: $findReplaceViewModel
     )
     .background(Color(nsColor: .textBackgroundColor))
+  }
+}
+
+extension NoteEditView {
+  func setup() {
+    currentContent = note.content
+    naviTitle = note.content
+    fontSize = note.fontSize
+    
+    if let themeID = note.themeID {
+      Log.info("Theme exist: \(themeID)")
+    }
+  }
+  
+  func updateTheme() {
+    if let themeID = note.themeID {
+      theme = themeViewModel.theme(withID: themeID)
+    } else {
+      theme = nil
+    }
+  }
+  
+  private func handleThemeChanged(_ notification: Notification) {
+    guard let updatedThemeID = notification.object as? UUID,
+          let themeID = theme?.id,
+          themeID == updatedThemeID
+    else {
+      return
+    }
+    
+    updateTheme()
   }
 }
 
