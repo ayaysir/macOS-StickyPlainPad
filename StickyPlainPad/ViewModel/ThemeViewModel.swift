@@ -97,7 +97,11 @@ class ThemeViewModel {
   
   func addThemes(from themes: [Theme]) {
     themes.forEach { theme in
-      repository.add(theme)
+      if self.themes.contains(where: { $0.id == theme.id }) {
+        Log.error("\(theme.id) (\(theme.name)): 이미 존재합니다.")
+      } else {
+        repository.add(theme)
+      }
     }
     
     fetchAllThemes()

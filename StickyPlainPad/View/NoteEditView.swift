@@ -210,9 +210,9 @@ extension NoteEditView {
     naviTitle = note.content
     fontSize = note.fontSize
     
-    if let themeID = note.themeID {
-      Log.info("Theme exist: \(themeID)")
-    }
+    // if let themeID = note.themeID {
+    //   Log.info("heme exist: \(themeID)")
+    // }
   }
   
   func updateTheme() {
