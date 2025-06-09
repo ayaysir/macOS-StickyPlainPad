@@ -271,7 +271,6 @@ extension StickyPlainPadApp {
         if let note = noteFromKeyWindow {
           noteViewModel.currentNoteIdForFind = note.id
         }
-        
       }
       .keyboardShortcut("f", modifiers: [.command])
     }

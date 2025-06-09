@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct FindReplaceInnerView: View {
-  @Binding var viewModel: FindReplaceViewModel
+  @Bindable var viewModel: FindReplaceViewModel
+  @FocusState private var isFindFieldFocused: Bool
+  @FocusState private var isReplaceFieldFocused: Bool
   
   var body: some View {
     ZStack {
@@ -21,6 +23,15 @@ struct FindReplaceInnerView: View {
           ZStack(alignment: .trailing) {
             TextField("loc_find_ellipsis", text: $viewModel.findKeyword)
               .clipShape(RoundedRectangle(cornerRadius: 10))
+              .focused($isFindFieldFocused)
+              .onKeyPress(.tab) {
+                if viewModel.isReplaceAreaPresented {
+                  isReplaceFieldFocused = true
+                  return .handled
+                }
+                
+                return .ignored
+              }
             Text("\(viewModel.resultRanges.count)")
               .padding(.trailing, 10)
               .foregroundStyle(.gray.opacity(0.5))
@@ -47,6 +58,8 @@ struct FindReplaceInnerView: View {
           HStack(spacing: 2) {
             TextField("loc_replace_ellipsis", text: $viewModel.replaceKeyword)
               .clipShape(RoundedRectangle(cornerRadius: 10))
+              .focused($isReplaceFieldFocused)
+            // 따로 지정하지 않아도 저절로 첫번째 TextField로 돌아감
             Button(action: viewModel.replaceCurrent) {
               Text("loc_replace")
             }
@@ -61,6 +74,22 @@ struct FindReplaceInnerView: View {
       .padding(5)
     }
     .background(.clear)
+    .onAppear {
+      if viewModel.isSearchWindowPresented {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          isFindFieldFocused = true
+        }
+      }
+    }
+    .onDisappear {
+      isFindFieldFocused = false
+    }
+    .onChange(of: viewModel.isReplaceAreaPresented) { _, newValue in
+      if !newValue, isReplaceFieldFocused {
+        isReplaceFieldFocused = false
+        isFindFieldFocused = true
+      }
+    }
   }
   
   var buttonComplete: some View {
@@ -173,10 +202,10 @@ extension FindReplaceInnerView {
 
 #Preview {
   @Previewable @State var isShow = false
-  @Previewable @State var viewModel = FindReplaceViewModel()
+  @Previewable @Bindable var viewModel = FindReplaceViewModel()
   
   FindReplaceInnerView(
-    viewModel: $viewModel
+    viewModel: viewModel
   )
 }
 

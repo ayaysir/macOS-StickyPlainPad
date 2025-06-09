@@ -12,7 +12,7 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @Binding var text: String
   @Binding var fontSize: CGFloat
   @Binding var theme: Theme?
-  @Binding var viewModel: FindReplaceViewModel
+  @Bindable var viewModel: FindReplaceViewModel
   
   @AppStorage(.cfgEditorAutoCopyPaste) private var autoCopyPaste = true
   @AppStorage(.cfgEditorAutoQuotes) private var autoQuotes = false
@@ -277,13 +277,13 @@ extension AutoHidingScrollTextEditor {
   @Previewable @State var text = "ABCD\n"
   @Previewable @State var fontSize: CGFloat = 14
   @Previewable @State var theme: Theme? = nil
-  @Previewable @State var findReplaceViewModel = FindReplaceViewModel()
+  @Previewable @Bindable var findReplaceViewModel = FindReplaceViewModel()
   
   AutoHidingScrollTextEditor(
     text: $text,
     fontSize: $fontSize,
     theme: $theme,
-    viewModel: $findReplaceViewModel
+    viewModel: findReplaceViewModel
   )
     .frame(width: 400, height: 100)
 }

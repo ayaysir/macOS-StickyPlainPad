@@ -15,7 +15,7 @@ struct NoteEditView: View {
   
   @State private var noteViewModel: NoteViewModel
   @State private var themeViewModel: ThemeViewModel
-  @State private var findReplaceViewModel = FindReplaceViewModel()
+  @Bindable private var findReplaceViewModel = FindReplaceViewModel()
   
   @State private var note: Note
   @State private var theme: Theme?
@@ -41,21 +41,8 @@ struct NoteEditView: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      
-      headerToolbar
-      
-      VStack(spacing: 0) {
-        if findReplaceViewModel.isSearchWindowPresented {
-          searchArea
-        }
-        AutoHidingScrollTextEditor(
-          text: $currentContent,
-          fontSize: $fontSize,
-          theme: $theme,
-          viewModel: $findReplaceViewModel
-        )
-      }
-      .background(Color.defaultNoteBackground)
+      HeaderToolbar
+      TextEditorArea
     }
     .navigationTitle(naviTitle)
     .onAppear(perform: setup)
@@ -66,6 +53,9 @@ struct NoteEditView: View {
     .onChange(of: findReplaceViewModel.text) {
       currentContent = findReplaceViewModel.text
       note = noteViewModel.updateNote(note, content: currentContent)
+    }
+    .onChange(of: findReplaceViewModel.isSearchWindowPresented) {
+      print("sisisi", findReplaceViewModel.isSearchWindowPresented)
     }
     .onChange(of: fontSize) {
       note.fontSize = fontSize
@@ -114,8 +104,10 @@ struct NoteEditView: View {
       .frame(minHeight: 500, maxHeight: 1000)
     }
   }
-  
-  func headerButton(
+}
+
+extension NoteEditView {
+  func HeaderButton(
     action: @escaping VoidCallback,
     imageSystemName: String,
     isTurnOn: Bool = false
@@ -136,7 +128,7 @@ struct NoteEditView: View {
     .buttonStyle(.plain)
   }
   
-  private var headerToolbar: some View {
+  private var HeaderToolbar: some View {
     ZStack {
       if let theme {
         Color(hex: theme.backgroundColorHex)
@@ -148,7 +140,7 @@ struct NoteEditView: View {
       
       HStack {
         // 닫기
-        headerButton(
+        HeaderButton(
           action: closeWindow,
           imageSystemName: "squareshape"
         )
@@ -159,33 +151,32 @@ struct NoteEditView: View {
           .contentShape(Rectangle())
           .onTapGesture(count: 2, perform: maximizeWindow)
       
-      
         // 새 노트 추가
-        headerButton(
+        HeaderButton(
           action: makeNewNote,
           imageSystemName: "plus"
         )
         
-        headerButton(
+        HeaderButton(
           action: makeWindowAlwaysOnTop,
           imageSystemName: "pin.fill",
           isTurnOn: note.isPinned
         )
         .help("loc_always_on_top")
         
-        headerButton(
+        HeaderButton(
           action: { showThemeSelectSheet = true },
           imageSystemName: "paintpalette"
         )
         .help("loc_change_theme_ellipsis")
         
-        headerButton(
+        HeaderButton(
           action: maximizeWindow,
           imageSystemName: "arrow.up.left.and.arrow.down.right"
         )
         .help("loc_maxres_window")
         
-        headerButton(
+        HeaderButton(
           action: { shrinkWindow(to: HEADER_HEIGHT) },
           imageSystemName: "rectangle.topthird.inset.filled"
         )
@@ -196,11 +187,26 @@ struct NoteEditView: View {
     .frame(height: HEADER_HEIGHT)
   }
   
-  private var searchArea: some View {
+  private var SearchArea: some View {
     FindReplaceInnerView(
-      viewModel: $findReplaceViewModel
+      viewModel: findReplaceViewModel
     )
     .background(Color(nsColor: .textBackgroundColor))
+  }
+  
+  private var TextEditorArea: some View {
+    VStack(spacing: 0) {
+      if findReplaceViewModel.isSearchWindowPresented {
+        SearchArea
+      }
+      AutoHidingScrollTextEditor(
+        text: $currentContent,
+        fontSize: $fontSize,
+        theme: $theme,
+        viewModel: findReplaceViewModel
+      )
+    }
+    .background(Color.defaultNoteBackground)
   }
 }
 
