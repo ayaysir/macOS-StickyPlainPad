@@ -116,23 +116,38 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     
     // ⚠️ 이 부분은 영향 없음
     if textView.string != text {
-      DispatchQueue.main.async {
+      if viewModel.isReplaceAreaPresented,
+         let undoManager = textView.undoManager {
+        let oldText = textView.string
+        print("oldText:", oldText)
+        
+        undoManager.registerUndo(withTarget: textView) { target in
+          target.string = oldText
+          viewModel.text = oldText
+        }
+        
+        undoManager.setActionName("Replace")
+        
         textView.string = text
+        highlight(using: viewModel.resultRanges, in: textView)
+      } else {
+        // text가 바뀌었다면 textView.string 업데이트
+        DispatchQueue.main.async {
+          textView.string = text
+        }
       }
     }
     
-    // 기존 스타일 초기화 <- ❌ 실행되면 안됨 (스크롤 이상 현상)
-    // -> 서치 모드일 때만 실행되도록
-    // -> 테마 업데이트는 반드시 이부분보다 나중에 실행 (폰트 적용 위해)
     if viewModel.isSearchWindowPresented {
-      let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
-      
-      if let theme,
-         let labelColor = NSColor(hex: theme.textColorHex) {
-        textView.textStorage?.setAttributes([.foregroundColor: labelColor], range: fullRange)
-      } else {
-        textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
-      }
+      // 기존 스타일 초기화 <- ❌ 실행되면 안됨 (스크롤 이상 현상)
+      // -> 서치 모드일 때만 실행되도록
+      // -> 테마 업데이트는 반드시 이부분보다 나중에 실행 (폰트 적용 위해)
+      resetAllStorageAttributes(textView: textView)
+    }
+    
+    if viewModel.isSearchOrReplaceCompletedOnce {
+      resetAllStorageAttributes(textView: textView)
+      viewModel.isSearchOrReplaceCompletedOnce = false
     }
     
     // 검색 관련 <- ⚠️ , 대신 && 사용? (기분탓?)
@@ -182,10 +197,6 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     // ⚠️ 여기가 문제, 호출되고 뭔가 하면 무조건 깨짐
     // ⚠️ updateNSView 문제 해결하면 이 부분 문제 또한 해결됨
     func textDidChange(_ notification: Notification) {
-      // if let textView {
-      //   parent.text = textView.string
-      // }
-      
       // 퍼포먼스 향상 위해 debounce 도입
       if let textView {
         textSubject.send(textView.string)
@@ -245,31 +256,89 @@ extension AutoHidingScrollTextEditor {
     let LEAST_OPACITY = 0.7
     
     // 강조된 부분 다시 설정
-    for (index, range) in ranges.enumerated() {
-      let isCurrent = index == viewModel.currentResultRangeIndex
-      let font = NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
-
-      let attributes: [NSAttributedString.Key: Any]
-
-      if let theme, let backgroundColor = NSColor(hex: theme.backgroundColorHex) {
-        let newBGColor = backgroundColor.contrastingColor
-        let newTextColor = newBGColor.invertedColor
+    if let textStorage = textView.textStorage {
+      let maxLength = textStorage.length
+      
+      for (index, range) in ranges.enumerated() {
+        guard range.location >= 0,
+              range.location + range.length <= maxLength
+        else {
+          Log.warning("❗️하이라이트 범위 초과: \(range), 텍스트 길이: \(maxLength)")
+          continue
+        }
         
-        attributes = [
-          .foregroundColor: newTextColor,
-          .backgroundColor: newBGColor.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
-          .font: font
-        ]
-      } else {
-        attributes = [
-          .foregroundColor: NSColor.defaultSelected,
-          .backgroundColor: NSColor.defaultSelected.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
-          .font: font
-        ]
+        let isCurrent = index == viewModel.currentResultRangeIndex
+        let font = NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
+        let attributes: [NSAttributedString.Key : Any]
+        
+        if let theme,
+           let backgroundColor = NSColor(hex: theme.backgroundColorHex) {
+          let newBGColor = backgroundColor.contrastingColor
+          let newTextColor = newBGColor.invertedColor
+          
+          attributes = [
+            .foregroundColor: newTextColor,
+            .backgroundColor: newBGColor.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
+            .font: font
+          ]
+        } else {
+          attributes = [
+            .foregroundColor: NSColor.defaultSelected,
+            .backgroundColor: NSColor.defaultSelected.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
+            .font: font
+          ]
+        }
+   
+        textStorage.addAttributes(attributes, range: range)
       }
-
-      textView.textStorage?.addAttributes(attributes, range: range)
     }
+    
+    // for (index, range) in ranges.enumerated() {
+    //   let isCurrent = index == viewModel.currentResultRangeIndex
+    //   let font = NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
+   
+    //   let attributes: [NSAttributedString.Key: Any]
+   
+    //   if let theme, let backgroundColor = NSColor(hex: theme.backgroundColorHex) {
+    //     let newBGColor = backgroundColor.contrastingColor
+    //     let newTextColor = newBGColor.invertedColor
+    //     
+    //     attributes = [
+    //       .foregroundColor: newTextColor,
+    //       .backgroundColor: newBGColor.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
+    //       .font: font
+    //     ]
+    //   } else {
+    //     attributes = [
+    //       .foregroundColor: NSColor.defaultSelected,
+    //       .backgroundColor: NSColor.defaultSelected.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
+    //       .font: font
+    //     ]
+    //   }
+   
+    //   textView.textStorage?.addAttributes(attributes, range: range)
+    // }
+  }
+  
+  func resetAllStorageAttributes(textView: NSTextView) {
+    guard let textStorage = textView.textStorage else {
+      return
+    }
+    
+    let fullRange = NSRange(location: 0, length: textStorage.length)
+    
+    // 속도 개선
+    let color = theme.flatMap { NSColor(hex: $0.textColorHex) } ?? .labelColor
+    textStorage.beginEditing()
+    textStorage.setAttributes([.foregroundColor: color], range: fullRange)
+    textStorage.endEditing()
+    
+    // if let theme,
+    //    let labelColor = NSColor(hex: theme.textColorHex) {
+    //   textView.textStorage?.setAttributes([.foregroundColor: labelColor], range: fullRange)
+    // } else {
+    //   textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
+    // }
   }
 }
 

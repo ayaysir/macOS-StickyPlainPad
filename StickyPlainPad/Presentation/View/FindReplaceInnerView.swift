@@ -60,10 +60,16 @@ struct FindReplaceInnerView: View {
               .clipShape(RoundedRectangle(cornerRadius: 10))
               .focused($isReplaceFieldFocused)
             // 따로 지정하지 않아도 저절로 첫번째 TextField로 돌아감
-            Button(action: viewModel.replaceCurrent) {
+            Button {
+              viewModel.replaceCurrent()
+              isReplaceFieldFocused = false
+            } label: {
               Text("loc_replace")
             }
-            Button(action: viewModel.replaceAll) {
+            Button {
+              viewModel.replaceAll()
+              isReplaceFieldFocused = false
+            } label: {
               Text("loc_all")
             }
             Spacer()
@@ -84,6 +90,8 @@ struct FindReplaceInnerView: View {
     .onDisappear {
       isFindFieldFocused = false
     }
+    // ESC 버튼 누르면 실행됨
+    .onExitCommand(perform: escape)
     .onChange(of: viewModel.isReplaceAreaPresented) { _, newValue in
       if !newValue, isReplaceFieldFocused {
         isReplaceFieldFocused = false
@@ -93,7 +101,7 @@ struct FindReplaceInnerView: View {
   }
   
   var buttonComplete: some View {
-    Button(action: { viewModel.isSearchWindowPresented = false }) {
+    Button(action: escape) {
       Text("loc_done")
     }
     .buttonStyle(.borderedProminent)
@@ -125,6 +133,11 @@ extension FindReplaceInnerView {
         category: .findKeywordMode(.shouldEntireMatch)
       ),
     ]
+  }
+
+  private func escape() {
+    viewModel.isSearchWindowPresented = false
+    viewModel.isSearchOrReplaceCompletedOnce = true
   }
   
   func showMenu() {
@@ -197,7 +210,6 @@ extension FindReplaceInnerView {
       }
     }
   }
-  
 }
 
 #Preview {

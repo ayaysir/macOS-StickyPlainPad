@@ -11,6 +11,7 @@ import Foundation
 final class FindReplaceViewModel {
   var isSearchWindowPresented = false
   var isReplaceAreaPresented = false
+  var isSearchOrReplaceCompletedOnce = false
   
   /*
    currentResultRangeIndex가 0이 되는 조건
