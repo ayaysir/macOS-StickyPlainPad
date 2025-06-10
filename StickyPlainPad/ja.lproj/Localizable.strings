@@ -96,3 +96,5 @@
 "loc.theme_is_not_default" = "このテーマはデフォルトに設定されていません。";
 "loc.set_as_default_theme" = "デフォルトテーマに設定";
 "loc.reset_default_theme" = "デフォルトテーマをリセット";
+
+"loc.enter_timeformat" = "現在の日付と時刻を挿入";

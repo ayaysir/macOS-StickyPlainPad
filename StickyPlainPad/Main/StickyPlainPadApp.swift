@@ -275,6 +275,16 @@ extension StickyPlainPadApp {
       .keyboardShortcut("f", modifiers: [.command])
     }
     
+    CommandGroup(before: .textEditing) {
+      Divider()
+      Button("loc.enter_timeformat") {
+        if let note = noteFromKeyWindow {
+          noteViewModel.currentNoteIdForAddText = .init(id: note.id, command: "timestamp")
+        }
+      }
+      .keyboardShortcut("t", modifiers: [.control])
+    }
+    
     // Close 버튼 대체
     CommandGroup(replacing: .saveItem) {
       Button("loc_close") {

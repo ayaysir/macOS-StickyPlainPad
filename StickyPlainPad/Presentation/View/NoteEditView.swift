@@ -16,6 +16,7 @@ struct NoteEditView: View {
   @State private var noteViewModel: NoteViewModel
   @State private var themeViewModel: ThemeViewModel
   @Bindable private var findReplaceViewModel = FindReplaceViewModel()
+  @Bindable private var noteEditViewModel = NoteEditViewModel()
   
   @State private var note: Note
   @State private var theme: Theme?
@@ -80,6 +81,7 @@ struct NoteEditView: View {
         findReplaceViewModel.isSearchWindowPresented = false
       }
     }
+    .onChange(of: noteViewModel.currentNoteIdForAddText, handleNoteAddText)
     .onChange(of: findReplaceViewModel.isSearchWindowPresented) { oldValue, newValue in
       if oldValue == true,
          newValue == false,
@@ -91,7 +93,10 @@ struct NoteEditView: View {
         findReplaceViewModel.text = currentContent
       }
     }
-    .onReceive(NotificationCenter.default.publisher(for: .didThemeChanged), perform: handleThemeChanged)
+    .onReceive(
+      NotificationCenter.default.publisher(for: .didThemeChanged),
+      perform: handleThemeChanged
+    )
     .sheet(isPresented: $showThemeSelectSheet) {
       // onDismiss
       updateTheme()
@@ -203,7 +208,8 @@ extension NoteEditView {
         text: $currentContent,
         fontSize: $fontSize,
         theme: $theme,
-        viewModel: findReplaceViewModel
+        frViewModel: findReplaceViewModel,
+        neViewModel: noteEditViewModel
       )
     }
     .background(Color.defaultNoteBackground)
@@ -238,6 +244,31 @@ extension NoteEditView {
     }
     
     updateTheme()
+  }
+  
+  private func handleNoteAddText(
+    _ oldValue: NoteCommand?,
+    _ newValue: NoteCommand?
+  ) {
+    guard let noteCommand = newValue,
+          note.id == noteCommand.id else {
+      // Log.error("Note ID Mismatch")
+      return
+    }
+
+    switch noteCommand.command {
+    case "timestamp":
+      let formatter = DateFormatter()
+      formatter.locale = .autoupdatingCurrent // 시스템 지역을 따름
+      formatter.dateStyle = .medium
+      formatter.timeStyle = .medium
+      
+      noteEditViewModel.pendingInsertText = formatter.string(from: .now)
+    default:
+      break
+    }
+    
+    noteViewModel.currentNoteIdForAddText = nil
   }
 }
 

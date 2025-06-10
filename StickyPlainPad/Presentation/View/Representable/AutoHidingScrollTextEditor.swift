@@ -12,7 +12,8 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
   @Binding var text: String
   @Binding var fontSize: CGFloat
   @Binding var theme: Theme?
-  @Bindable var viewModel: FindReplaceViewModel
+  @Bindable var frViewModel: FindReplaceViewModel
+  @Bindable var neViewModel: NoteEditViewModel
   
   @AppStorage(.cfgEditorAutoCopyPaste) private var autoCopyPaste = true
   @AppStorage(.cfgEditorAutoQuotes) private var autoQuotes = false
@@ -116,20 +117,22 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
     
     // ⚠️ 이 부분은 영향 없음
     if textView.string != text {
-      if viewModel.isReplaceAreaPresented,
+      if frViewModel.isReplaceAreaPresented,
          let undoManager = textView.undoManager {
         let oldText = textView.string
-        print("oldText:", oldText)
         
         undoManager.registerUndo(withTarget: textView) { target in
           target.string = oldText
-          viewModel.text = oldText
+          DispatchQueue.main.async {
+            frViewModel.text = oldText
+            text = oldText
+          }
         }
         
         undoManager.setActionName("Replace")
         
         textView.string = text
-        highlight(using: viewModel.resultRanges, in: textView)
+        highlight(using: frViewModel.resultRanges, in: textView)
       } else {
         // text가 바뀌었다면 textView.string 업데이트
         DispatchQueue.main.async {
@@ -138,33 +141,39 @@ struct AutoHidingScrollTextEditor: NSViewRepresentable {
       }
     }
     
-    if viewModel.isSearchWindowPresented {
+    if frViewModel.isSearchWindowPresented {
       // 기존 스타일 초기화 <- ❌ 실행되면 안됨 (스크롤 이상 현상)
       // -> 서치 모드일 때만 실행되도록
       // -> 테마 업데이트는 반드시 이부분보다 나중에 실행 (폰트 적용 위해)
       resetAllStorageAttributes(textView: textView)
     }
     
-    if viewModel.isSearchOrReplaceCompletedOnce {
+    if frViewModel.isSearchOrReplaceCompletedOnce {
       resetAllStorageAttributes(textView: textView)
-      viewModel.isSearchOrReplaceCompletedOnce = false
+      frViewModel.isSearchOrReplaceCompletedOnce = false
     }
     
     // 검색 관련 <- ⚠️ , 대신 && 사용? (기분탓?)
-    if viewModel.isSearchWindowPresented && viewModel.resultRanges.count > 0 {
+    if frViewModel.isSearchWindowPresented && frViewModel.resultRanges.count > 0 {
       // 창이 떠 있고, 검색 결과가 1 이상 있을 때
-      highlight(using: viewModel.resultRanges, in: textView)
+      highlight(using: frViewModel.resultRanges, in: textView)
       textView.isEditable = false
-    } else if !viewModel.isSearchWindowPresented && !textView.isEditable {
+    } else if !frViewModel.isSearchWindowPresented && !textView.isEditable {
       // ⚠️ 이 부분이 너무 자주 호출되면 안됨 -> else if 조건 추가
       textView.isEditable = true
       Log.debug("text view is editable now")
     }
     
     // 검색 시 위치 이동 <- ⚠️ , 대신 && 사용? (기분탓?)
-    if viewModel.isSearchWindowPresented && viewModel.currentResultRangeIndex < viewModel.resultRanges.count {
-      let range = viewModel.resultRanges[viewModel.currentResultRangeIndex]
+    if frViewModel.isSearchWindowPresented && frViewModel.currentResultRangeIndex < frViewModel.resultRanges.count {
+      let range = frViewModel.resultRanges[frViewModel.currentResultRangeIndex]
       textView.scrollRangeToVisible(range)
+    }
+    
+    // 특정 텍스트 삽입
+    if let insertText = neViewModel.pendingInsertText {
+      insertTextToCurrentCursor(textView: textView, insertText: insertText)
+      neViewModel.pendingInsertText = nil
     }
     
     // 테마 업데이트 (영향 없음, 지우면 테마 적용 안됨)
@@ -229,7 +238,7 @@ extension AutoHidingScrollTextEditor {
       
       // 🔄 텍스트 색상 적용
       let newTextColor = NSColor(hex: theme.textColorHex) ?? .textColor
-      if !viewModel.isSearchWindowPresented, textView.textColor != newTextColor {
+      if !frViewModel.isSearchWindowPresented, textView.textColor != newTextColor {
         textView.textColor = newTextColor
       }
     } else {
@@ -267,7 +276,7 @@ extension AutoHidingScrollTextEditor {
           continue
         }
         
-        let isCurrent = index == viewModel.currentResultRangeIndex
+        let isCurrent = index == frViewModel.currentResultRangeIndex
         let font = NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
         let attributes: [NSAttributedString.Key : Any]
         
@@ -340,6 +349,34 @@ extension AutoHidingScrollTextEditor {
     //   textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
     // }
   }
+  
+  func insertTextToCurrentCursor(textView: NSTextView, insertText: String) {
+    let range = textView.selectedRange()
+    
+    if let undoManager = textView.undoManager {
+      let oldText = textView.string
+      
+      undoManager.registerUndo(withTarget: textView) { target in
+        target.string = oldText
+        target.setSelectedRange(range)
+        DispatchQueue.main.async {
+          frViewModel.text = oldText
+        }
+      }
+      undoManager.setActionName("Insert Text")
+    }
+    
+    // 실제 삽입
+    textView.insertText(insertText, replacementRange: range)
+    DispatchQueue.main.async {
+      text = textView.string
+      frViewModel.text = textView.string
+    }
+
+    // 커서를 삽입된 텍스트 뒤로 이동
+    let newCursorPosition = range.location + (insertText as NSString).length
+    textView.setSelectedRange(NSRange(location: newCursorPosition, length: 0))
+  }
 }
 
 #Preview {
@@ -347,12 +384,14 @@ extension AutoHidingScrollTextEditor {
   @Previewable @State var fontSize: CGFloat = 14
   @Previewable @State var theme: Theme? = nil
   @Previewable @Bindable var findReplaceViewModel = FindReplaceViewModel()
+  @Previewable @Bindable var noteEditViewModel = NoteEditViewModel()
   
   AutoHidingScrollTextEditor(
     text: $text,
     fontSize: $fontSize,
     theme: $theme,
-    viewModel: findReplaceViewModel
+    frViewModel: findReplaceViewModel,
+    neViewModel: noteEditViewModel
   )
     .frame(width: 400, height: 100)
 }

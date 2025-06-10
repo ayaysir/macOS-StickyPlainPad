@@ -96,3 +96,5 @@
 "loc.theme_is_not_default" = "현재 기본 테마로 설정되지 않았습니다.";
 "loc.set_as_default_theme" = "기본 테마로 설정";
 "loc.reset_default_theme" = "기본 테마 초기화";
+
+"loc.enter_timeformat" = "현재 날짜 및 시간 입력";
