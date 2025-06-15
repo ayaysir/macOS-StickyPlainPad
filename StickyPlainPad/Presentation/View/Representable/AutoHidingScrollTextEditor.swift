@@ -219,13 +219,15 @@ extension AutoHidingScrollTextEditor {
     if let theme {
       // 🔄 폰트 크기 반영 (폰트명도 포함하여 완전히 새로 설정)
       if let postScriptName = theme.fontMember?.postScriptName {
-        let newFont = NSFont(name: postScriptName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
-        if textView.font?.fontName != postScriptName || textView.font?.pointSize != fontSize {
+        if textView.font?.fontName != postScriptName
+            || textView.font?.pointSize != fontSize {
+          let newFont = NSFont(name: postScriptName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
           textView.font = newFont
         }
       } else {
-        let newFont = NSFont(name: theme.fontName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
-        if textView.font?.fontName != theme.fontName || textView.font?.pointSize != fontSize {
+        if textView.font?.fontName != theme.fontName
+            || textView.font?.pointSize != fontSize {
+          let newFont = NSFont(name: theme.fontName, size: fontSize) ?? NSFont.systemFont(ofSize: fontSize)
           textView.font = newFont
         }
       }
@@ -301,32 +303,6 @@ extension AutoHidingScrollTextEditor {
         textStorage.addAttributes(attributes, range: range)
       }
     }
-    
-    // for (index, range) in ranges.enumerated() {
-    //   let isCurrent = index == viewModel.currentResultRangeIndex
-    //   let font = NSFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 12)
-   
-    //   let attributes: [NSAttributedString.Key: Any]
-   
-    //   if let theme, let backgroundColor = NSColor(hex: theme.backgroundColorHex) {
-    //     let newBGColor = backgroundColor.contrastingColor
-    //     let newTextColor = newBGColor.invertedColor
-    //     
-    //     attributes = [
-    //       .foregroundColor: newTextColor,
-    //       .backgroundColor: newBGColor.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
-    //       .font: font
-    //     ]
-    //   } else {
-    //     attributes = [
-    //       .foregroundColor: NSColor.defaultSelected,
-    //       .backgroundColor: NSColor.defaultSelected.withAlphaComponent(isCurrent ? 1 : LEAST_OPACITY),
-    //       .font: font
-    //     ]
-    //   }
-   
-    //   textView.textStorage?.addAttributes(attributes, range: range)
-    // }
   }
   
   func resetAllStorageAttributes(textView: NSTextView) {
@@ -341,13 +317,6 @@ extension AutoHidingScrollTextEditor {
     textStorage.beginEditing()
     textStorage.setAttributes([.foregroundColor: color], range: fullRange)
     textStorage.endEditing()
-    
-    // if let theme,
-    //    let labelColor = NSColor(hex: theme.textColorHex) {
-    //   textView.textStorage?.setAttributes([.foregroundColor: labelColor], range: fullRange)
-    // } else {
-    //   textView.textStorage?.setAttributes([.foregroundColor: NSColor.labelColor], range: fullRange)
-    // }
   }
   
   func insertTextToCurrentCursor(textView: NSTextView, insertText: String) {

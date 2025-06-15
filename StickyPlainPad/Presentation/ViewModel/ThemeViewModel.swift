@@ -157,6 +157,24 @@ class ThemeViewModel {
     repository.update(updated)
     fetchAllThemes()
   }
+  
+  /// 저장된 모든 Theme 중 fontTraits가 nil인 항목에 대해 해당 폰트의 첫 번째 스타일(availableFontStyles.first!.dataDescription)을 사용해 값을 설정합니다.
+  func migrateFontTraitsIfNeeded() {
+    for theme in themes {
+      guard theme.fontTraits == nil else { continue }
+
+      availableFontMembers(ofFontFamily: theme.fontName)
+
+      if let firstFontMember = availableFontStyles.first {
+        updateTheme(
+          id: theme.id,
+          fontTraits: firstFontMember.dataDescription
+        )
+        // print(#function, "updated: \(theme.id), \(theme.fontTraits)")
+      }
+    }
+  }
+
 
   func deleteTheme(_ theme: Theme) {
     repository.delete(theme)

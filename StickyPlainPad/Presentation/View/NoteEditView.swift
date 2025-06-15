@@ -55,9 +55,6 @@ struct NoteEditView: View {
       currentContent = findReplaceViewModel.text
       note = noteViewModel.updateNote(note, content: currentContent)
     }
-    .onChange(of: findReplaceViewModel.isSearchWindowPresented) {
-      print("sisisi", findReplaceViewModel.isSearchWindowPresented)
-    }
     .onChange(of: fontSize) {
       note.fontSize = fontSize
       note = noteViewModel.updateNote(note)
@@ -348,7 +345,6 @@ extension NoteEditView {
     )
   }
 }
-
 
 #Preview {
   NoteEditView(

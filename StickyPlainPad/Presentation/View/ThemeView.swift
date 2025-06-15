@@ -246,15 +246,19 @@ extension ThemeView {
     selectedFontName = value
     updateFontTraitsPickerWhenFontNameChanged()
     
-    guard let selectedFontMember else {
-      return
+    if let selectedFontMember {
+      themeViewModel.updateTheme(
+        id: theme.id,
+        fontName: selectedFontName,
+        fontTraits: selectedFontMember.dataDescription
+      )
+    } else if !themeViewModel.availableFontStyles.isEmpty {
+      themeViewModel.updateTheme(
+        id: theme.id,
+        fontName: selectedFontName,
+        fontTraits: themeViewModel.availableFontStyles.first!.dataDescription
+      )
     }
-    
-    themeViewModel.updateTheme(
-      id: theme.id,
-      fontName: selectedFontName,
-      fontTraits: selectedFontMember.dataDescription
-    )
     
     sendNotifiation()
   }

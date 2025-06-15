@@ -34,6 +34,7 @@ extension String {
   
   static let onceHasLoadedInitialThemes = "hasLoadedInitialThemes"
   static let onceHasLoadedInitialNotes  = "hasLoadedInitialNotes"
+  static let onceHasLoadedMissingFontTraits = "hasLoadedMissingFontTraits"
   
   static let cfgEditorAutoQuotes           = "cfg_editor_auto_quotes"
   static let cfgEditorAutoDashes           = "cfg_editor_auto_dashes"

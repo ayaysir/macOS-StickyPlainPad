@@ -41,6 +41,7 @@ struct StickyPlainPadApp: App {
       .onAppear {
         loadInitialThemesIfNeeded()
         loadInitialNotesIfNeeded()
+        loadMissingFontTraitsIfNeeded()
       }
       .onReceive(NotificationCenter.default.publisher(for: .didOpenFileURL)) { output in
         // print("onReceive: \(output)")
@@ -130,6 +131,20 @@ extension StickyPlainPadApp {
     noteViewModel.addNotes(from: notes)
     UserDefaults.standard.set(true, forKey: .onceHasLoadedInitialNotes)
     Log.notice("✅ 초기 노트를 성공적으로 로드했습니다")
+  }
+  
+  /// 앱 설치 후, 테마 fontTraits 채우기
+  func loadMissingFontTraitsIfNeeded() {
+    guard !UserDefaults.standard.bool(forKey: .onceHasLoadedMissingFontTraits) else { return }
+    
+    guard !themeViewModel.themes.isEmpty else {
+      Log.notice("\(#function): 테마가 비어있습니다.")
+      return
+    }
+    
+    themeViewModel.migrateFontTraitsIfNeeded()
+    UserDefaults.standard.set(true, forKey: .onceHasLoadedMissingFontTraits)
+    Log.notice("✅ Missing Font Tratis를 성공적으로 로드했습니다")
   }
   
   private func windowFrame(for index: Int, padding: CGFloat = 20) -> Rect? {
